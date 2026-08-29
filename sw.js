@@ -1,9 +1,10 @@
 /* Network-first, cache-fallback.
    Network-first on purpose: a cache-first worker would keep serving an old
    build after every deploy, which is worse than being briefly offline. */
-const CACHE = 'tilt-v1';
+const CACHE = 'tilt-2026-08-29.1';
 const FILES = ['./', './index.html', './decks.js', './manifest.json',
                './icon.svg', './icon-192.png', './icon-512.png'];
+/* Images under img/ are cached on first use by the fetch handler below. */
 
 self.addEventListener('install', e=>{
   e.waitUntil(caches.open(CACHE).then(c=>c.addAll(FILES)).then(()=>self.skipWaiting()));

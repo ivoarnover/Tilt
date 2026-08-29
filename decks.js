@@ -1,3 +1,5 @@
+const DECKS_VERSION = '2026-08-29.1';
+
 /* ===============================================================
    TILT — deck content
    Card format:  "Answer"   or   "Answer|banned,banned,banned"
@@ -530,6 +532,16 @@ const DECKS = [
  'Fingerless gloves','Lace gloves','Truth or Dare','Celebration tour','Super Bowl halftime',
  'Vogue hand dance','Eighties MTV','Reinvention','Michigan girl','Bleached eyebrows',
  'Cowboy hat era','Wedding dress on stage','Backing dancers in suits']},
+
+{id:'memes',n:'Famous memes',e:'😹',c:'#6D28D9',lang:'en',k:[
+ 'Distracted Boyfriend','Doge','Grumpy Cat','Rickroll','Nyan Cat','This Is Fine',
+ 'Woman Yelling at a Cat','Success Kid','Bad Luck Brian','Philosoraptor','Keyboard Cat',
+ 'Trollface','Hide the Pain Harold','Confused Math Lady','Roll Safe','Two Buttons',
+ 'Expanding Brain','Change My Mind','Is This a Pigeon','Stonks','Facepalm','Screaming Goat',
+ 'Dancing Baby','Double Rainbow','Numa Numa','Leeroy Jenkins','Dramatic Chipmunk',
+ 'Harlem Shake','Gangnam Style','Planking','Ice Bucket Challenge','Left Shark','Salt Bae',
+ 'Ok Boomer','Rage Comic','Slow Clap','Deal With It Sunglasses','One Does Not Simply',
+ 'Awkward Penguin','Overly Attached','First World Problems','Mocking Text Case']},
 
 /* ---- Estonian decks: hidden unless the Estonian toggle is on ---- */
 

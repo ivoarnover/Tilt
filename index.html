@@ -128,12 +128,17 @@ button{font-family:inherit;font-size:16px;color:var(--ink);background:none;borde
   background:rgba(0,0,0,0.30)}
 #play::after{content:"";position:absolute;inset:0;pointer-events:none;
   background:radial-gradient(120% 85% at 50% 15%,rgba(255,255,255,0.09),rgba(0,0,0,0.16) 80%)}
+#cardImg{display:none;position:relative;max-width:78%;max-height:44vh;object-fit:contain;
+  border-radius:14px;margin-bottom:14px;box-shadow:0 10px 30px rgba(0,0,0,0.45)}
 #word{font-weight:800;letter-spacing:-0.035em;line-height:1.02;padding:0 5%;width:100%;position:relative;
   text-shadow:0 2px 20px rgba(0,0,0,0.22)}
 #taboo{font-size:15px;margin-top:16px;opacity:0.7;text-decoration:line-through;
   letter-spacing:0.05em;padding:0 8%;position:relative;font-weight:600}
 #timer{position:absolute;top:calc(10px + env(safe-area-inset-top));left:0;right:0;text-align:center;
   font-size:17px;font-weight:800;opacity:0.7;font-variant-numeric:tabular-nums;z-index:2;letter-spacing:0}
+#deckTag{position:absolute;top:calc(34px + env(safe-area-inset-top));left:0;right:0;
+  text-align:center;font-size:13px;font-weight:700;opacity:0.62;z-index:2;
+  letter-spacing:0.06em;text-transform:uppercase}
 #modeTag{position:absolute;bottom:calc(10px + env(safe-area-inset-bottom));left:0;right:0;text-align:center;
   font-size:12px;font-weight:650;opacity:0.55;z-index:2;letter-spacing:0.04em}
 #exit{position:absolute;top:calc(4px + env(safe-area-inset-top));left:6px;z-index:6;
@@ -228,6 +233,7 @@ button{font-family:inherit;font-size:16px;color:var(--ink);background:none;borde
   <button class="btn" onclick="openRemoved()" id="removedBtn">Removed words<small>Words you told the game to stop showing</small></button>
   <button class="btn" onclick="openDiag()">Sensor check<small>Run this if tilt does nothing</small></button>
   <button class="btn" id="installEntry" onclick="askInstall()">Install as an app<small>Fullscreen, offline, no browser bar</small></button>
+  <p class="sub" id="verLine" style="text-align:center;font-size:12px;margin-top:8px">—</p>
 </section>
 
 <!-- HOW -->
@@ -383,8 +389,10 @@ button{font-family:inherit;font-size:16px;color:var(--ink);background:none;borde
 <section id="play" class="screen">
   <button id="exit" onclick="quitRound()">✕</button>
   <div id="timer">0:60</div>
+  <div id="deckTag"></div>
   <div id="hintPass" class="edge">▲<br>pass</div>
   <div id="hintOk" class="edge">▼<br>got it</div>
+  <img id="cardImg" alt="">
   <div id="word">Word</div>
   <div id="taboo"></div>
   <div id="modeTag"></div>
@@ -409,8 +417,26 @@ button{font-family:inherit;font-size:16px;color:var(--ink);background:none;borde
   <button class="btn ghost" id="resSecondary" onclick="go('decks')">Different deck</button>
 </section>
 
+<div id="mismatch"></div>
 <script src="decks.js"></script>
 <script>
+const APP_VERSION = '2026-08-29.1';
+
+/* If the two files were uploaded separately, say so on screen rather than
+   failing quietly with an empty or stale deck list. */
+(function versionCheck(){
+  const el = document.getElementById('mismatch');
+  const dv = (typeof DECKS_VERSION === 'undefined') ? null : DECKS_VERSION;
+  if(dv === APP_VERSION) return;
+  el.style.cssText = 'position:fixed;left:10px;right:10px;top:10px;z-index:99;'+
+    'background:#7A1F1F;border:1px solid #C0392B;border-radius:14px;padding:12px 14px;'+
+    'font:600 13px/1.45 system-ui,sans-serif;color:#fff';
+  el.innerHTML = dv === null
+    ? 'decks.js is missing or failed to load. Upload decks.js next to index.html.'
+    : 'Files are out of step: index.html is ' + APP_VERSION + ' but decks.js is ' + dv +
+      '. Re-upload both.';
+})();
+
 /* ===============================================================
    STORAGE — degrades to memory if the browser blocks it
 =============================================================== */
@@ -430,7 +456,7 @@ function store(k, v){
 function parseDeck(d){
   return { id:d.id, name:d.n, emoji:d.e, color:d.c, lang:d.lang||'en',
     cards: d.k.map(s=>{ const p=s.split('|');
-      return { t:p[0], x:p[1]?p[1].split(','):null }; }) };
+      return { t:p[0], x:p[1]?p[1].split(','):null, img:p[2]||null }; }) };
 }
 const ALL_DECKS = DECKS.map(parseDeck);
 
@@ -444,7 +470,7 @@ function liveCards(d){ return d.cards.filter(c=>!isBanned(c)); }
 function mixedDeck(){
   const seen = new Set(), cards = [];
   visibleDecks().forEach(d=>d.cards.forEach(c=>{
-    if(!seen.has(c.t)){ seen.add(c.t); cards.push(c); }
+    if(!seen.has(c.t)){ seen.add(c.t); cards.push(Object.assign({}, c, {src:d.name})); }
   }));
   return { id:'mixed', name:'All mixed', emoji:'🎲', color:'#4B5BD6', lang:'en', cards };
 }
@@ -566,7 +592,7 @@ function lighten(hex, amt){
 const GROUPS = [
   {id:'all',    name:'All'},
   {id:'music',  name:'Music',     ids:['music','singers','popstars','madonna','eurovision','instruments','dance']},
-  {id:'screen', name:'Screen',    ids:['movies','tv','games','characters','heroes','myth','retro','internet']},
+  {id:'screen', name:'Screen',    ids:['movies','tv','games','characters','heroes','myth','retro','internet','memes']},
   {id:'food',   name:'Food',      ids:['food','drinks','desserts','fruitveg','cooking','restaurant','shop','smells']},
   {id:'daily',  name:'Everyday',  ids:['house','essentials','chores','office','money','tools','jobs','school','body','doctor','gym','pocket','wedding','pets']},
   {id:'world',  name:'World',     ids:['countries','cities','landmarks','travel','nature','weather','space','science','history','famous','animals','sealife','dinos','camping','cars']},
@@ -612,7 +638,9 @@ function customDeck(ids){
   const chosen = ALL_DECKS.filter(d=>ids.indexOf(d.id)>-1);
   if(!chosen.length) return mixedDeck();
   const seen=new Set(), cards=[];
-  chosen.forEach(d=>d.cards.forEach(c=>{ if(!seen.has(c.t)){ seen.add(c.t); cards.push(c); } }));
+  chosen.forEach(d=>d.cards.forEach(c=>{
+    if(!seen.has(c.t)){ seen.add(c.t); cards.push(Object.assign({}, c, {src:d.name})); }
+  }));
   return {
     id:'custom:'+ids.join(','),
     name: chosen.length<=2 ? chosen.map(d=>d.name).join(' + ') : chosen.length+' decks',
@@ -1012,6 +1040,8 @@ function openDiag(){ go('diag'); renderDiag(); }
 function renderDiag(){
   const framed=(function(){ try{ return window.self!==window.top; }catch(e){ return true; } })();
   document.getElementById('diagOut').textContent = [
+    'app version   '+APP_VERSION,
+    'decks version '+(typeof DECKS_VERSION==='undefined'?'MISSING':DECKS_VERSION),
     'origin        '+location.protocol+'//'+(location.hostname||'(none)'),
     'secureContext '+window.isSecureContext,
     'in iframe     '+framed,
@@ -1121,6 +1151,18 @@ function nextCard(){
   cardShownAt = performance.now();
 
   const wordEl=document.getElementById('word'), tabEl=document.getElementById('taboo');
+  const imgEl=document.getElementById('cardImg');
+  /* A picture card shows the image to the room; the holder still guesses the name.
+     If the file is missing the card silently falls back to text only. */
+  if(card.img){
+    imgEl.src = 'img/' + card.img;
+    imgEl.style.display = 'block';
+    imgEl.onerror = ()=>{ imgEl.style.display='none'; fitText(); };
+    imgEl.onload = ()=>fitText();
+  } else {
+    imgEl.style.display = 'none';
+    imgEl.removeAttribute('src');
+  }
   wordEl.textContent = card.t;
   tabEl.textContent = card.x ? card.x.join(' · ') : '';
   document.body.style.background = card.wild ? '#C9A227' : deck.color;
@@ -1128,6 +1170,12 @@ function nextCard(){
   wordEl.style.color=ink; tabEl.style.color=ink;
   document.getElementById('timer').style.color=ink;
   document.getElementById('modeTag').style.color=ink;
+  /* Only worth showing when the card really could be from anywhere. On a single
+     deck the room already knows, and the card screen stays bare. */
+  const dt=document.getElementById('deckTag');
+  dt.textContent = card.src || '';
+  dt.style.color = ink;
+  dt.style.display = card.src ? 'block' : 'none';
   /* Hints describe whatever is switched on right now: touch instructions when
      touch is on, and a warning if tilt is on but the sensor is silent. */
   const tiltDead = tiltOn && !sensorLive();
@@ -1143,7 +1191,9 @@ function nextCard(){
 }
 function fitText(){
   const el=document.getElementById('word');
-  const availH = window.innerHeight * (document.getElementById('taboo').textContent ? 0.50 : 0.66);
+  const hasImg = document.getElementById('cardImg').style.display === 'block';
+  const availH = window.innerHeight *
+    (hasImg ? 0.22 : (document.getElementById('taboo').textContent ? 0.50 : 0.66));
   const availW = window.innerWidth * 0.90;
   let lo=26, hi=Math.min(window.innerHeight*0.58,280), best=lo;
   for(let i=0;i<13;i++){
@@ -1384,6 +1434,9 @@ function dismissInstall(){
 }
 
 if(standalone){ const ie=document.getElementById('installEntry'); if(ie) ie.style.display='none'; }
+document.getElementById('verLine').textContent =
+  'v' + APP_VERSION + ' \u00B7 ' + ALL_DECKS.length + ' decks \u00B7 ' +
+  ALL_DECKS.reduce((a,d)=>a+d.cards.length,0) + ' cards';
 session = loadSession();
 buildDecks();
 buildModeChips();
