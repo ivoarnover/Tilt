@@ -1,4 +1,4 @@
-# Tilt — release 2026-08-29.1
+# Tilt — release 2026-08-29.2
 
 ## The whole app is nine files
 
@@ -36,7 +36,7 @@ Optional and irrelevant to the running site: `.gitlab-ci.yml` (only for GitLab),
 The home screen now prints a line at the bottom:
 
 ```
-v2026-08-29.1 · 78 decks · 3032 cards
+v2026-08-29.2 · 78 decks · 3032 cards
 ```
 
 Three things to check against it:
@@ -74,7 +74,26 @@ node test/flows.js    58 cases — user journeys
 `RELEASE INTEGRITY` in the first suite fails if the versions drift apart or a
 referenced file is missing from the folder.
 
+## Repository hygiene
+
+Two stray files are in the repo root and should be deleted — they do nothing but
+they make the list harder to read:
+
+- `flows.js` at the root — belongs in `test/`, and is not needed by the site
+- `icon-1.svg` — a duplicate GitHub created when `icon.svg` was uploaded twice
+
 ## What changed in this release
+
+**2026-08-29.2**
+- `decks.js` is now requested as `decks.js?v=<version>`. Without this, Chrome
+  serves a cached copy of the deck file even after a fresh upload, and the app
+  reports it as missing. This was the cause of the red banner appearing on a
+  repository that had every file in place.
+- The banner now carries a **Clear cache and reload** button that deletes the
+  service-worker caches, unregisters the worker and reloads bypassing the HTTP
+  cache — so it can fix itself rather than only describing the problem.
+
+**2026-08-29.1**
 
 - Version stamping and the mismatch banner (this document's reason for existing)
 - Famous memes deck, plus picture-card support for any deck

@@ -418,9 +418,23 @@ button{font-family:inherit;font-size:16px;color:var(--ink);background:none;borde
 </section>
 
 <div id="mismatch"></div>
-<script src="decks.js"></script>
+<script src="decks.js?v=2026-08-29.2"></script>
 <script>
-const APP_VERSION = '2026-08-29.1';
+const APP_VERSION = '2026-08-29.2';
+
+/* Wipes the service-worker caches and reloads bypassing the HTTP cache.
+   Declared before the version check so the banner can call it. */
+function hardReload(){
+  const done = ()=>location.replace(location.pathname + '?r=' + Date.now());
+  if(!('caches' in window)) return done();
+  caches.keys()
+    .then(keys=>Promise.all(keys.map(k=>caches.delete(k))))
+    .then(()=>navigator.serviceWorker && navigator.serviceWorker.getRegistrations
+      ? navigator.serviceWorker.getRegistrations().then(rs=>Promise.all(rs.map(r=>r.unregister())))
+      : null)
+    .catch(()=>{})
+    .then(done, done);
+}
 
 /* If the two files were uploaded separately, say so on screen rather than
    failing quietly with an empty or stale deck list. */
@@ -431,10 +445,13 @@ const APP_VERSION = '2026-08-29.1';
   el.style.cssText = 'position:fixed;left:10px;right:10px;top:10px;z-index:99;'+
     'background:#7A1F1F;border:1px solid #C0392B;border-radius:14px;padding:12px 14px;'+
     'font:600 13px/1.45 system-ui,sans-serif;color:#fff';
-  el.innerHTML = dv === null
-    ? 'decks.js is missing or failed to load. Upload decks.js next to index.html.'
-    : 'Files are out of step: index.html is ' + APP_VERSION + ' but decks.js is ' + dv +
-      '. Re-upload both.';
+  el.innerHTML =
+    (dv === null
+      ? 'decks.js did not load. Usually an old copy cached by the browser.'
+      : 'Files are out of step: index.html is ' + APP_VERSION + ' but decks.js is ' + dv + '.') +
+    ' <button onclick="hardReload()" style="margin-top:10px;display:block;width:100%;' +
+    'padding:11px;border-radius:10px;background:#fff;color:#7A1F1F;font-weight:800;' +
+    'font-size:14px;border:none">Clear cache and reload</button>';
 })();
 
 /* ===============================================================
