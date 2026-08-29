@@ -1,0 +1,707 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
+<meta name="theme-color" content="#161A33">
+<link rel="manifest" href="manifest.json">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<title>Tilt — party guessing game</title>
+<style>
+:root{
+  --bg:#161A33; --line:rgba(255,255,255,0.12);
+  --ink:#FFFFFF; --ink-dim:#A9B0D0;
+  --ok:#2FA36B; --pass:#C25C1C;
+  --font:"Inter","Figtree",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html,body{height:100%;overflow:hidden}
+body{
+  background:
+    radial-gradient(120% 60% at 20% 0%, #2A3060 0%, transparent 60%),
+    radial-gradient(100% 60% at 90% 20%, #33255C 0%, transparent 55%),
+    var(--bg);
+  color:var(--ink);font-family:var(--font);font-size:17px;line-height:1.4;
+  -webkit-user-select:none;user-select:none;overscroll-behavior:none;
+}
+.screen{position:fixed;inset:0;display:none;flex-direction:column;
+  padding:max(18px,env(safe-area-inset-top)) max(16px,env(safe-area-inset-left)) max(18px,env(safe-area-inset-bottom)) max(16px,env(safe-area-inset-right));
+  overflow-y:auto;-webkit-overflow-scrolling:touch}
+.screen.on{display:flex}
+h1{font-size:44px;font-weight:800;letter-spacing:-0.035em;line-height:1}
+h2{font-size:28px;font-weight:800;letter-spacing:-0.025em}
+.sub{color:var(--ink-dim);font-size:15px}
+.spacer{flex:1}
+button{font-family:inherit;font-size:17px;color:var(--ink);background:none;border:none;cursor:pointer}
+.btn{display:block;width:100%;padding:17px 20px;border-radius:16px;
+  background:rgba(255,255,255,0.07);border:1px solid var(--line);
+  text-align:left;font-weight:600;margin-bottom:10px}
+.btn:active{transform:scale(0.99)}
+.btn.primary{background:linear-gradient(135deg,#FFD166,#FF8A5B);color:#2A1A06;border:none;text-align:center;font-weight:800}
+.btn small{display:block;color:var(--ink-dim);font-weight:400;font-size:14px;margin-top:2px}
+.btn.primary small{color:#6B4A16}
+.back{color:var(--ink-dim);font-size:15px;margin-bottom:10px;text-align:left;width:auto;font-weight:600}
+
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;padding-bottom:24px}
+.tile{border-radius:20px;padding:14px 14px 16px;min-height:132px;
+  display:flex;flex-direction:column;justify-content:space-between;text-align:left;
+  box-shadow:0 6px 18px rgba(0,0,0,0.28);border:none;overflow:hidden}
+.tile:active{transform:scale(0.98)}
+.tile .ic{font-size:34px;line-height:1;filter:drop-shadow(0 2px 4px rgba(0,0,0,0.25))}
+.tile b{font-size:18px;font-weight:800;letter-spacing:-0.02em;display:block;color:#fff;
+  text-shadow:0 1px 3px rgba(0,0,0,0.28);line-height:1.1}
+.tile span{font-size:12px;font-weight:600;color:rgba(255,255,255,0.85);display:block;margin-top:3px}
+.tile.wide{grid-column:1 / -1;min-height:96px;flex-direction:row;align-items:center;gap:14px}
+.tile.wide .ic{font-size:40px}
+.search{width:100%;padding:13px 16px;border-radius:14px;border:1px solid var(--line);
+  background:rgba(255,255,255,0.07);color:var(--ink);font-size:16px;margin:4px 0 10px;font-family:inherit}
+.search::placeholder{color:var(--ink-dim)}
+
+.chips{display:flex;gap:8px;overflow-x:auto;padding:2px 0 8px;flex-wrap:nowrap}
+.chip{white-space:nowrap;padding:9px 14px;border-radius:999px;border:1px solid var(--line);
+  background:rgba(255,255,255,0.06);font-size:14px;font-weight:600;color:var(--ink-dim)}
+.chip.on{background:#fff;color:#161A33;border-color:#fff}
+
+#play{padding:0;justify-content:center;align-items:center;text-align:center}
+#play::before{content:"";position:absolute;inset:0;background:rgba(0,0,0,0.16);pointer-events:none}
+#word{font-weight:800;letter-spacing:-0.03em;line-height:1.02;padding:0 5%;width:100%;position:relative}
+#taboo{font-size:15px;margin-top:14px;opacity:0.72;text-decoration:line-through;letter-spacing:0.04em;padding:0 8%;position:relative}
+#timer{position:absolute;top:calc(8px + env(safe-area-inset-top));left:0;right:0;text-align:center;
+  font-size:16px;font-weight:700;opacity:0.72;font-variant-numeric:tabular-nums;z-index:2}
+#modeTag{position:absolute;bottom:calc(8px + env(safe-area-inset-bottom));left:0;right:0;text-align:center;font-size:13px;opacity:0.6;z-index:2}
+#flash{position:fixed;inset:0;display:none;align-items:center;justify-content:center;font-size:24vmin;font-weight:800;z-index:5}
+#taps{position:fixed;inset:0;display:flex;z-index:4}
+#taps div{flex:1}
+#count{font-size:28vmin;font-weight:800;line-height:1;letter-spacing:-0.04em}
+
+.res{display:flex;align-items:center;gap:10px;padding:11px 2px;border-bottom:1px solid var(--line)}
+.res .main{flex:1;display:flex;justify-content:space-between;align-items:center;gap:10px;text-align:left;padding:4px 0}
+.res b{font-weight:600;font-size:17px}
+.res.no b{text-decoration:line-through;color:var(--ink-dim)}
+.res.gone b{opacity:0.4}
+.res em{font-style:normal;font-size:13px;color:var(--ink-dim);white-space:nowrap}
+.kill{width:40px;height:40px;border-radius:12px;border:1px solid var(--line);
+  background:rgba(255,255,255,0.05);font-size:16px;line-height:1;color:var(--ink-dim);flex:none}
+.kill.on{background:#C0392B;border-color:#C0392B;color:#fff}
+.pill{font-size:13px;border:1px solid var(--line);border-radius:999px;padding:5px 12px;color:var(--ink-dim);font-weight:600}
+.stat{background:rgba(255,255,255,0.07);border-radius:14px;padding:12px 14px;margin-bottom:8px;text-align:left}
+.stat span{display:block;font-size:13px;color:var(--ink-dim)}
+.big{font-size:76px;font-weight:800;letter-spacing:-0.04em;line-height:1;
+  background:linear-gradient(135deg,#FFD166,#FF8A5B);-webkit-background-clip:text;background-clip:text;color:transparent}
+.warn{background:#4A3410;border:1px solid #7A5A18;border-radius:14px;padding:12px 14px;font-size:14px;margin-bottom:12px}
+</style>
+</head>
+<body>
+
+<!-- HOME -->
+<section id="home" class="screen on">
+  <div style="padding-top:9vh">
+    <h1>Tilt</h1>
+    <p class="sub" style="margin-top:8px;font-size:17px">Phone on your forehead.<br>They talk, you guess.</p>
+  </div>
+  <div class="spacer"></div>
+  <button class="btn primary" onclick="go('decks')">Play</button>
+  <button class="btn" onclick="go('how')">How it works<small>Read this once before the first round</small></button>
+  <button class="btn" onclick="openRemoved()" id="removedBtn">Removed words<small>Words you told the game to stop showing</small></button>
+  <button class="btn" onclick="openDiag()">Sensor check<small>Run this if tilt does nothing</small></button>
+</section>
+
+<!-- HOW -->
+<section id="how" class="screen">
+  <button class="back" onclick="go('home')">Back</button>
+  <h2>How it works</h2>
+  <p class="sub" style="margin:12px 0 18px">One player holds the phone against their forehead, screen facing everyone else. The others describe the word without saying it. The holder guesses.</p>
+  <div class="stat"><span>Guessed it</span>Tilt the screen down toward the floor</div>
+  <div class="stat"><span>Give up</span>Tilt the screen up toward the ceiling</div>
+  <div class="stat"><span>No sensor, or sensor misbehaving</span>Swipe down for correct, swipe up to pass. Or tap the right half for correct, left half to pass.</div>
+  <div class="stat"><span>Struck-through words</span>Banned. Say one and the card is burnt.</div>
+  <div class="stat"><span>Nobody knew that word</span>Hit the ✕ next to it after the round. It never comes back.</div>
+  <div class="spacer"></div>
+  <button class="btn primary" onclick="go('decks')">Pick a deck</button>
+</section>
+
+<!-- REMOVED WORDS -->
+<section id="removed" class="screen">
+  <button class="back" onclick="go('home')">Back</button>
+  <h2>Removed words</h2>
+  <p class="sub" style="margin:8px 0 14px" id="removedNote">Nothing removed yet.</p>
+  <button class="btn" id="restoreAll" style="display:none;text-align:center" onclick="restoreAll()">Bring all of them back</button>
+  <div id="removedList"></div>
+</section>
+
+<!-- DIAGNOSTICS -->
+<section id="diag" class="screen">
+  <button class="back" onclick="go('home')">Back</button>
+  <h2>Sensor check</h2>
+  <p class="sub" style="margin:8px 0 14px">Move the phone around while this is open.</p>
+  <div id="verdict" class="warn" style="display:none"></div>
+  <button class="btn primary" onclick="askMotion()">Request sensor access</button>
+  <div id="diagOut" class="stat" style="font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:13px;line-height:1.7;white-space:pre-wrap"></div>
+</section>
+
+<!-- DECKS -->
+<section id="decks" class="screen">
+  <button class="back" onclick="go('home')">Back</button>
+  <h2>Decks</h2>
+  <input id="deckSearch" class="search" placeholder="Search decks" oninput="buildDecks()" autocomplete="off">
+  <div class="chips">
+    <button class="chip" id="etChip" onclick="toggleEstonian()">Eesti keel</button>
+    <span class="chip" id="deckCount" style="pointer-events:none"></span>
+  </div>
+  <div id="deckGrid" class="grid"></div>
+</section>
+
+<!-- PRE-ROUND -->
+<section id="pre" class="screen">
+  <button class="back" onclick="go('decks')">Back</button>
+  <div class="spacer"></div>
+  <div style="text-align:center">
+    <div id="preIcon" style="font-size:56px">🎬</div>
+    <h1 id="preDeck" style="font-size:36px;margin-top:6px">Deck</h1>
+    <p class="sub" id="preCount" style="margin-top:4px">0 cards</p>
+  </div>
+  <div style="height:22px"></div>
+  <div class="stat" style="text-align:center"><span>Tilt down or swipe down</span>Correct</div>
+  <div class="stat" style="text-align:center"><span>Tilt up or swipe up</span>Pass</div>
+  <p class="sub" id="sensorRead" style="margin-top:10px;font-size:14px;text-align:center">Checking sensor…</p>
+  <div id="permWrap" style="display:none;margin-top:10px">
+    <button class="btn" style="text-align:center" onclick="askMotion()">Allow motion access</button>
+  </div>
+  <div class="spacer"></div>
+  <p class="sub" style="font-size:13px;margin-bottom:6px">Clue rule</p>
+  <div class="chips" id="modeChips"></div>
+  <div style="height:10px"></div>
+  <button class="btn primary" onclick="startRound()">Start round</button>
+  <div class="chips">
+    <button class="chip" onclick="cycleSens()" id="sensBtn">Sensitivity: Medium</button>
+    <button class="chip" onclick="toggleInvert()" id="invBtn">Swap tilt direction</button>
+  </div>
+</section>
+
+<!-- COUNTDOWN -->
+<section id="ready" class="screen" style="justify-content:center;align-items:center;text-align:center">
+  <div id="count">3</div>
+  <p class="sub" id="readyNote" style="margin-top:18px">Hold still</p>
+</section>
+
+<!-- PLAY -->
+<section id="play" class="screen">
+  <div id="timer">0:60</div>
+  <div id="word">Word</div>
+  <div id="taboo"></div>
+  <div id="modeTag"></div>
+</section>
+<div id="taps" style="display:none"><div id="tapPass"></div><div id="tapOk"></div></div>
+<div id="flash"></div>
+
+<!-- RESULTS -->
+<section id="results" class="screen">
+  <div style="display:flex;justify-content:space-between;align-items:flex-end;gap:12px;margin-bottom:14px">
+    <div><div class="big" id="score">0</div><span class="sub" id="scoreNote">points</span></div>
+    <span class="pill" id="deckPill">Deck</span>
+  </div>
+  <div id="stats"></div>
+  <p class="sub" style="margin:14px 0 2px;font-size:14px">Tap a word to change the verdict. Tap ✕ to never see it again.</p>
+  <div id="cardList"></div>
+  <div style="height:16px"></div>
+  <button class="btn primary" onclick="startRound()">Same deck, again</button>
+  <button class="btn" style="text-align:center" onclick="go('decks')">Different deck</button>
+</section>
+
+<script src="decks.js"></script>
+<script>
+/* ===============================================================
+   STORAGE — degrades to memory if the browser blocks it
+=============================================================== */
+const mem = {};
+function store(k, v){
+  if(v === undefined){
+    try{ const s = localStorage.getItem(k); return s===null ? mem[k] : s; }catch(e){ return mem[k]; }
+  }
+  mem[k] = v;
+  try{ localStorage.setItem(k, v); }catch(e){}
+  return v;
+}
+
+/* ===============================================================
+   CONTENT SETUP
+=============================================================== */
+function parseDeck(d){
+  return { id:d.id, name:d.n, emoji:d.e, color:d.c, lang:d.lang||'en',
+    cards: d.k.map(s=>{ const p=s.split('|');
+      return { t:p[0], x:p[1]?p[1].split(','):null }; }) };
+}
+const ALL_DECKS = DECKS.map(parseDeck);
+
+let showEt = store('tilt_et') === '1';
+let banned = new Set((store('tilt_banned') || '').split('\n').filter(Boolean));
+
+function visibleDecks(){ return ALL_DECKS.filter(d => d.lang==='en' || showEt); }
+function isBanned(c){ return banned.has(c.t); }
+function liveCards(d){ return d.cards.filter(c=>!isBanned(c)); }
+
+function mixedDeck(){
+  const seen = new Set(), cards = [];
+  visibleDecks().forEach(d=>d.cards.forEach(c=>{
+    if(!seen.has(c.t)){ seen.add(c.t); cards.push(c); }
+  }));
+  return { id:'mixed', name:'All mixed', emoji:'🎲', color:'#4B5BD6', lang:'en', cards };
+}
+
+const MODES = [
+  {id:'normal', name:'Normal'},
+  {id:'oneword',name:'One word each'},
+  {id:'sound',  name:'Sound only'},
+  {id:'alien',  name:'Explain to an alien'},
+  {id:'dict',   name:'Dictionary voice'},
+  {id:'opp',    name:'Opposites only'}
+];
+
+/* ===============================================================
+   STATE
+=============================================================== */
+const ROUND_MS = 60000, WILDCARD_EVERY = 12;
+let TRIGGER = 38; const RELEASE = 16, LOCKOUT = 650, ALPHA = 0.18;
+const SENS = [{n:'Low',v:50},{n:'Medium',v:38},{n:'High',v:28}];
+let sensIdx = 1;
+
+let deck = null, mode = MODES[0], invert = false;
+let bag = [], recent = [], card = null, cardShownAt = 0;
+let log = [], score = 0, streak = 0;
+let roundEnd = 0, running = false, raf = 0;
+let pitch = 0, neutral = 0, tiltState = 'armed', firedAt = 0;
+let calibrating = false, calibSamples = [], sensorSeen = false;
+let audioCtx = null, wakeLock = null;
+
+/* ===============================================================
+   NAVIGATION
+=============================================================== */
+function go(id){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('on'));
+  document.getElementById(id).classList.add('on');
+  document.getElementById('taps').style.display = (id==='play')?'flex':'none';
+  document.body.style.background = (id==='play'||id==='ready') && deck ? deck.color : '';
+  if(id!=='play'&&id!=='ready') stopRound(false);
+  if(id==='home') refreshRemovedBtn();
+}
+
+function lighten(hex, amt){
+  const n = parseInt(hex.slice(1),16);
+  return 'rgb('+Math.min(255,(n>>16)+amt)+','+Math.min(255,((n>>8)&255)+amt)+','+Math.min(255,(n&255)+amt)+')';
+}
+
+function buildDecks(){
+  const q = (document.getElementById('deckSearch').value||'').trim().toLowerCase();
+  const g = document.getElementById('deckGrid');
+  const list = visibleDecks();
+  g.innerHTML = '';
+  document.getElementById('etChip').className = 'chip' + (showEt ? ' on' : '');
+  const totalCards = list.reduce((a,d)=>a+liveCards(d).length,0);
+  document.getElementById('deckCount').textContent = list.length + ' decks · ' + totalCards + ' cards';
+
+  if(!q){
+    const mix = mixedDeck();
+    const t = document.createElement('button');
+    t.className = 'tile wide';
+    t.style.background = 'linear-gradient(135deg,#5B6BF5,#8B4BD6)';
+    t.innerHTML = '<div class="ic">🎲</div><div><b>All mixed</b><span>'+
+      liveCards(mix).length+' cards from every deck</span></div>';
+    t.onclick = ()=>pickDeck(mix);
+    g.appendChild(t);
+  }
+  list.filter(d=>!q || d.name.toLowerCase().includes(q)).forEach(d=>{
+    const b = document.createElement('button');
+    b.className = 'tile';
+    b.style.background = 'linear-gradient(150deg,'+lighten(d.color,22)+','+d.color+')';
+    b.innerHTML = '<div class="ic">'+d.emoji+'</div><div><b>'+d.name+'</b><span>'+
+      liveCards(d).length+' cards</span></div>';
+    b.onclick = ()=>pickDeck(d);
+    g.appendChild(b);
+  });
+  if(!g.children.length){
+    const p=document.createElement('p'); p.className='sub'; p.textContent='No deck by that name.';
+    g.appendChild(p);
+  }
+}
+function toggleEstonian(){
+  showEt = !showEt;
+  store('tilt_et', showEt ? '1' : '0');
+  buildDecks();
+}
+
+function pickDeck(d){
+  deck = d; bag = []; recent = [];
+  document.getElementById('preIcon').textContent = d.emoji;
+  document.getElementById('preDeck').textContent = d.name;
+  document.getElementById('preCount').textContent = liveCards(d).length + ' cards';
+  buildModeChips();
+  go('pre');
+}
+function buildModeChips(){
+  const w = document.getElementById('modeChips');
+  w.innerHTML = '';
+  MODES.forEach(m=>{
+    const b=document.createElement('button');
+    b.className='chip'+(m.id===mode.id?' on':'');
+    b.textContent=m.name;
+    b.onclick=()=>{ mode=m; buildModeChips(); };
+    w.appendChild(b);
+  });
+}
+function toggleInvert(){
+  invert = !invert;
+  document.getElementById('invBtn').textContent = invert ? 'Tilt swapped' : 'Swap tilt direction';
+}
+function cycleSens(){
+  sensIdx = (sensIdx+1) % SENS.length;
+  TRIGGER = SENS[sensIdx].v;
+  document.getElementById('sensBtn').textContent = 'Sensitivity: ' + SENS[sensIdx].n;
+}
+
+/* ===============================================================
+   REMOVED WORDS
+=============================================================== */
+function saveBanned(){ store('tilt_banned', Array.from(banned).join('\n')); }
+function banWord(t){ banned.add(t); saveBanned(); }
+function unbanWord(t){ banned.delete(t); saveBanned(); }
+function restoreAll(){ banned.clear(); saveBanned(); openRemoved(); }
+function refreshRemovedBtn(){
+  document.getElementById('removedBtn').innerHTML =
+    'Removed words<small>' + (banned.size ? banned.size + ' words will not come back' :
+    'Words you told the game to stop showing') + '</small>';
+}
+function openRemoved(){
+  const list = document.getElementById('removedList');
+  list.innerHTML='';
+  const arr = Array.from(banned).sort();
+  document.getElementById('removedNote').textContent = arr.length
+    ? arr.length + ' words are out of rotation. Tap one to bring it back.'
+    : 'Nothing removed yet. After a round, tap ✕ next to a word nobody knew.';
+  document.getElementById('restoreAll').style.display = arr.length ? 'block' : 'none';
+  arr.forEach(t=>{
+    const row=document.createElement('button');
+    row.className='res';
+    row.innerHTML='<div class="main"><b>'+t+'</b><em>tap to restore</em></div>';
+    row.onclick=()=>{ unbanWord(t); openRemoved(); };
+    list.appendChild(row);
+  });
+  go('removed');
+}
+
+/* ===============================================================
+   SENSOR
+=============================================================== */
+let lastSensorMs = 0, sensorSrc = '';
+let mCount = 0, oCount = 0, mSample = '—', oSample = '—';
+
+function feed(raw, src){
+  if(raw===null || raw===undefined || isNaN(raw)) return;
+  sensorSeen = true; lastSensorMs = performance.now(); sensorSrc = src;
+  pitch = pitch + ALPHA*(raw - pitch);
+  if(calibrating) calibSamples.push(pitch);
+}
+function onMotion(e){
+  mCount++;
+  const g = e.accelerationIncludingGravity;
+  mSample = g ? ('x '+fmt(g.x)+'  y '+fmt(g.y)+'  z '+fmt(g.z)) : 'object missing';
+  if(!g || g.z===null || g.z===undefined) return;
+  feed(Math.asin(Math.max(-1,Math.min(1, g.z/9.81))) * 180/Math.PI, 'motion');
+}
+function onOrient(e){
+  oCount++;
+  oSample = 'beta '+fmt(e.beta)+'  gamma '+fmt(e.gamma);
+  if(e.beta===null || e.gamma===null) return;
+  if(sensorSrc==='motion' && performance.now()-lastSensorMs < 500) return;
+  const b=e.beta*Math.PI/180, g=e.gamma*Math.PI/180;
+  feed(Math.asin(Math.max(-1,Math.min(1,Math.cos(b)*Math.cos(g)))) * 180/Math.PI, 'orientation');
+}
+function fmt(v){ return (v===null||v===undefined)?'null':(typeof v==='number'?v.toFixed(1):String(v)); }
+function attachSensors(){
+  window.addEventListener('devicemotion', onMotion);
+  window.addEventListener('deviceorientation', onOrient);
+}
+function askMotion(){
+  const jobs=[];
+  if(typeof DeviceMotionEvent!=='undefined' && typeof DeviceMotionEvent.requestPermission==='function')
+    jobs.push(DeviceMotionEvent.requestPermission());
+  if(typeof DeviceOrientationEvent!=='undefined' && typeof DeviceOrientationEvent.requestPermission==='function')
+    jobs.push(DeviceOrientationEvent.requestPermission());
+  Promise.allSettled(jobs).then(attachSensors);
+}
+attachSensors();
+
+setInterval(()=>{
+  const live = sensorSeen && performance.now()-lastSensorMs < 1000;
+  if(document.getElementById('pre').classList.contains('on')){
+    const el=document.getElementById('sensorRead');
+    el.textContent = live ? ('Tilt ready · '+Math.round(pitch)+'°') : 'No motion sensor — swipe instead';
+    el.style.color = live ? 'var(--ink-dim)' : '#F3B34A';
+    const needsPerm = !live && typeof DeviceMotionEvent!=='undefined' &&
+                      typeof DeviceMotionEvent.requestPermission==='function';
+    document.getElementById('permWrap').style.display = needsPerm ? 'block' : 'none';
+  }
+  if(document.getElementById('diag').classList.contains('on')) renderDiag();
+}, 250);
+
+function openDiag(){ go('diag'); renderDiag(); }
+function renderDiag(){
+  const framed=(function(){ try{ return window.self!==window.top; }catch(e){ return true; } })();
+  document.getElementById('diagOut').textContent = [
+    'origin        '+location.protocol+'//'+(location.hostname||'(none)'),
+    'secureContext '+window.isSecureContext,
+    'in iframe     '+framed,
+    'needs prompt  '+(typeof DeviceMotionEvent!=='undefined' &&
+                      typeof DeviceMotionEvent.requestPermission==='function'),
+    '',
+    'devicemotion events      '+mCount,
+    '  accelIncludingGravity  '+mSample,
+    'deviceorientation events '+oCount,
+    '  angles                 '+oSample,
+    '',
+    'pitch         '+pitch.toFixed(1)+'°',
+    'source        '+(sensorSrc||'none')
+  ].join('\n');
+  let v='';
+  if(framed) v='This page is inside an iframe, where sensor access is off by default. Open the file directly.';
+  else if(location.protocol==='content:'||location.protocol==='file:')
+    v='Opened as a local file, so the page has no real origin and Chrome will never grant sensor access. Host it over https:// — GitHub Pages works.';
+  else if(mCount===0 && oCount===0)
+    v='No events arriving. Check Chrome: Settings, Site settings, Motion sensors.';
+  else if(mCount>0 && mSample.indexOf('null')>-1 && oSample.indexOf('null')>-1)
+    v='Events arrive but every value is null — this origin is not allowed to read sensors. Serve the page over https://.';
+  const el=document.getElementById('verdict');
+  el.style.display = v?'block':'none';
+  el.textContent = v;
+}
+
+function tiltCheck(now){
+  if(!sensorSeen) return null;
+  let d = pitch - neutral;
+  if(invert) d = -d;
+  if(tiltState==='armed'){
+    if(d <= -TRIGGER){ tiltState='fired'; firedAt=now; return 'ok'; }
+    if(d >= TRIGGER){ tiltState='fired'; firedAt=now; return 'pass'; }
+  } else if(tiltState==='fired'){
+    if(now-firedAt >= LOCKOUT) tiltState='recovering';
+  } else if(tiltState==='recovering'){
+    if(Math.abs(d) <= RELEASE) tiltState='armed';
+  }
+  return null;
+}
+
+/* ===============================================================
+   FEEDBACK
+=============================================================== */
+function beep(freq, ms, type){
+  try{
+    audioCtx = audioCtx || new (window.AudioContext||window.webkitAudioContext)();
+    const o=audioCtx.createOscillator(), g=audioCtx.createGain();
+    o.type=type||'sine'; o.frequency.value=freq;
+    g.gain.setValueAtTime(0.0001,audioCtx.currentTime);
+    g.gain.exponentialRampToValueAtTime(0.25,audioCtx.currentTime+0.01);
+    g.gain.exponentialRampToValueAtTime(0.0001,audioCtx.currentTime+ms/1000);
+    o.connect(g); g.connect(audioCtx.destination);
+    o.start(); o.stop(audioCtx.currentTime+ms/1000);
+  }catch(e){}
+}
+function buzz(ms){ if(navigator.vibrate) navigator.vibrate(ms); }
+function flash(kind){
+  const f=document.getElementById('flash');
+  f.style.background = kind==='ok'?'var(--ok)':'var(--pass)';
+  f.textContent = kind==='ok'?'✓':'→';
+  f.style.display='flex';
+  setTimeout(()=>{ f.style.display='none'; },150);
+}
+
+/* ===============================================================
+   CARDS
+=============================================================== */
+function refillBag(){
+  bag = liveCards(deck).slice();
+  if(!bag.length) bag = deck.cards.slice();     // everything banned: fall back
+  for(let i=bag.length-1;i>0;i--){ const j=Math.random()*(i+1)|0; [bag[i],bag[j]]=[bag[j],bag[i]]; }
+  const avoid = recent.slice(-Math.min(12, Math.floor(bag.length/3)));
+  let guard=0;
+  while(avoid.includes(bag[0].t) && guard++<25){ bag.push(bag.shift()); }
+}
+function nextCard(){
+  do{ if(!bag.length) refillBag(); card = bag.shift(); }
+  while(card && isBanned(card) && bag.length);
+  card.wild = (Math.random()*WILDCARD_EVERY|0)===0;
+  recent.push(card.t);
+  cardShownAt = performance.now();
+
+  const wordEl=document.getElementById('word'), tabEl=document.getElementById('taboo');
+  wordEl.textContent = card.t;
+  tabEl.textContent = card.x ? card.x.join(' · ') : '';
+  document.body.style.background = card.wild ? '#C9A227' : deck.color;
+  const ink = card.wild ? '#3A2E05' : '#FFFFFF';
+  wordEl.style.color=ink; tabEl.style.color=ink;
+  document.getElementById('timer').style.color=ink;
+  document.getElementById('modeTag').style.color=ink;
+  document.getElementById('modeTag').textContent = card.wild ? mode.name+' · double points' : mode.name;
+  fitText();
+}
+function fitText(){
+  const el=document.getElementById('word');
+  const availH = window.innerHeight * (document.getElementById('taboo').textContent ? 0.50 : 0.66);
+  const availW = window.innerWidth * 0.90;
+  let lo=26, hi=Math.min(window.innerHeight*0.58,280), best=lo;
+  for(let i=0;i<13;i++){
+    const mid=(lo+hi)/2;
+    el.style.fontSize=mid+'px';
+    if(el.scrollWidth<=availW && el.scrollHeight<=availH){ best=mid; lo=mid; } else hi=mid;
+  }
+  el.style.fontSize=best+'px';
+}
+window.addEventListener('resize', ()=>{ if(running) fitText(); });
+
+/* ===============================================================
+   ROUND
+=============================================================== */
+function startRound(){
+  log=[]; score=0; streak=0; bag=[]; recent=[];
+  document.body.style.background = deck.color;
+  go('ready');
+  calibrating=true; calibSamples=[];
+  document.getElementById('count').textContent='•';
+  document.getElementById('readyNote').textContent = sensorSeen
+    ? 'Hold the phone still against your forehead'
+    : 'Swipe down for correct, up to pass';
+  setTimeout(()=>{
+    calibrating=false;
+    neutral = calibSamples.length
+      ? calibSamples.slice(-30).reduce((a,b)=>a+b,0)/Math.min(30,calibSamples.length) : 0;
+    tiltState='recovering';
+    countdown(3);
+  },1200);
+}
+function countdown(n){
+  document.getElementById('count').textContent = n>0?n:'Go';
+  document.getElementById('readyNote').textContent='';
+  beep(n>0?520:760, n>0?90:160);
+  if(n<0){ beginPlay(); return; }
+  setTimeout(()=>countdown(n-1),700);
+}
+async function beginPlay(){
+  running=true;
+  roundEnd = performance.now()+ROUND_MS;
+  try{ if('wakeLock' in navigator) wakeLock = await navigator.wakeLock.request('screen'); }catch(e){}
+  go('play'); nextCard(); loop();
+}
+function loop(){
+  if(!running) return;
+  const now=performance.now(), left=Math.max(0,roundEnd-now), s=Math.ceil(left/1000);
+  document.getElementById('timer').textContent='0:'+(s<10?'0':'')+s;
+  if(left<=0){ resolve(null); return; }
+  if(left<=5000 && s!==loop.lastTick){ loop.lastTick=s; beep(880,60,'square'); }
+  const ev=tiltCheck(now);
+  if(ev) resolve(ev==='ok');
+  raf=requestAnimationFrame(loop);
+}
+function resolve(correct){
+  const ms = performance.now()-cardShownAt;
+  if(correct===null){
+    log.push({t:card.t, ok:false, ms, timeout:true, wild:card.wild});
+    stopRound(true); return;
+  }
+  if(correct){
+    streak++;
+    let pts = card.wild?2:1;
+    if(streak%3===0) pts+=1;
+    score+=pts;
+    flash('ok'); buzz(40); beep(880,90);
+  } else {
+    streak=0;
+    flash('pass'); buzz(120); beep(300,120);
+  }
+  log.push({t:card.t, ok:!!correct, ms, wild:card.wild});
+  nextCard();
+}
+function stopRound(showResults){
+  running=false;
+  if(raf) cancelAnimationFrame(raf);
+  if(wakeLock){ try{ wakeLock.release(); }catch(e){} wakeLock=null; }
+  if(showResults){ buzz([0,200,100,200]); beep(200,400,'sawtooth'); renderResults(); }
+}
+
+/* ===============================================================
+   RESULTS
+=============================================================== */
+function renderResults(){
+  document.body.style.background='';
+  document.getElementById('deckPill').textContent = deck.emoji+' '+deck.name;
+  const done = log.filter(c=>!c.timeout), got = done.filter(c=>c.ok);
+  document.getElementById('score').textContent = score;
+  document.getElementById('scoreNote').textContent = got.length+' of '+done.length+' cards';
+
+  const stats=document.getElementById('stats'); stats.innerHTML='';
+  if(got.length){
+    const fast=got.reduce((a,b)=>a.ms<b.ms?a:b);
+    stats.innerHTML += '<div class="stat"><span>Fastest guess</span>'+fast.t+' — '+(fast.ms/1000).toFixed(1)+'s</div>';
+  }
+  if(done.length){
+    const hard=done.reduce((a,b)=>a.ms>b.ms?a:b);
+    stats.innerHTML += '<div class="stat"><span>Hardest card</span>'+hard.t+' — '+(hard.ms/1000).toFixed(1)+'s</div>';
+  }
+
+  const list=document.getElementById('cardList'); list.innerHTML='';
+  log.forEach(c=>{
+    const row=document.createElement('div');
+    row.className='res'+(c.ok?'':' no')+(banned.has(c.t)?' gone':'');
+
+    const main=document.createElement('button');
+    main.className='main';
+    main.innerHTML='<b>'+c.t+(c.wild?' ★':'')+'</b><em>'+
+      (banned.has(c.t)?'removed':(c.timeout?'time ran out':(c.ms/1000).toFixed(1)+'s'))+'</em>';
+    main.onclick=()=>{
+      c.ok=!c.ok;
+      score += c.ok ? (c.wild?2:1) : -(c.wild?2:1);
+      if(score<0) score=0;
+      renderResults();
+    };
+
+    const kill=document.createElement('button');
+    kill.className='kill'+(banned.has(c.t)?' on':'');
+    kill.textContent = banned.has(c.t) ? '↺' : '✕';
+    kill.title = 'Never show this word again';
+    kill.onclick=(e)=>{
+      e.stopPropagation();
+      if(banned.has(c.t)) unbanWord(c.t); else banWord(c.t);
+      renderResults();
+    };
+
+    row.appendChild(main); row.appendChild(kill);
+    list.appendChild(row);
+  });
+  go('results');
+}
+
+/* ===============================================================
+   SWIPE + TAP + KEYBOARD
+=============================================================== */
+const tapsEl=document.getElementById('taps');
+let touchY=null, touchT=0, moved=false;
+tapsEl.addEventListener('touchstart', e=>{ touchY=e.touches[0].clientY; touchT=performance.now(); moved=false; },{passive:true});
+tapsEl.addEventListener('touchmove', e=>{
+  if(touchY===null || !running) return;
+  const dy=e.touches[0].clientY-touchY;
+  if(Math.abs(dy)>70 && performance.now()-touchT<700){ moved=true; touchY=null; resolve(dy>0); }
+},{passive:true});
+tapsEl.addEventListener('touchend', ()=>{ touchY=null; setTimeout(()=>{moved=false;},50); },{passive:true});
+document.getElementById('tapOk').addEventListener('click', ()=>{ if(running&&!moved) resolve(true); });
+document.getElementById('tapPass').addEventListener('click', ()=>{ if(running&&!moved) resolve(false); });
+window.addEventListener('keydown', e=>{
+  if(!running) return;
+  if(e.key==='ArrowDown'||e.key===' '){ e.preventDefault(); resolve(true); }
+  if(e.key==='ArrowUp'){ e.preventDefault(); resolve(false); }
+});
+
+buildDecks();
+buildModeChips();
+refreshRemovedBtn();
+</script>
+</body>
+</html>
