@@ -521,6 +521,16 @@ const DECKS = [
  'Raking leaves','Shovelling snow','Washing windows','Sorting recycling','Defrosting the freezer',
  'Scrubbing the bath','Ironing','Putting things back','Nobody else did it']},
 
+{id:'madonna',n:'Madonna',e:'🎙️',c:'#8E1B4C',lang:'en',k:[
+ 'Like a Virgin','Material Girl','Vogue','Papa Dont Preach','La Isla Bonita','Holiday',
+ 'Into the Groove','Express Yourself','Ray of Light','Frozen','Hung Up','Four Minutes',
+ 'Borderline','Crazy for You','Lucky Star','Cherish','Take a Bow','Beautiful Stranger',
+ 'Die Another Day','Living for Love','Music','Justify My Love','Like a Prayer','Bad Girl',
+ 'Cone bra','Blond Ambition tour','Queen of Pop','Evita','Desperately Seeking Susan',
+ 'Fingerless gloves','Lace gloves','Truth or Dare','Celebration tour','Super Bowl halftime',
+ 'Vogue hand dance','Eighties MTV','Reinvention','Michigan girl','Bleached eyebrows',
+ 'Cowboy hat era','Wedding dress on stage','Backing dancers in suits']},
+
 /* ---- Estonian decks: hidden unless the Estonian toggle is on ---- */
 
 {id:'eesti',n:'Eesti asjad',e:'🇪🇪',c:'#1E5F9E',lang:'et',k:[
