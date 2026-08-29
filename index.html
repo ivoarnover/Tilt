@@ -168,6 +168,20 @@ button{font-family:inherit;font-size:16px;color:var(--ink);background:none;borde
 
 /* install sheet */
 #home.pushed{padding-bottom:190px}
+.tile.sel::after{border:3px solid #fff;box-shadow:inset 0 0 0 1px rgba(0,0,0,0.25)}
+.tile .tick{position:absolute;top:10px;right:10px;width:26px;height:26px;border-radius:50%;
+  background:#fff;color:#161A33;font-size:15px;font-weight:800;display:flex;
+  align-items:center;justify-content:center;z-index:2}
+#selBar{position:fixed;left:12px;right:12px;bottom:calc(12px + env(safe-area-inset-bottom));
+  z-index:21;background:rgba(24,27,48,0.95);backdrop-filter:blur(16px);
+  border:1px solid var(--line-2);border-radius:20px;padding:12px 14px;display:none;
+  align-items:center;gap:10px;box-shadow:0 16px 40px rgba(0,0,0,0.55);animation:in .2s ease}
+#selBar .info{flex:1;font-size:14px;font-weight:650;line-height:1.25}
+#selBar .info em{display:block;font-style:normal;font-size:12px;color:var(--ink-dim);font-weight:500}
+#selBar button{padding:12px 16px;border-radius:14px;font-weight:800;font-size:15px;flex:none}
+#selBar .play{background:linear-gradient(115deg,var(--acc-1),var(--acc-2));color:#fff}
+#selBar .clear{background:var(--surface);color:var(--ink-dim);border:1px solid var(--line)}
+#decks.selecting{padding-bottom:96px}
 #toast{position:fixed;left:12px;right:12px;bottom:calc(14px + env(safe-area-inset-bottom));
   z-index:22;background:rgba(24,27,48,0.96);backdrop-filter:blur(14px);
   border:1px solid var(--line-2);border-radius:16px;padding:13px 15px;display:none;
@@ -205,7 +219,8 @@ button{font-family:inherit;font-size:16px;color:var(--ink);background:none;borde
     <p>Phone on your forehead. They talk, you guess.</p>
   </div>
   <div class="spacer"></div>
-  <button class="btn primary" onclick="go('decks')">Play</button>
+  <button class="btn primary" onclick="quickPlay()">Quick round</button>
+  <button class="btn" onclick="openParty()">Party mode<small>Teams or pass the phone, with a running scoreboard</small></button>
   <button class="btn" onclick="go('how')">How it works<small>Read this once before the first round</small></button>
   <button class="btn" onclick="openRemoved()" id="removedBtn">Removed words<small>Words you told the game to stop showing</small></button>
   <button class="btn" onclick="openDiag()">Sensor check<small>Run this if tilt does nothing</small></button>
@@ -244,6 +259,60 @@ button{font-family:inherit;font-size:16px;color:var(--ink);background:none;borde
   <div id="diagOut" class="stat" style="font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:13px;line-height:1.7;white-space:pre-wrap"></div>
 </section>
 
+<!-- PARTY SETUP -->
+<section id="party" class="screen">
+  <button class="back" onclick="go('home')"><span>‹</span> Back</button>
+  <h2>Party mode</h2>
+  <p class="sub" style="margin:6px 0 14px">Everyone takes a turn. The app keeps score and tells you who is next.</p>
+
+  <p class="eyebrow" style="margin-bottom:7px">Playing as</p>
+  <div class="chips" id="partyKind"></div>
+
+  <p class="eyebrow" style="margin:12px 0 7px">How many</p>
+  <div class="chips" id="partyCount"></div>
+
+  <p class="eyebrow" style="margin:12px 0 7px">Turns each</p>
+  <div class="chips" id="partyRounds"></div>
+
+  <p class="eyebrow" style="margin:12px 0 7px">Names</p>
+  <div id="partyNames"></div>
+
+  <p class="eyebrow" style="margin:12px 0 7px">Decks</p>
+  <div class="chips" id="partyDeck"></div>
+
+  <p class="eyebrow" style="margin:12px 0 7px">Clue rules</p>
+  <div class="chips" id="partyMods"></div>
+
+  <div style="height:18px"></div>
+  <button class="btn primary" onclick="startParty()">Start the game</button>
+</section>
+
+<!-- SCOREBOARD -->
+<section id="board" class="screen">
+  <button class="back" onclick="leaveParty()"><span>‹</span> End game</button>
+  <h2 id="boardTitle">Scoreboard</h2>
+  <p class="sub" id="boardSub" style="margin:6px 0 14px">Round 1</p>
+  <div id="boardList"></div>
+  <div class="spacer"></div>
+  <div class="stat" style="text-align:center" id="nextUp"><span>Next up</span>—</div>
+  <button class="btn primary" onclick="startTurn()" id="turnBtn">Start the round</button>
+</section>
+
+<!-- FINAL -->
+<section id="final" class="screen">
+  <div class="spacer"></div>
+  <div style="text-align:center">
+    <div style="font-size:64px">🏆</div>
+    <h1 id="winner" style="font-size:34px;margin-top:8px">Winner</h1>
+    <p class="sub" id="winnerScore" style="margin-top:6px">0 points</p>
+  </div>
+  <div style="height:18px"></div>
+  <div id="finalList"></div>
+  <div class="spacer"></div>
+  <button class="btn primary" onclick="rematch()">Rematch, same teams</button>
+  <button class="btn ghost" onclick="leaveParty()">Back to the start</button>
+</section>
+
 <!-- DECKS -->
 <section id="decks" class="screen">
   <button class="back" onclick="go('home')"><span>‹</span> Back</button>
@@ -252,12 +321,18 @@ button{font-family:inherit;font-size:16px;color:var(--ink);background:none;borde
     <input id="deckSearch" class="search" placeholder="Search decks" oninput="buildDecks()" autocomplete="off">
     <div class="chips" id="groupChips"></div>
     <div class="chips">
+      <button class="chip" id="multiChip" onclick="toggleMulti()">Pick several</button>
       <button class="chip" id="etChip" onclick="toggleEstonian()">Eesti keel</button>
       <span class="chip" id="deckCount" style="pointer-events:none"></span>
     </div>
   </div>
   <div id="deckGrid" class="grid"></div>
 </section>
+<div id="selBar">
+  <button class="clear" onclick="clearSelection()">Clear</button>
+  <div class="info" id="selInfo">2 decks<em>0 cards</em></div>
+  <button class="play" onclick="playSelection()">Play</button>
+</div>
 
 <!-- PRE-ROUND -->
 <section id="pre" class="screen">
@@ -324,8 +399,8 @@ button{font-family:inherit;font-size:16px;color:var(--ink);background:none;borde
   <p class="sub" style="margin:14px 0 2px;font-size:14px">Tap a word to change the verdict. Tap ✕ to never see it again.</p>
   <div id="cardList"></div>
   <div style="height:16px"></div>
-  <button class="btn primary" onclick="startRound()">Same deck, again</button>
-  <button class="btn ghost" onclick="go('decks')">Different deck</button>
+  <button class="btn primary" id="resPrimary" onclick="startRound()">Same deck, again</button>
+  <button class="btn ghost" id="resSecondary" onclick="go('decks')">Different deck</button>
 </section>
 
 <script src="decks.js"></script>
@@ -436,6 +511,7 @@ function go(id){
   document.body.style.background = (id==='play'||id==='ready') && deck ? deck.color : '';
   if(id!=='play'&&id!=='ready') stopRound(false);
   if(id==='home') refreshRemovedBtn();
+  if(id!=='decks' && multi){ multi=false; document.getElementById('selBar').style.display='none'; }
   currentScreen = id;
 }
 
@@ -466,6 +542,11 @@ function quitRound(confirmed){
   quitArmed = 0;
   document.getElementById('toast').style.display='none';
   running=false;
+  if(session){
+    if(raf) cancelAnimationFrame(raf);
+    if(wakeLock){ try{ wakeLock.release(); }catch(e){} wakeLock=null; }
+    return showBoard();
+  }
   if(raf) cancelAnimationFrame(raf);
   if(wakeLock){ try{ wakeLock.release(); }catch(e){} wakeLock=null; }
   go('decks');
@@ -505,16 +586,65 @@ function buildGroupChips(){
     w.appendChild(b);
   });
 }
+let multi = false;
+let selected = new Set((store('tilt_sel')||'').split(',').filter(Boolean));
+
+function toggleMulti(){
+  multi = !multi;
+  if(!multi) selected.clear();
+  buildDecks();
+}
+function clearSelection(){ selected.clear(); buildDecks(); }
+function toggleSelected(id){
+  if(selected.has(id)) selected.delete(id); else selected.add(id);
+  store('tilt_sel', Array.from(selected).join(','));
+  buildDecks();
+}
+/* A selection of decks behaves exactly like a deck: same shape, cards merged
+   and de-duplicated, so nothing downstream needs to know the difference. */
+function customDeck(ids){
+  const chosen = ALL_DECKS.filter(d=>ids.indexOf(d.id)>-1);
+  if(!chosen.length) return mixedDeck();
+  const seen=new Set(), cards=[];
+  chosen.forEach(d=>d.cards.forEach(c=>{ if(!seen.has(c.t)){ seen.add(c.t); cards.push(c); } }));
+  return {
+    id:'custom:'+ids.join(','),
+    name: chosen.length<=2 ? chosen.map(d=>d.name).join(' + ') : chosen.length+' decks',
+    emoji: chosen.length===1 ? chosen[0].emoji : '🎛️',
+    color: chosen[0].color, lang:'en', cards
+  };
+}
+function playSelection(){
+  if(!selected.size) return;
+  const d = customDeck(Array.from(selected));
+  multi = false;
+  pickDeck(d);
+}
+function updateSelBar(){
+  const bar=document.getElementById('selBar');
+  const on = multi && selected.size>0;
+  bar.style.display = on ? 'flex' : 'none';
+  document.getElementById('decks').classList.toggle('selecting', multi);
+  if(on){
+    const d = customDeck(Array.from(selected));
+    document.getElementById('selInfo').innerHTML =
+      selected.size + (selected.size===1?' deck':' decks') +
+      '<em>' + liveCards(d).length + ' cards</em>';
+  }
+}
+
 function buildDecks(){
   const q = (document.getElementById('deckSearch').value||'').trim().toLowerCase();
   const g = document.getElementById('deckGrid');
   const list = visibleDecks();
   g.innerHTML = '';
   document.getElementById('etChip').className = 'chip' + (showEt ? ' on' : '');
+  document.getElementById('multiChip').className = 'chip' + (multi ? ' on' : '');
+  document.getElementById('multiChip').textContent = multi ? '\u2713 Picking several' : 'Pick several';
   const totalCards = list.reduce((a,d)=>a+liveCards(d).length,0);
   document.getElementById('deckCount').textContent = list.length + ' decks · ' + totalCards + ' cards';
 
-  if(!q && group==='all'){
+  if(!q && group==='all' && !multi){
     const mix = mixedDeck();
     const t = document.createElement('button');
     t.className = 'tile wide';
@@ -529,15 +659,30 @@ function buildDecks(){
     const b = document.createElement('button');
     b.className = 'tile';
     b.style.background = 'linear-gradient(150deg,'+lighten(d.color,22)+','+d.color+')';
-    b.innerHTML = '<div class="ic">'+d.emoji+'</div><div><b>'+d.name+'</b><span>'+
+    const isSel = multi && selected.has(d.id);
+    if(isSel) b.className = 'tile sel';
+    b.innerHTML = (isSel ? '<div class="tick">\u2713</div>' : '') +
+      '<div class="ic">'+d.emoji+'</div><div><b>'+d.name+'</b><span>'+
       liveCards(d).length+' cards</span></div>';
-    b.onclick = ()=>pickDeck(d);
+    b.onclick = multi ? (()=>toggleSelected(d.id)) : (()=>pickDeck(d));
     g.appendChild(b);
   });
   if(!g.children.length){
     const p=document.createElement('p'); p.className='sub'; p.textContent='No deck by that name.';
     g.appendChild(p);
   }
+  if(multi && group!=='all'){
+    const all=document.createElement('button');
+    all.className='btn ghost'; all.style.gridColumn='1 / -1'; all.style.marginTop='4px';
+    all.textContent='Add every deck in ' + GROUPS.find(x=>x.id===group).name;
+    all.onclick=()=>{
+      list.filter(inGroup).forEach(d=>selected.add(d.id));
+      store('tilt_sel', Array.from(selected).join(','));
+      buildDecks();
+    };
+    g.appendChild(all);
+  }
+  updateSelBar();
 }
 function toggleEstonian(){
   showEt = !showEt;
@@ -545,7 +690,9 @@ function toggleEstonian(){
   buildDecks();
 }
 
+function quickPlay(){ session=null; saveSession(); go('decks'); }
 function pickDeck(d){
+  if(session && session.deckMode==='one' && !session.deckId) session.deckId = d.id;
   deck = d; bag = []; recent = [];
   document.getElementById('preIcon').textContent = d.emoji;
   document.getElementById('preDeck').textContent = d.name;
@@ -618,6 +765,149 @@ function openRemoved(){
     list.appendChild(row);
   });
   go('removed');
+}
+
+/* ===============================================================
+   PARTY MODE — teams or pass-the-phone, with a running scoreboard
+=============================================================== */
+const MOD_LADDER = ['normal','normal','oneword','sound','alien','opp'];
+let session = null;
+let setup = { kind:'teams', count:2, roundsEach:3, deckMode:'each', mods:true, names:[] };
+
+function saveSession(){ store('tilt_session', session ? JSON.stringify(session) : ''); }
+function loadSession(){
+  try{ const raw = store('tilt_session'); return raw ? JSON.parse(raw) : null; }catch(e){ return null; }
+}
+
+function defaultNames(){
+  const out=[];
+  for(let i=0;i<setup.count;i++){
+    out.push(setup.names[i] || (setup.kind==='teams' ? 'Team '+(i+1) : 'Player '+(i+1)));
+  }
+  return out;
+}
+function openParty(){ buildParty(); go('party'); }
+
+function chipRow(el, opts, current, onPick){
+  const w=document.getElementById(el); w.innerHTML='';
+  opts.forEach(o=>{
+    const b=document.createElement('button');
+    b.className='chip'+(o.v===current?' on':'');
+    b.textContent=o.n;
+    b.onclick=()=>onPick(o.v);
+    w.appendChild(b);
+  });
+}
+function buildParty(){
+  chipRow('partyKind',[{n:'Teams',v:'teams'},{n:'Every player',v:'players'}], setup.kind,
+    v=>{ setup.kind=v; setup.names=[]; buildParty(); });
+  chipRow('partyCount',[2,3,4,5,6].map(n=>({n:String(n),v:n})), setup.count,
+    v=>{ setup.count=v; buildParty(); });
+  chipRow('partyRounds',[1,2,3,4].map(n=>({n:n+(n===1?' turn':' turns'),v:n})), setup.roundsEach,
+    v=>{ setup.roundsEach=v; buildParty(); });
+  chipRow('partyDeck',[{n:'Pick each turn',v:'each'},{n:'One deck all game',v:'one'}], setup.deckMode,
+    v=>{ setup.deckMode=v; buildParty(); });
+  chipRow('partyMods',[{n:'Mix it up',v:true},{n:'Normal only',v:false}], setup.mods,
+    v=>{ setup.mods=v; buildParty(); });
+
+  const wrap=document.getElementById('partyNames'); wrap.innerHTML='';
+  defaultNames().forEach((n,i)=>{
+    const inp=document.createElement('input');
+    inp.className='search'; inp.style.margin='0 0 8px'; inp.value=n; inp.maxLength=18;
+    inp.oninput=()=>{ setup.names[i]=inp.value; };
+    wrap.appendChild(inp);
+  });
+}
+
+function startParty(){
+  const names = defaultNames().map((n,i)=>(setup.names[i]||n).trim() || ('Team '+(i+1)));
+  session = {
+    kind:setup.kind, names, scores:names.map(()=>0),
+    turn:0, played:0, total:names.length*setup.roundsEach,
+    deckMode:setup.deckMode, deckId:null, mods:setup.mods, lastRound:null
+  };
+  saveSession(); showBoard();
+}
+function rematch(){
+  if(!session) return;
+  session.scores = session.names.map(()=>0);
+  session.turn=0; session.played=0; session.lastRound=null;
+  saveSession(); showBoard();
+}
+function leaveParty(){ session=null; saveSession(); go('home'); }
+
+function showBoard(){
+  if(!session) return go('home');
+  document.getElementById('boardTitle').textContent =
+    session.played ? 'Scoreboard' : (session.kind==='teams' ? 'Teams ready' : 'Players ready');
+  document.getElementById('boardSub').textContent =
+    'Round ' + Math.min(session.played+1, session.total) + ' of ' + session.total +
+    (session.lastRound ? '  ·  ' + session.lastRound : '');
+
+  const list=document.getElementById('boardList'); list.innerHTML='';
+  const ranked = session.names.map((n,i)=>({n, s:session.scores[i], i}))
+                              .sort((a,b)=>b.s-a.s);
+  ranked.forEach((r,pos)=>{
+    const row=document.createElement('div');
+    row.className='res';
+    const lead = pos===0 && r.s>0 ? ' 👑' : '';
+    row.innerHTML='<div class="main"><b>'+r.n+lead+'</b><em>'+r.s+' pts</em></div>';
+    if(r.i===session.turn) row.style.background='rgba(255,255,255,0.06)';
+    list.appendChild(row);
+  });
+
+  document.getElementById('nextUp').innerHTML =
+    '<span>Next up</span>' + session.names[session.turn] +
+    (session.mods ? ' · ' + MODES.find(m=>m.id===MOD_LADDER[session.played % MOD_LADDER.length]).name : '');
+  document.getElementById('turnBtn').textContent =
+    'Start ' + session.names[session.turn] + '\u2019s round';
+  go('board');
+}
+
+function startTurn(){
+  if(!session) return;
+  if(session.mods){
+    const want = MOD_LADDER[session.played % MOD_LADDER.length];
+    mode = MODES.find(m=>m.id===want) || MODES[0];
+  }
+  if(session.deckMode==='one' && session.deckId){
+    deck = deckById(session.deckId);
+    pickDeck(deck);
+  } else {
+    go('decks');            // the picked deck starts the round
+  }
+}
+function deckById(id){
+  if(!id || id==='mixed') return mixedDeck();
+  if(id.indexOf('custom:')===0) return customDeck(id.slice(7).split(','));
+  return ALL_DECKS.find(d=>d.id===id) || mixedDeck();
+}
+
+/* Called when a round finishes inside a session. */
+function commitRound(points){
+  if(!session) return;
+  session.scores[session.turn] += points;
+  session.played += 1;
+  session.lastRound = session.names[session.turn] + ' scored ' + points;
+  session.turn = (session.turn + 1) % session.names.length;
+  saveSession();
+  if(session.played >= session.total) showFinal(); else showBoard();
+}
+function showFinal(){
+  const ranked = session.names.map((n,i)=>({n, s:session.scores[i]})).sort((a,b)=>b.s-a.s);
+  const top = ranked[0], tie = ranked.filter(r=>r.s===top.s);
+  document.getElementById('winner').textContent =
+    tie.length>1 ? 'A tie!' : top.n;
+  document.getElementById('winnerScore').textContent =
+    tie.length>1 ? tie.map(t=>t.n).join(' and ') + ' — ' + top.s + ' points each'
+                 : top.s + ' points';
+  const l=document.getElementById('finalList'); l.innerHTML='';
+  ranked.forEach(r=>{
+    const row=document.createElement('div'); row.className='res';
+    row.innerHTML='<div class="main"><b>'+r.n+'</b><em>'+r.s+' pts</em></div>';
+    l.appendChild(row);
+  });
+  go('final');
 }
 
 /* ===============================================================
@@ -954,6 +1244,18 @@ function renderResults(){
     row.appendChild(main); row.appendChild(kill);
     list.appendChild(row);
   });
+  const p=document.getElementById('resPrimary'), sec=document.getElementById('resSecondary');
+  if(session){
+    p.textContent = 'Save ' + score + ' pts \u00B7 pass the phone';
+    p.onclick = ()=>commitRound(score);
+    sec.textContent = 'Play this round again';
+    sec.onclick = ()=>startRound();
+  } else {
+    p.textContent = 'Same deck, again';
+    p.onclick = ()=>startRound();
+    sec.textContent = 'Different deck';
+    sec.onclick = ()=>go('decks');
+  }
   go('results');
 }
 
@@ -1017,6 +1319,7 @@ function dismissInstall(){
   store('tilt_noinstall','1');
 }
 
+session = loadSession();
 buildDecks();
 buildModeChips();
 buildInputChips();
