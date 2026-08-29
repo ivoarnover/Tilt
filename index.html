@@ -11,95 +11,198 @@
 <title>Tilt — party guessing game</title>
 <style>
 :root{
-  --bg:#161A33; --line:rgba(255,255,255,0.12);
-  --ink:#FFFFFF; --ink-dim:#A9B0D0;
+  --bg:#0C0E1C;
+  --surface:rgba(255,255,255,0.055);
+  --surface-2:rgba(255,255,255,0.09);
+  --line:rgba(255,255,255,0.10);
+  --line-2:rgba(255,255,255,0.18);
+  --ink:#FFFFFF;
+  --ink-dim:#9AA2C4;
+  --ink-faint:#6B7398;
+  --acc-1:#7C5CFF;
+  --acc-2:#FF5C93;
+  --acc-3:#FFB443;
   --ok:#2FA36B; --pass:#C25C1C;
   --font:"Inter","Figtree",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  --r:20px;
 }
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
 html,body{height:100%;overflow:hidden}
 body{
   background:
-    radial-gradient(120% 60% at 20% 0%, #2A3060 0%, transparent 60%),
-    radial-gradient(100% 60% at 90% 20%, #33255C 0%, transparent 55%),
+    radial-gradient(90% 55% at 12% -5%, rgba(124,92,255,0.38) 0%, transparent 62%),
+    radial-gradient(80% 50% at 95% 8%, rgba(255,92,147,0.24) 0%, transparent 58%),
+    radial-gradient(70% 40% at 50% 105%, rgba(255,180,67,0.12) 0%, transparent 60%),
     var(--bg);
-  color:var(--ink);font-family:var(--font);font-size:17px;line-height:1.4;
+  color:var(--ink);font-family:var(--font);font-size:16px;line-height:1.45;
+  letter-spacing:-0.011em;
   -webkit-user-select:none;user-select:none;overscroll-behavior:none;
+  -webkit-font-smoothing:antialiased;
 }
 .screen{position:fixed;inset:0;display:none;flex-direction:column;
-  padding:max(18px,env(safe-area-inset-top)) max(16px,env(safe-area-inset-left)) max(18px,env(safe-area-inset-bottom)) max(16px,env(safe-area-inset-right));
+  padding:max(14px,env(safe-area-inset-top)) max(18px,env(safe-area-inset-left)) max(18px,env(safe-area-inset-bottom)) max(18px,env(safe-area-inset-right));
   overflow-y:auto;-webkit-overflow-scrolling:touch}
-.screen.on{display:flex}
-h1{font-size:44px;font-weight:800;letter-spacing:-0.035em;line-height:1}
-h2{font-size:28px;font-weight:800;letter-spacing:-0.025em}
+.screen.on{display:flex;animation:in .22s ease}
+@keyframes in{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+
+h1{font-size:52px;font-weight:800;letter-spacing:-0.045em;line-height:0.98}
+h2{font-size:30px;font-weight:800;letter-spacing:-0.03em;line-height:1.1}
 .sub{color:var(--ink-dim);font-size:15px}
-.spacer{flex:1}
-button{font-family:inherit;font-size:17px;color:var(--ink);background:none;border:none;cursor:pointer}
-.btn{display:block;width:100%;padding:17px 20px;border-radius:16px;
-  background:rgba(255,255,255,0.07);border:1px solid var(--line);
-  text-align:left;font-weight:600;margin-bottom:10px}
-.btn:active{transform:scale(0.99)}
-.btn.primary{background:linear-gradient(135deg,#FFD166,#FF8A5B);color:#2A1A06;border:none;text-align:center;font-weight:800}
-.btn small{display:block;color:var(--ink-dim);font-weight:400;font-size:14px;margin-top:2px}
-.btn.primary small{color:#6B4A16}
-.back{color:var(--ink-dim);font-size:15px;margin-bottom:10px;text-align:left;width:auto;font-weight:600}
+.eyebrow{font-size:12px;font-weight:700;letter-spacing:0.10em;text-transform:uppercase;color:var(--ink-faint)}
+.spacer{flex:1;min-height:8px}
+button{font-family:inherit;font-size:16px;color:var(--ink);background:none;border:none;cursor:pointer}
 
-.grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;padding-bottom:24px}
-.tile{border-radius:20px;padding:14px 14px 16px;min-height:132px;
-  display:flex;flex-direction:column;justify-content:space-between;text-align:left;
-  box-shadow:0 6px 18px rgba(0,0,0,0.28);border:none;overflow:hidden}
-.tile:active{transform:scale(0.98)}
-.tile .ic{font-size:34px;line-height:1;filter:drop-shadow(0 2px 4px rgba(0,0,0,0.25))}
-.tile b{font-size:18px;font-weight:800;letter-spacing:-0.02em;display:block;color:#fff;
-  text-shadow:0 1px 3px rgba(0,0,0,0.28);line-height:1.1}
-.tile span{font-size:12px;font-weight:600;color:rgba(255,255,255,0.85);display:block;margin-top:3px}
-.tile.wide{grid-column:1 / -1;min-height:96px;flex-direction:row;align-items:center;gap:14px}
-.tile.wide .ic{font-size:40px}
-.search{width:100%;padding:13px 16px;border-radius:14px;border:1px solid var(--line);
-  background:rgba(255,255,255,0.07);color:var(--ink);font-size:16px;margin:4px 0 10px;font-family:inherit}
-.search::placeholder{color:var(--ink-dim)}
+.btn{display:block;width:100%;padding:16px 18px;border-radius:var(--r);
+  background:var(--surface);border:1px solid var(--line);
+  text-align:left;font-weight:650;margin-bottom:10px;transition:transform .12s ease,background .15s ease}
+.btn:active{transform:scale(0.985);background:var(--surface-2)}
+.btn small{display:block;color:var(--ink-dim);font-weight:450;font-size:13.5px;margin-top:2px;letter-spacing:0}
+.btn.primary{
+  background:linear-gradient(115deg,var(--acc-1),var(--acc-2) 62%,var(--acc-3));
+  color:#fff;border:none;text-align:center;font-weight:800;font-size:18px;padding:19px;
+  box-shadow:0 10px 26px -8px rgba(124,92,255,0.75)}
+.btn.primary:active{transform:scale(0.985)}
+.btn.ghost{text-align:center;font-weight:650;background:transparent;border-color:var(--line-2)}
+.back{color:var(--ink-dim);font-size:15px;font-weight:650;text-align:left;width:auto;
+  padding:6px 0 10px;display:flex;align-items:center;gap:6px}
 
-.chips{display:flex;gap:8px;overflow-x:auto;padding:2px 0 8px;flex-wrap:nowrap}
-.chip{white-space:nowrap;padding:9px 14px;border-radius:999px;border:1px solid var(--line);
-  background:rgba(255,255,255,0.06);font-size:14px;font-weight:600;color:var(--ink-dim)}
-.chip.on{background:#fff;color:#161A33;border-color:#fff}
+/* hero */
+.hero{padding:12vh 2px 0}
+.mark{display:inline-flex;align-items:center;gap:10px;margin-bottom:14px}
+.mark i{width:34px;height:34px;border-radius:11px;display:block;
+  background:linear-gradient(140deg,var(--acc-1),var(--acc-2));
+  box-shadow:0 6px 18px -6px rgba(124,92,255,0.9)}
+.hero p{font-size:18px;color:var(--ink-dim);margin-top:12px;max-width:22ch;line-height:1.35}
 
+/* sticky header on the deck screen */
+.sticky{position:sticky;top:-2px;z-index:5;padding-bottom:8px;
+  background:linear-gradient(180deg,var(--bg) 62%,rgba(12,14,28,0));
+  backdrop-filter:blur(12px)}
+
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:11px;padding-bottom:28px}
+.tile{position:relative;border-radius:22px;padding:14px;min-height:126px;overflow:hidden;
+  display:flex;flex-direction:column;justify-content:space-between;text-align:left;border:none;
+  box-shadow:0 10px 24px -14px rgba(0,0,0,0.9);transition:transform .12s ease}
+.tile::after{content:"";position:absolute;inset:0;border-radius:22px;pointer-events:none;
+  border:1px solid rgba(255,255,255,0.16);
+  background:linear-gradient(160deg,rgba(255,255,255,0.16),rgba(255,255,255,0) 46%)}
+.tile:active{transform:scale(0.975)}
+.tile .ic{width:42px;height:42px;border-radius:13px;display:flex;align-items:center;justify-content:center;
+  font-size:23px;background:rgba(0,0,0,0.20);backdrop-filter:blur(3px);position:relative;z-index:1}
+.tile b{font-size:17px;font-weight:800;letter-spacing:-0.025em;display:block;color:#fff;line-height:1.12;position:relative;z-index:1}
+.tile span{font-size:11.5px;font-weight:650;color:rgba(255,255,255,0.78);display:block;margin-top:2px;position:relative;z-index:1}
+.tile.wide{grid-column:1 / -1;min-height:92px;flex-direction:row;align-items:center;gap:14px}
+.tile.wide .ic{width:50px;height:50px;font-size:27px;flex:none}
+
+.search{width:100%;padding:14px 16px;border-radius:16px;border:1px solid var(--line);
+  background:var(--surface);color:var(--ink);font-size:16px;margin:2px 0 10px;font-family:inherit}
+.search::placeholder{color:var(--ink-faint)}
+.search:focus{outline:none;border-color:var(--line-2);background:var(--surface-2)}
+
+.chips{display:flex;gap:8px;overflow-x:auto;padding:2px 0 6px;flex-wrap:nowrap;scrollbar-width:none}
+.chips::-webkit-scrollbar{display:none}
+.chip{white-space:nowrap;padding:10px 15px;border-radius:999px;border:1px solid var(--line);
+  background:var(--surface);font-size:14px;font-weight:650;color:var(--ink-dim);transition:all .14s ease}
+.chip.on{background:linear-gradient(115deg,var(--acc-1),var(--acc-2));color:#fff;border-color:transparent;
+  box-shadow:0 6px 16px -8px rgba(124,92,255,0.9)}
+.chip:active{transform:scale(0.96)}
+
+/* cards / lists */
+.stat{background:var(--surface);border:1px solid var(--line);border-radius:16px;
+  padding:13px 15px;margin-bottom:8px;text-align:left;font-weight:600}
+.stat span{display:block;font-size:12px;color:var(--ink-faint);font-weight:650;
+  letter-spacing:0.06em;text-transform:uppercase;margin-bottom:3px}
+.statRow{display:flex;gap:8px}
+.statRow .stat{flex:1;margin-bottom:0}
+.help{background:rgba(255,180,67,0.10);border:1px solid rgba(255,180,67,0.34);border-radius:16px;
+  padding:13px 15px;font-size:14px;color:var(--ink-dim);margin-top:10px;text-align:left;line-height:1.5}
+.help b{color:var(--ink);display:block;margin-bottom:4px;font-size:15px}
+.help u{text-decoration:none;color:var(--acc-3);font-weight:700;border-bottom:1.5px solid rgba(255,180,67,0.5);padding-bottom:1px}
+.warn{background:rgba(255,180,67,0.10);border:1px solid rgba(255,180,67,0.34);
+  border-radius:16px;padding:13px 15px;font-size:14px;margin-bottom:12px;line-height:1.5}
+
+/* play */
 #play{padding:0;justify-content:center;align-items:center;text-align:center}
-#play::before{content:"";position:absolute;inset:0;background:rgba(0,0,0,0.16);pointer-events:none}
-#word{font-weight:800;letter-spacing:-0.03em;line-height:1.02;padding:0 5%;width:100%;position:relative}
-#taboo{font-size:15px;margin-top:14px;opacity:0.72;text-decoration:line-through;letter-spacing:0.04em;padding:0 8%;position:relative}
-#timer{position:absolute;top:calc(8px + env(safe-area-inset-top));left:0;right:0;text-align:center;
-  font-size:16px;font-weight:700;opacity:0.72;font-variant-numeric:tabular-nums;z-index:2}
-#modeTag{position:absolute;bottom:calc(8px + env(safe-area-inset-bottom));left:0;right:0;text-align:center;font-size:13px;opacity:0.6;z-index:2}
-#flash{position:fixed;inset:0;display:none;align-items:center;justify-content:center;font-size:24vmin;font-weight:800;z-index:5}
+#play::before{content:"";position:absolute;inset:0;pointer-events:none;
+  background:radial-gradient(120% 80% at 50% 0%,rgba(255,255,255,0.10),rgba(0,0,0,0.26) 78%)}
+#word{font-weight:800;letter-spacing:-0.035em;line-height:1.02;padding:0 5%;width:100%;position:relative;
+  text-shadow:0 2px 20px rgba(0,0,0,0.22)}
+#taboo{font-size:15px;margin-top:16px;opacity:0.7;text-decoration:line-through;
+  letter-spacing:0.05em;padding:0 8%;position:relative;font-weight:600}
+#timer{position:absolute;top:calc(10px + env(safe-area-inset-top));left:0;right:0;text-align:center;
+  font-size:17px;font-weight:800;opacity:0.7;font-variant-numeric:tabular-nums;z-index:2;letter-spacing:0}
+#modeTag{position:absolute;bottom:calc(10px + env(safe-area-inset-bottom));left:0;right:0;text-align:center;
+  font-size:12px;font-weight:650;opacity:0.55;z-index:2;letter-spacing:0.04em}
+#exit{position:absolute;top:calc(4px + env(safe-area-inset-top));left:6px;z-index:6;
+  width:50px;height:50px;font-size:19px;opacity:0.5;font-weight:700}
+.edge{position:absolute;z-index:3;font-size:12px;font-weight:800;line-height:1.3;
+  text-align:center;opacity:0.42;letter-spacing:0.03em;display:none;text-transform:uppercase}
+#hintPass{left:12px;top:50%;transform:translateY(-50%)}
+#hintOk{right:12px;top:50%;transform:translateY(-50%)}
+#flash{position:fixed;inset:0;display:none;align-items:center;justify-content:center;
+  font-size:26vmin;font-weight:800;z-index:5;color:#fff}
 #taps{position:fixed;inset:0;display:flex;z-index:4}
 #taps div{flex:1}
-#count{font-size:28vmin;font-weight:800;line-height:1;letter-spacing:-0.04em}
+#count{font-size:30vmin;font-weight:800;line-height:1;letter-spacing:-0.05em;
+  background:linear-gradient(150deg,#fff,rgba(255,255,255,0.55));
+  -webkit-background-clip:text;background-clip:text;color:transparent}
 
-.res{display:flex;align-items:center;gap:10px;padding:11px 2px;border-bottom:1px solid var(--line)}
-.res .main{flex:1;display:flex;justify-content:space-between;align-items:center;gap:10px;text-align:left;padding:4px 0}
-.res b{font-weight:600;font-size:17px}
-.res.no b{text-decoration:line-through;color:var(--ink-dim)}
-.res.gone b{opacity:0.4}
-.res em{font-style:normal;font-size:13px;color:var(--ink-dim);white-space:nowrap}
-.kill{width:40px;height:40px;border-radius:12px;border:1px solid var(--line);
-  background:rgba(255,255,255,0.05);font-size:16px;line-height:1;color:var(--ink-dim);flex:none}
+/* results */
+.scoreCard{border-radius:24px;padding:20px;margin-bottom:14px;position:relative;overflow:hidden;
+  background:linear-gradient(125deg,var(--acc-1),var(--acc-2) 70%,var(--acc-3));
+  box-shadow:0 16px 34px -18px rgba(124,92,255,0.9)}
+.scoreCard .big{font-size:80px;font-weight:800;letter-spacing:-0.05em;line-height:0.95;color:#fff}
+.scoreCard .cap{font-size:14px;font-weight:650;color:rgba(255,255,255,0.85);margin-top:4px}
+.scoreCard .deckTag{position:absolute;top:18px;right:18px;font-size:12px;font-weight:700;
+  background:rgba(0,0,0,0.22);border-radius:999px;padding:6px 12px}
+.res{display:flex;align-items:center;gap:10px;padding:9px 2px;border-bottom:1px solid var(--line)}
+.res .main{flex:1;display:flex;justify-content:space-between;align-items:center;gap:10px;text-align:left;padding:5px 0}
+.res b{font-weight:650;font-size:16.5px}
+.res.no b{text-decoration:line-through;color:var(--ink-faint)}
+.res.gone b{opacity:0.35}
+.res em{font-style:normal;font-size:12.5px;color:var(--ink-faint);white-space:nowrap;font-weight:600}
+.kill{width:40px;height:40px;border-radius:13px;border:1px solid var(--line);
+  background:var(--surface);font-size:15px;line-height:1;color:var(--ink-faint);flex:none}
 .kill.on{background:#C0392B;border-color:#C0392B;color:#fff}
-.pill{font-size:13px;border:1px solid var(--line);border-radius:999px;padding:5px 12px;color:var(--ink-dim);font-weight:600}
-.stat{background:rgba(255,255,255,0.07);border-radius:14px;padding:12px 14px;margin-bottom:8px;text-align:left}
-.stat span{display:block;font-size:13px;color:var(--ink-dim)}
-.big{font-size:76px;font-weight:800;letter-spacing:-0.04em;line-height:1;
-  background:linear-gradient(135deg,#FFD166,#FF8A5B);-webkit-background-clip:text;background-clip:text;color:transparent}
-.warn{background:#4A3410;border:1px solid #7A5A18;border-radius:14px;padding:12px 14px;font-size:14px;margin-bottom:12px}
+.pill{font-size:13px;border:1px solid var(--line);border-radius:999px;padding:6px 13px;color:var(--ink-dim);font-weight:650}
+
+/* install sheet */
+#home.pushed{padding-bottom:190px}
+#toast{position:fixed;left:12px;right:12px;bottom:calc(14px + env(safe-area-inset-bottom));
+  z-index:22;background:rgba(24,27,48,0.96);backdrop-filter:blur(14px);
+  border:1px solid var(--line-2);border-radius:16px;padding:13px 15px;display:none;
+  align-items:center;gap:12px;font-size:14px;box-shadow:0 14px 34px rgba(0,0,0,0.55);animation:in .2s ease}
+#toast span{flex:1;color:var(--ink-dim)}
+#toast button{font-weight:800;color:var(--acc-3);font-size:14px;padding:4px 2px}
+#install{position:fixed;left:12px;right:12px;bottom:calc(12px + env(safe-area-inset-bottom));
+  z-index:20;background:rgba(24,27,48,0.92);backdrop-filter:blur(18px);
+  border:1px solid var(--line-2);border-radius:24px;padding:18px;display:none;
+  box-shadow:0 20px 50px rgba(0,0,0,0.6);animation:in .3s ease}
+#install b{display:block;font-size:17px;font-weight:800;letter-spacing:-0.02em}
+#install p{font-size:13.5px;color:var(--ink-dim);margin-top:4px;line-height:1.45}
+#install .row{display:flex;gap:9px;margin-top:14px}
+#install button{flex:1;padding:13px;border-radius:15px;font-weight:750;font-size:15px}
+#install .go{background:linear-gradient(115deg,var(--acc-1),var(--acc-2));color:#fff}
+#install .no{background:var(--surface);color:var(--ink-dim);border:1px solid var(--line)}
 </style>
 </head>
 <body>
 
+<div id="install">
+  <b id="installTitle">Add Tilt to your home screen</b>
+  <p id="installText">It runs fullscreen, works offline, and the tilt sensor behaves better.</p>
+  <div class="row">
+    <button class="no" onclick="dismissInstall()">Not now</button>
+    <button class="go" id="installGo" onclick="doInstall()">Install</button>
+  </div>
+</div>
+
 <!-- HOME -->
 <section id="home" class="screen on">
-  <div style="padding-top:9vh">
+  <div class="hero">
+    <div class="mark"><i></i><span class="eyebrow">Party game</span></div>
     <h1>Tilt</h1>
-    <p class="sub" style="margin-top:8px;font-size:17px">Phone on your forehead.<br>They talk, you guess.</p>
+    <p>Phone on your forehead. They talk, you guess.</p>
   </div>
   <div class="spacer"></div>
   <button class="btn primary" onclick="go('decks')">Play</button>
@@ -110,12 +213,12 @@ button{font-family:inherit;font-size:17px;color:var(--ink);background:none;borde
 
 <!-- HOW -->
 <section id="how" class="screen">
-  <button class="back" onclick="go('home')">Back</button>
+  <button class="back" onclick="go('home')"><span>‹</span> Back</button>
   <h2>How it works</h2>
   <p class="sub" style="margin:12px 0 18px">One player holds the phone against their forehead, screen facing everyone else. The others describe the word without saying it. The holder guesses.</p>
   <div class="stat"><span>Guessed it</span>Tilt the screen down toward the floor</div>
   <div class="stat"><span>Give up</span>Tilt the screen up toward the ceiling</div>
-  <div class="stat"><span>No sensor, or sensor misbehaving</span>Swipe down for correct, swipe up to pass. Or tap the right half for correct, left half to pass.</div>
+  <div class="stat"><span>Prefer not to tilt?</span>Pick Swipe or Tap on the deck screen — good for playing seated, passing the phone around, or when the sensor is unreliable.</div>
   <div class="stat"><span>Struck-through words</span>Banned. Say one and the card is burnt.</div>
   <div class="stat"><span>Nobody knew that word</span>Hit the ✕ next to it after the round. It never comes back.</div>
   <div class="spacer"></div>
@@ -124,7 +227,7 @@ button{font-family:inherit;font-size:17px;color:var(--ink);background:none;borde
 
 <!-- REMOVED WORDS -->
 <section id="removed" class="screen">
-  <button class="back" onclick="go('home')">Back</button>
+  <button class="back" onclick="go('home')"><span>‹</span> Back</button>
   <h2>Removed words</h2>
   <p class="sub" style="margin:8px 0 14px" id="removedNote">Nothing removed yet.</p>
   <button class="btn" id="restoreAll" style="display:none;text-align:center" onclick="restoreAll()">Bring all of them back</button>
@@ -133,7 +236,7 @@ button{font-family:inherit;font-size:17px;color:var(--ink);background:none;borde
 
 <!-- DIAGNOSTICS -->
 <section id="diag" class="screen">
-  <button class="back" onclick="go('home')">Back</button>
+  <button class="back" onclick="go('home')"><span>‹</span> Back</button>
   <h2>Sensor check</h2>
   <p class="sub" style="margin:8px 0 14px">Move the phone around while this is open.</p>
   <div id="verdict" class="warn" style="display:none"></div>
@@ -143,19 +246,22 @@ button{font-family:inherit;font-size:17px;color:var(--ink);background:none;borde
 
 <!-- DECKS -->
 <section id="decks" class="screen">
-  <button class="back" onclick="go('home')">Back</button>
-  <h2>Decks</h2>
-  <input id="deckSearch" class="search" placeholder="Search decks" oninput="buildDecks()" autocomplete="off">
-  <div class="chips">
-    <button class="chip" id="etChip" onclick="toggleEstonian()">Eesti keel</button>
-    <span class="chip" id="deckCount" style="pointer-events:none"></span>
+  <button class="back" onclick="go('home')"><span>‹</span> Back</button>
+  <div class="sticky">
+    <h2>Decks</h2>
+    <input id="deckSearch" class="search" placeholder="Search decks" oninput="buildDecks()" autocomplete="off">
+    <div class="chips" id="groupChips"></div>
+    <div class="chips">
+      <button class="chip" id="etChip" onclick="toggleEstonian()">Eesti keel</button>
+      <span class="chip" id="deckCount" style="pointer-events:none"></span>
+    </div>
   </div>
   <div id="deckGrid" class="grid"></div>
 </section>
 
 <!-- PRE-ROUND -->
 <section id="pre" class="screen">
-  <button class="back" onclick="go('decks')">Back</button>
+  <button class="back" onclick="go('decks')"><span>‹</span> Back</button>
   <div class="spacer"></div>
   <div style="text-align:center">
     <div id="preIcon" style="font-size:56px">🎬</div>
@@ -166,11 +272,18 @@ button{font-family:inherit;font-size:17px;color:var(--ink);background:none;borde
   <div class="stat" style="text-align:center"><span>Tilt down or swipe down</span>Correct</div>
   <div class="stat" style="text-align:center"><span>Tilt up or swipe up</span>Pass</div>
   <p class="sub" id="sensorRead" style="margin-top:10px;font-size:14px;text-align:center">Checking sensor…</p>
+  <div id="tiltHelp" class="help" style="display:none">
+    <b>Tilt not doing anything?</b>
+    Play with <b style="display:inline">swipes</b> instead — swipe down on the screen for correct, up to pass. Tapping works too: right half correct, left half pass.<br><br>
+    If tilt should be working: raise <u onclick="cycleSens()">Sensitivity</u>, or hit <u onclick="toggleInvert()">Swap tilt direction</u> if it fires backwards. Still nothing? Open <u onclick="openDiag()">Sensor check</u>.
+  </div>
   <div id="permWrap" style="display:none;margin-top:10px">
-    <button class="btn" style="text-align:center" onclick="askMotion()">Allow motion access</button>
+    <button class="btn ghost" onclick="askMotion()">Allow motion access</button>
   </div>
   <div class="spacer"></div>
-  <p class="sub" style="font-size:13px;margin-bottom:6px">Clue rule</p>
+  <p class="eyebrow" style="margin-bottom:7px">How to answer &mdash; use either, or both</p>
+  <div class="chips" id="inputChips"></div>
+  <p class="eyebrow" style="margin:10px 0 7px">Clue rule</p>
   <div class="chips" id="modeChips"></div>
   <div style="height:10px"></div>
   <button class="btn primary" onclick="startRound()">Start round</button>
@@ -188,26 +301,31 @@ button{font-family:inherit;font-size:17px;color:var(--ink);background:none;borde
 
 <!-- PLAY -->
 <section id="play" class="screen">
+  <button id="exit" onclick="quitRound()">✕</button>
   <div id="timer">0:60</div>
+  <div id="hintPass" class="edge">▲<br>pass</div>
+  <div id="hintOk" class="edge">▼<br>got it</div>
   <div id="word">Word</div>
   <div id="taboo"></div>
   <div id="modeTag"></div>
 </section>
 <div id="taps" style="display:none"><div id="tapPass"></div><div id="tapOk"></div></div>
 <div id="flash"></div>
+<div id="toast"><span id="toastText"></span><button id="toastBtn" onclick="undoToast()">Undo</button></div>
 
 <!-- RESULTS -->
 <section id="results" class="screen">
-  <div style="display:flex;justify-content:space-between;align-items:flex-end;gap:12px;margin-bottom:14px">
-    <div><div class="big" id="score">0</div><span class="sub" id="scoreNote">points</span></div>
-    <span class="pill" id="deckPill">Deck</span>
+  <div class="scoreCard">
+    <span class="deckTag" id="deckPill">Deck</span>
+    <div class="big" id="score">0</div>
+    <div class="cap" id="scoreNote">points</div>
   </div>
-  <div id="stats"></div>
+  <div class="statRow" id="stats"></div>
   <p class="sub" style="margin:14px 0 2px;font-size:14px">Tap a word to change the verdict. Tap ✕ to never see it again.</p>
   <div id="cardList"></div>
   <div style="height:16px"></div>
   <button class="btn primary" onclick="startRound()">Same deck, again</button>
-  <button class="btn" style="text-align:center" onclick="go('decks')">Different deck</button>
+  <button class="btn ghost" onclick="go('decks')">Different deck</button>
 </section>
 
 <script src="decks.js"></script>
@@ -263,16 +381,49 @@ const MODES = [
    STATE
 =============================================================== */
 const ROUND_MS = 60000, WILDCARD_EVERY = 12;
-let TRIGGER = 38; const RELEASE = 16, LOCKOUT = 650, ALPHA = 0.18;
-const SENS = [{n:'Low',v:50},{n:'Medium',v:38},{n:'High',v:28}];
+let TRIGGER = 26; const RELEASE = 12, LOCKOUT = 650, ALPHA = 0.22;
+const SENS = [{n:'Low',v:38},{n:'Medium',v:26},{n:'High',v:16}];
 let sensIdx = 1;
+let lastFireMs = 0, recoverSince = 0;
 
 let deck = null, mode = MODES[0], invert = false;
+let tiltOn  = store('tilt_useTilt')  !== '0';
+let touchOn = store('tilt_useTouch') !== '0';
+
+/* Tilt and touch are independent switches, not a choice between two modes.
+   Both on is the default: tilt for the holder, tapping for whoever grabs the
+   phone. At least one must stay on, so turning off the last one flips the other. */
+function setTilt(v){
+  tiltOn = v; if(!tiltOn && !touchOn) touchOn = true;
+  store('tilt_useTilt', tiltOn?'1':'0'); store('tilt_useTouch', touchOn?'1':'0');
+  buildInputChips();
+}
+function setTouch(v){
+  touchOn = v; if(!tiltOn && !touchOn) tiltOn = true;
+  store('tilt_useTilt', tiltOn?'1':'0'); store('tilt_useTouch', touchOn?'1':'0');
+  buildInputChips();
+}
+function buildInputChips(){
+  const w = document.getElementById('inputChips');
+  w.innerHTML = '';
+  const opts = [
+    {on:tiltOn,  label:'Tilt' + (tiltOn && !sensorLive() ? ' \u26A0' : ''), fn:()=>setTilt(!tiltOn)},
+    {on:touchOn, label:'Swipe & tap', fn:()=>setTouch(!touchOn)}
+  ];
+  opts.forEach(o=>{
+    const b=document.createElement('button');
+    b.className='chip'+(o.on?' on':'');
+    b.textContent=(o.on?'\u2713 ':'') + o.label;
+    b.onclick=o.fn;
+    w.appendChild(b);
+  });
+}
+function sensorLive(){ return sensorSeen && performance.now()-lastSensorMs < 1500; }
 let bag = [], recent = [], card = null, cardShownAt = 0;
 let log = [], score = 0, streak = 0;
 let roundEnd = 0, running = false, raf = 0;
 let pitch = 0, neutral = 0, tiltState = 'armed', firedAt = 0;
-let calibrating = false, calibSamples = [], sensorSeen = false;
+let calibrating = false, calibSamples = [], sensorSeen = false, lastLive = null;
 let audioCtx = null, wakeLock = null;
 
 /* ===============================================================
@@ -285,6 +436,39 @@ function go(id){
   document.body.style.background = (id==='play'||id==='ready') && deck ? deck.color : '';
   if(id!=='play'&&id!=='ready') stopRound(false);
   if(id==='home') refreshRemovedBtn();
+  currentScreen = id;
+}
+
+/* The phone back button (and browser back) abandons the round and returns
+   to the deck list rather than leaving the game. */
+let currentScreen = 'home';
+history.replaceState({s:'home'}, '');
+window.addEventListener('popstate', ()=>{
+  /* On home we let the back press through, so the browser can actually leave.
+     Anywhere else we swallow it and step back inside the game. */
+  if(currentScreen==='home') return;
+  history.pushState({s:currentScreen}, '');
+  if(currentScreen==='play' || currentScreen==='ready' || currentScreen==='results') quitRound(true);
+  else if(currentScreen==='pre') go('decks');
+  else go('home');
+});
+history.pushState({s:'home'}, '');
+
+let quitArmed = 0;
+function quitRound(confirmed){
+  /* One tap arms, a second within three seconds quits. The phone is on someone's
+     forehead; a single stray press should not bin the round. */
+  if(!confirmed && running && performance.now()-quitArmed > 3000){
+    quitArmed = performance.now();
+    showToast('Tap ✕ again to end the round');
+    return;
+  }
+  quitArmed = 0;
+  document.getElementById('toast').style.display='none';
+  running=false;
+  if(raf) cancelAnimationFrame(raf);
+  if(wakeLock){ try{ wakeLock.release(); }catch(e){} wakeLock=null; }
+  go('decks');
 }
 
 function lighten(hex, amt){
@@ -292,6 +476,35 @@ function lighten(hex, amt){
   return 'rgb('+Math.min(255,(n>>16)+amt)+','+Math.min(255,((n>>8)&255)+amt)+','+Math.min(255,(n&255)+amt)+')';
 }
 
+const GROUPS = [
+  {id:'all',    name:'All'},
+  {id:'music',  name:'Music',     ids:['music','singers','popstars','eurovision','instruments','dance']},
+  {id:'screen', name:'Screen',    ids:['movies','tv','games','characters','heroes','myth','retro','internet']},
+  {id:'food',   name:'Food',      ids:['food','drinks','desserts','fruitveg','cooking','restaurant','shop','smells']},
+  {id:'daily',  name:'Everyday',  ids:['house','essentials','chores','office','money','tools','jobs','school','body','doctor','gym','pocket','wedding','pets']},
+  {id:'world',  name:'World',     ids:['countries','cities','landmarks','travel','nature','weather','space','science','history','famous','animals','sealife','dinos','camping','cars']},
+  {id:'silly',  name:'Silly',     ids:['hard','undef','feel','party','badideas','noise','verbs','idioms','impressions','crime','luck']},
+  {id:'season', name:'Seasonal',  ids:['christmas','halloween','summer','winter']},
+  {id:'kids',   name:'Kids',      ids:['kids','toys','hobbies','sports','fashion','brands','companies','tech']}
+];
+let group = 'all';
+function setGroup(g){ group = g; buildDecks(); }
+function inGroup(d){
+  if(group==='all') return true;
+  const g = GROUPS.find(x=>x.id===group);
+  return g && g.ids && g.ids.indexOf(d.id) > -1;
+}
+function buildGroupChips(){
+  const w = document.getElementById('groupChips');
+  w.innerHTML='';
+  GROUPS.forEach(g=>{
+    const b=document.createElement('button');
+    b.className='chip'+(g.id===group?' on':'');
+    b.textContent=g.name;
+    b.onclick=()=>setGroup(g.id);
+    w.appendChild(b);
+  });
+}
 function buildDecks(){
   const q = (document.getElementById('deckSearch').value||'').trim().toLowerCase();
   const g = document.getElementById('deckGrid');
@@ -301,7 +514,7 @@ function buildDecks(){
   const totalCards = list.reduce((a,d)=>a+liveCards(d).length,0);
   document.getElementById('deckCount').textContent = list.length + ' decks · ' + totalCards + ' cards';
 
-  if(!q){
+  if(!q && group==='all'){
     const mix = mixedDeck();
     const t = document.createElement('button');
     t.className = 'tile wide';
@@ -311,7 +524,8 @@ function buildDecks(){
     t.onclick = ()=>pickDeck(mix);
     g.appendChild(t);
   }
-  list.filter(d=>!q || d.name.toLowerCase().includes(q)).forEach(d=>{
+  buildGroupChips();
+  list.filter(d=>(!q || d.name.toLowerCase().includes(q)) && (q?true:inGroup(d))).forEach(d=>{
     const b = document.createElement('button');
     b.className = 'tile';
     b.style.background = 'linear-gradient(150deg,'+lighten(d.color,22)+','+d.color+')';
@@ -337,6 +551,7 @@ function pickDeck(d){
   document.getElementById('preDeck').textContent = d.name;
   document.getElementById('preCount').textContent = liveCards(d).length + ' cards';
   buildModeChips();
+  buildInputChips();
   go('pre');
 }
 function buildModeChips(){
@@ -363,6 +578,21 @@ function cycleSens(){
 /* ===============================================================
    REMOVED WORDS
 =============================================================== */
+let toastUndo=null, toastTimer=null;
+function showToast(msg, undo){
+  const t=document.getElementById('toast');
+  document.getElementById('toastText').textContent=msg;
+  toastUndo=undo||null;
+  document.getElementById('toastBtn').style.display = undo ? 'block' : 'none';
+  t.style.display='flex';
+  clearTimeout(toastTimer);
+  toastTimer=setTimeout(()=>{ t.style.display='none'; toastUndo=null; }, 4000);
+}
+function undoToast(){
+  if(toastUndo) toastUndo();
+  document.getElementById('toast').style.display='none';
+  toastUndo=null;
+}
 function saveBanned(){ store('tilt_banned', Array.from(banned).join('\n')); }
 function banWord(t){ banned.add(t); saveBanned(); }
 function unbanWord(t){ banned.delete(t); saveBanned(); }
@@ -436,8 +666,11 @@ setInterval(()=>{
   const live = sensorSeen && performance.now()-lastSensorMs < 1000;
   if(document.getElementById('pre').classList.contains('on')){
     const el=document.getElementById('sensorRead');
-    el.textContent = live ? ('Tilt ready · '+Math.round(pitch)+'°') : 'No motion sensor — swipe instead';
+    el.textContent = live ? ('Tilt ready · '+Math.round(pitch)+'°') : 'No motion sensor detected';
     el.style.color = live ? 'var(--ink-dim)' : '#F3B34A';
+    document.getElementById('tiltHelp').style.display =
+      (!live && tiltOn) ? 'block' : 'none';
+    if(live !== lastLive){ lastLive = live; buildInputChips(); }
     const needsPerm = !live && typeof DeviceMotionEvent!=='undefined' &&
                       typeof DeviceMotionEvent.requestPermission==='function';
     document.getElementById('permWrap').style.display = needsPerm ? 'block' : 'none';
@@ -477,16 +710,22 @@ function renderDiag(){
 }
 
 function tiltCheck(now){
-  if(!sensorSeen) return null;
+  if(!sensorSeen || !tiltOn) return null;
   let d = pitch - neutral;
   if(invert) d = -d;
   if(tiltState==='armed'){
-    if(d <= -TRIGGER){ tiltState='fired'; firedAt=now; return 'ok'; }
-    if(d >= TRIGGER){ tiltState='fired'; firedAt=now; return 'pass'; }
+    /* Drift the baseline toward however the holder is actually holding it.
+       Without this, a neutral captured at the wrong angle locks the game up. */
+    if(Math.abs(d) < RELEASE) neutral += 0.02*(pitch - neutral);
+    if(d <= -TRIGGER){ tiltState='fired'; firedAt=now; lastFireMs=now; return 'ok'; }
+    if(d >= TRIGGER){ tiltState='fired'; firedAt=now; lastFireMs=now; return 'pass'; }
   } else if(tiltState==='fired'){
-    if(now-firedAt >= LOCKOUT) tiltState='recovering';
+    if(now-firedAt >= LOCKOUT){ tiltState='recovering'; recoverSince=now; }
   } else if(tiltState==='recovering'){
-    if(Math.abs(d) <= RELEASE) tiltState='armed';
+    if(Math.abs(d) <= RELEASE){ tiltState='armed'; }
+    /* Safety valve: if the phone never returns to the old neutral band,
+       adopt wherever it is now as neutral rather than staying dead. */
+    else if(now-recoverSince > 1800){ neutral = pitch; tiltState='armed'; }
   }
   return null;
 }
@@ -518,19 +757,37 @@ function flash(kind){
 /* ===============================================================
    CARDS
 =============================================================== */
+/* Words served recently, kept across rounds and sessions so the same
+   cards do not keep coming back at the top of every new bag. */
+let seenHistory = (store('tilt_history') || '').split('\n').filter(Boolean);
+const HISTORY_MAX = 400;
+function remember(t){
+  const i = seenHistory.indexOf(t);
+  if(i > -1) seenHistory.splice(i,1);
+  seenHistory.push(t);
+  if(seenHistory.length > HISTORY_MAX) seenHistory = seenHistory.slice(-HISTORY_MAX);
+  store('tilt_history', seenHistory.join('\n'));
+}
+
 function refillBag(){
-  bag = liveCards(deck).slice();
-  if(!bag.length) bag = deck.cards.slice();     // everything banned: fall back
-  for(let i=bag.length-1;i>0;i--){ const j=Math.random()*(i+1)|0; [bag[i],bag[j]]=[bag[j],bag[i]]; }
-  const avoid = recent.slice(-Math.min(12, Math.floor(bag.length/3)));
-  let guard=0;
-  while(avoid.includes(bag[0].t) && guard++<25){ bag.push(bag.shift()); }
+  let pool = liveCards(deck).slice();
+  if(!pool.length) pool = deck.cards.slice();
+  for(let i=pool.length-1;i>0;i--){ const j=Math.random()*(i+1)|0; [pool[i],pool[j]]=[pool[j],pool[i]]; }
+  /* Fresh cards first, then the least recently seen ones. Within each group the
+     order stays random, so a deck does not play back in a fixed sequence. */
+  const fresh = pool.filter(c=>seenHistory.indexOf(c.t) === -1);
+  const stale = pool.filter(c=>seenHistory.indexOf(c.t) > -1)
+                    .sort((a,b)=>seenHistory.indexOf(a.t) - seenHistory.indexOf(b.t));
+  bag = fresh.concat(stale);
+  if(recent.length && bag.length>1 && bag[0].t===recent[recent.length-1]) bag.push(bag.shift());
 }
 function nextCard(){
   do{ if(!bag.length) refillBag(); card = bag.shift(); }
   while(card && isBanned(card) && bag.length);
+  if(card && isBanned(card)){ refillBag(); card = bag.shift(); }
   card.wild = (Math.random()*WILDCARD_EVERY|0)===0;
   recent.push(card.t);
+  remember(card.t);
   cardShownAt = performance.now();
 
   const wordEl=document.getElementById('word'), tabEl=document.getElementById('taboo');
@@ -541,7 +798,17 @@ function nextCard(){
   wordEl.style.color=ink; tabEl.style.color=ink;
   document.getElementById('timer').style.color=ink;
   document.getElementById('modeTag').style.color=ink;
-  document.getElementById('modeTag').textContent = card.wild ? mode.name+' · double points' : mode.name;
+  /* Hints describe whatever is switched on right now: touch instructions when
+     touch is on, and a warning if tilt is on but the sensor is silent. */
+  const tiltDead = tiltOn && !sensorLive();
+  const hp=document.getElementById('hintPass'), ho=document.getElementById('hintOk');
+  hp.style.display = ho.style.display = (touchOn || tiltDead) ? 'block' : 'none';
+  hp.innerHTML = touchOn ? '\u25B2<br>swipe up<br>or tap left<br>pass' : '\u25B2<br>tilt up<br>pass';
+  ho.innerHTML = touchOn ? '\u25BC<br>swipe down<br>or tap right<br>got it' : '\u25BC<br>tilt down<br>got it';
+  hp.style.color = ho.style.color = ink;
+  document.getElementById('modeTag').textContent =
+    (card.wild ? mode.name+' \u00B7 double points' : mode.name) +
+    (tiltDead ? '  \u00B7  no tilt signal' : '');
   fitText();
 }
 function fitText(){
@@ -566,27 +833,29 @@ function startRound(){
   document.body.style.background = deck.color;
   go('ready');
   calibrating=true; calibSamples=[];
-  document.getElementById('count').textContent='•';
-  document.getElementById('readyNote').textContent = sensorSeen
-    ? 'Hold the phone still against your forehead'
-    : 'Swipe down for correct, up to pass';
-  setTimeout(()=>{
-    calibrating=false;
-    neutral = calibSamples.length
-      ? calibSamples.slice(-30).reduce((a,b)=>a+b,0)/Math.min(30,calibSamples.length) : 0;
-    tiltState='recovering';
-    countdown(3);
-  },1200);
+  document.getElementById('readyNote').textContent =
+    (tiltOn && sensorLive()) ? 'Phone on your forehead now'
+    : touchOn ? 'Swipe down or tap right for correct \u00B7 up or left to pass'
+    : 'No tilt detected — turn on Swipe & tap';
+  countdown(3);
 }
 function countdown(n){
   document.getElementById('count').textContent = n>0?n:'Go';
-  document.getElementById('readyNote').textContent='';
   beep(n>0?520:760, n>0?90:160);
-  if(n<0){ beginPlay(); return; }
+  if(n<0){
+    /* Baseline is taken here, at the end of the countdown, because by now the
+       phone is where it will actually be played — not where it was on the menu. */
+    calibrating=false;
+    const tail = calibSamples.slice(-25);
+    neutral = tail.length ? tail.reduce((a,b)=>a+b,0)/tail.length : pitch;
+    tiltState='armed';
+    beginPlay();
+    return;
+  }
   setTimeout(()=>countdown(n-1),700);
 }
 async function beginPlay(){
-  running=true;
+  running=true; loop.lastTick=null;
   roundEnd = performance.now()+ROUND_MS;
   try{ if('wakeLock' in navigator) wakeLock = await navigator.wakeLock.request('screen'); }catch(e){}
   go('play'); nextCard(); loop();
@@ -620,6 +889,11 @@ function resolve(correct){
   log.push({t:card.t, ok:!!correct, ms, wild:card.wild});
   nextCard();
 }
+document.addEventListener('visibilitychange', async ()=>{
+  if(document.visibilityState==='visible' && running && !wakeLock){
+    try{ if('wakeLock' in navigator) wakeLock = await navigator.wakeLock.request('screen'); }catch(e){}
+  }
+});
 function stopRound(showResults){
   running=false;
   if(raf) cancelAnimationFrame(raf);
@@ -640,11 +914,11 @@ function renderResults(){
   const stats=document.getElementById('stats'); stats.innerHTML='';
   if(got.length){
     const fast=got.reduce((a,b)=>a.ms<b.ms?a:b);
-    stats.innerHTML += '<div class="stat"><span>Fastest guess</span>'+fast.t+' — '+(fast.ms/1000).toFixed(1)+'s</div>';
+    stats.innerHTML += '<div class="stat"><span>Fastest</span>'+fast.t+'<br><em style="font-style:normal;color:var(--ink-faint);font-size:13px">'+(fast.ms/1000).toFixed(1)+'s</em></div>';
   }
   if(done.length){
     const hard=done.reduce((a,b)=>a.ms>b.ms?a:b);
-    stats.innerHTML += '<div class="stat"><span>Hardest card</span>'+hard.t+' — '+(hard.ms/1000).toFixed(1)+'s</div>';
+    stats.innerHTML += '<div class="stat"><span>Hardest</span>'+hard.t+'<br><em style="font-style:normal;color:var(--ink-faint);font-size:13px">'+(hard.ms/1000).toFixed(1)+'s</em></div>';
   }
 
   const list=document.getElementById('cardList'); list.innerHTML='';
@@ -669,7 +943,11 @@ function renderResults(){
     kill.title = 'Never show this word again';
     kill.onclick=(e)=>{
       e.stopPropagation();
-      if(banned.has(c.t)) unbanWord(c.t); else banWord(c.t);
+      if(banned.has(c.t)){ unbanWord(c.t); }
+      else {
+        banWord(c.t);
+        showToast('Removed "'+c.t+'"', ()=>{ unbanWord(c.t); renderResults(); });
+      }
       renderResults();
     };
 
@@ -686,21 +964,62 @@ const tapsEl=document.getElementById('taps');
 let touchY=null, touchT=0, moved=false;
 tapsEl.addEventListener('touchstart', e=>{ touchY=e.touches[0].clientY; touchT=performance.now(); moved=false; },{passive:true});
 tapsEl.addEventListener('touchmove', e=>{
-  if(touchY===null || !running) return;
+  if(touchY===null || !running || !touchOn) return;
   const dy=e.touches[0].clientY-touchY;
   if(Math.abs(dy)>70 && performance.now()-touchT<700){ moved=true; touchY=null; resolve(dy>0); }
 },{passive:true});
 tapsEl.addEventListener('touchend', ()=>{ touchY=null; setTimeout(()=>{moved=false;},50); },{passive:true});
-document.getElementById('tapOk').addEventListener('click', ()=>{ if(running&&!moved) resolve(true); });
-document.getElementById('tapPass').addEventListener('click', ()=>{ if(running&&!moved) resolve(false); });
+document.getElementById('tapOk').addEventListener('click', ()=>{ if(running&&!moved&&touchOn) resolve(true); });
+document.getElementById('tapPass').addEventListener('click', ()=>{ if(running&&!moved&&touchOn) resolve(false); });
 window.addEventListener('keydown', e=>{
   if(!running) return;
   if(e.key==='ArrowDown'||e.key===' '){ e.preventDefault(); resolve(true); }
   if(e.key==='ArrowUp'){ e.preventDefault(); resolve(false); }
 });
 
+/* ===============================================================
+   INSTALL PROMPT
+=============================================================== */
+let deferredPrompt = null;
+const installEl = document.getElementById('install');
+const standalone = window.matchMedia('(display-mode: standalone)').matches ||
+                   window.navigator.standalone === true;
+const isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent);
+
+function showInstall(iosMode){
+  if(standalone || store('tilt_noinstall')==='1') return;
+  if(iosMode){
+    document.getElementById('installText').innerHTML =
+      'Tap <b style="display:inline">Share</b> in the browser bar, then <b style="display:inline">Add to Home Screen</b>. It runs fullscreen and the tilt sensor behaves better.';
+    document.getElementById('installGo').textContent = 'Got it';
+    document.getElementById('installGo').onclick = dismissInstall;
+  }
+  installEl.style.display='block';
+  document.getElementById('home').classList.add('pushed');
+}
+window.addEventListener('beforeinstallprompt', e=>{
+  e.preventDefault();
+  deferredPrompt = e;
+  setTimeout(()=>showInstall(false), 1200);
+});
+if(isIOS) setTimeout(()=>showInstall(true), 1500);
+
+function doInstall(){
+  if(!deferredPrompt){ dismissInstall(); return; }
+  installEl.style.display='none';
+  document.getElementById('home').classList.remove('pushed');
+  deferredPrompt.prompt();
+  deferredPrompt.userChoice.finally(()=>{ deferredPrompt=null; });
+}
+function dismissInstall(){
+  installEl.style.display='none';
+  document.getElementById('home').classList.remove('pushed');
+  store('tilt_noinstall','1');
+}
+
 buildDecks();
 buildModeChips();
+buildInputChips();
 refreshRemovedBtn();
 </script>
 </body>
