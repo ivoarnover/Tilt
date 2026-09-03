@@ -1,4 +1,4 @@
-# Tilt — release 2026-09-01.3
+# Tilt — release 2026-09-03.3
 
 ## The whole app is nine files
 
@@ -36,7 +36,7 @@ Optional and irrelevant to the running site: `.gitlab-ci.yml` (only for GitLab),
 The home screen now prints a line at the bottom:
 
 ```
-v2026-09-01.3 · 87 decks · 3276 cards
+v2026-09-03.3 · 87 decks · 3276 cards
 ```
 
 Three things to check against it:
@@ -83,6 +83,21 @@ they make the list harder to read:
 - `icon-1.svg` — a duplicate GitHub created when `icon.svg` was uploaded twice
 
 ## What changed in this release
+
+**2026-09-03.3**
+- Settings rows (round length, sound, tilt) could collapse to a sliver on the How to
+  play screen — same squash as the scorecard. Chip rows are now unshrinkable everywhere.
+- "How to play" is now "Settings & how to play", with the settings at the top.
+
+**2026-09-03.2**
+- Fixed the score card being squashed on the scorecard when the card list was long.
+  Screen contents no longer shrink to fit; the screen scrolls instead.
+
+**2026-09-03.1**
+- Score during the round is now 30px with a PTS label, top right; the timer matches it
+  top left with a LEFT label. Category sits beneath them.
+- The ✕ during play is gone. To end a round early, press back twice — the first press
+  explains itself, the second quits.
 
 **2026-09-01.3**
 - All mixed is first on the deck screen again, with Start here beneath it

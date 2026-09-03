@@ -107,7 +107,8 @@ button{font-family:inherit;font-size:16px;color:var(--ink);background:none;borde
 .search::placeholder{color:var(--ink-faint)}
 .search:focus{outline:none;border-color:var(--line-2);background:var(--surface-2)}
 
-.chips{display:flex;gap:8px;overflow-x:auto;padding:2px 0 6px;flex-wrap:nowrap;scrollbar-width:none}
+.chips{display:flex;gap:8px;overflow-x:auto;padding:2px 0 6px;flex-wrap:nowrap;scrollbar-width:none;
+  flex-shrink:0;min-height:52px}
 .chips::-webkit-scrollbar{display:none}
 .chip{white-space:nowrap;min-height:44px;display:inline-flex;align-items:center;padding:0 16px;border-radius:999px;border:1px solid var(--line);
   background:var(--surface);font-size:14px;font-weight:650;color:var(--ink-dim);transition:all .14s ease}
@@ -241,7 +242,7 @@ button{font-family:inherit;font-size:16px;color:var(--ink);background:none;borde
   <button class="btn primary" onclick="quickPlay()">Quick round</button>
   <button class="btn" onclick="openParty()">Party mode<small>Teams, turns and a running scoreboard</small></button>
   <div class="links">
-    <button onclick="go('how')">How to play</button>
+    <button onclick="go('how')">Settings &amp; how to play</button>
     <button onclick="openRemoved()" id="removedBtn">Removed words</button>
     <button onclick="openDiag()">Sensor check</button>
     <button id="installEntry" onclick="askInstall()">Install</button>
@@ -252,15 +253,9 @@ button{font-family:inherit;font-size:16px;color:var(--ink);background:none;borde
 <!-- HOW -->
 <section id="how" class="screen">
   <button class="back" onclick="go('home')"><span>‹</span> Back</button>
-  <h2>How to play</h2>
-  <p class="sub" style="margin:12px 0 18px">One player holds the phone against their forehead, screen facing everyone else. The others describe the word without saying it. The holder guesses.</p>
-  <div class="stat"><span>Guessed it</span>Tilt the screen down toward the floor</div>
-  <div class="stat"><span>Give up</span>Tilt the screen up toward the ceiling</div>
-  <div class="stat"><span>Prefer not to tilt?</span>Pick Swipe or Tap on the deck screen — good for playing seated, passing the phone around, or when the sensor is unreliable.</div>
-  <div class="stat"><span>Struck-through words</span>Banned. Say one and the card is burnt.</div>
-  <div class="stat"><span>Nobody knew that word</span>Hit the ✕ next to it after the round. It never comes back.</div>
-  <div class="stat"><span>Ending a round early</span>Press your phone\u2019s back button twice.</div>
-  <p class="eyebrow" style="margin:16px 0 7px">Round length</p>
+  <h2>Settings</h2>
+  <div style="height:10px"></div>
+  <p class="eyebrow" style="margin:0 0 7px">Round length</p>
   <div class="chips" id="lenChips"></div>
   <p class="eyebrow" style="margin:12px 0 7px">Card screen</p>
   <div class="chips">
@@ -277,6 +272,15 @@ button{font-family:inherit;font-size:16px;color:var(--ink);background:none;borde
     <button class="chip" onclick="cycleSens()" id="sensBtn">Sensitivity: Medium</button>
     <button class="chip" onclick="toggleInvert()" id="invBtn">Swap tilt direction</button>
   </div>
+
+  <h2 style="margin-top:26px">How to play</h2>
+  <p class="sub" style="margin:10px 0 14px">One player holds the phone against their forehead, screen facing everyone else. The others describe the word without saying it. The holder guesses.</p>
+  <div class="stat"><span>Guessed it</span>Tilt the screen down toward the floor</div>
+  <div class="stat"><span>Give up</span>Tilt the screen up toward the ceiling</div>
+  <div class="stat"><span>Prefer not to tilt?</span>Pick Swipe or Tap on the deck screen — good for playing seated, passing the phone around, or when the sensor is unreliable.</div>
+  <div class="stat"><span>Struck-through words</span>Banned. Say one and the card is burnt.</div>
+  <div class="stat"><span>Nobody knew that word</span>Hit the ✕ next to it after the round. It never comes back.</div>
+  <div class="stat"><span>Ending a round early</span>Press your phone\u2019s back button twice.</div>
   <div class="spacer"></div>
   <button class="btn primary" onclick="go('decks')">Pick a deck</button>
 </section>
@@ -458,9 +462,9 @@ button{font-family:inherit;font-size:16px;color:var(--ink);background:none;borde
 </section>
 
 <div id="mismatch"></div>
-<script src="decks.js?v=2026-09-03.2"></script>
+<script src="decks.js?v=2026-09-03.3"></script>
 <script>
-const APP_VERSION = '2026-09-03.2';
+const APP_VERSION = '2026-09-03.3';
 
 /* Wipes the service-worker caches and reloads bypassing the HTTP cache.
    Declared before the version check so the banner can call it. */
