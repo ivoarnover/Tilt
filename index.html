@@ -47,6 +47,7 @@ body{
   padding:max(14px,env(safe-area-inset-top)) max(18px,env(safe-area-inset-left)) max(18px,env(safe-area-inset-bottom)) max(18px,env(safe-area-inset-right));
   overflow-y:auto;-webkit-overflow-scrolling:touch}
 .screen.on{display:flex;animation:in .22s ease}
+.screen>*{flex-shrink:0}
 @keyframes in{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
 
 h1{font-size:52px;font-weight:800;letter-spacing:-0.045em;line-height:0.98}
@@ -142,16 +143,17 @@ button{font-family:inherit;font-size:16px;color:var(--ink);background:none;borde
   text-shadow:0 2px 20px rgba(0,0,0,0.22)}
 #taboo{font-size:15px;margin-top:16px;opacity:0.7;text-decoration:line-through;
   letter-spacing:0.05em;padding:0 8%;position:relative;font-weight:600}
-#timer{position:absolute;top:calc(10px + env(safe-area-inset-top));left:0;right:0;text-align:center;
-  font-size:17px;font-weight:800;opacity:0.7;font-variant-numeric:tabular-nums;z-index:2;letter-spacing:0}
-#deckTag{position:absolute;top:calc(34px + env(safe-area-inset-top));left:0;right:0;
+#deckTag{position:absolute;top:calc(54px + env(safe-area-inset-top));left:0;right:0;
   text-align:center;font-size:13px;font-weight:700;opacity:0.6;z-index:2;
   letter-spacing:0.07em;text-transform:uppercase}
-#liveScore{position:absolute;top:calc(6px + env(safe-area-inset-top));right:16px;
-  font-size:17px;font-weight:800;opacity:0.72;z-index:2;font-variant-numeric:tabular-nums}
+#liveScore{position:absolute;top:calc(6px + env(safe-area-inset-top));right:18px;
+  font-size:30px;font-weight:800;line-height:1;opacity:0.92;z-index:2;font-variant-numeric:tabular-nums;
+  text-align:right}
+#liveScore small{display:block;font-size:11px;font-weight:700;letter-spacing:0.12em;opacity:0.75;margin-top:1px}
+#timer{position:absolute;top:calc(8px + env(safe-area-inset-top));left:18px;right:auto;text-align:left;
+  font-size:30px;font-weight:800;line-height:1;opacity:0.92;font-variant-numeric:tabular-nums;z-index:2;letter-spacing:0}
+#timer small{display:block;font-size:11px;font-weight:700;letter-spacing:0.12em;opacity:0.75;margin-top:1px}
 
-#exit{position:absolute;top:calc(4px + env(safe-area-inset-top));left:6px;z-index:6;
-  width:52px;height:52px;font-size:19px;opacity:0.5;font-weight:700}
 .edge{position:absolute;z-index:3;font-size:12px;font-weight:800;line-height:1.3;
   text-align:center;opacity:0.42;letter-spacing:0.03em;display:none;text-transform:uppercase}
 #hintPass{left:12px;top:50%;transform:translateY(-50%)}
@@ -257,6 +259,7 @@ button{font-family:inherit;font-size:16px;color:var(--ink);background:none;borde
   <div class="stat"><span>Prefer not to tilt?</span>Pick Swipe or Tap on the deck screen — good for playing seated, passing the phone around, or when the sensor is unreliable.</div>
   <div class="stat"><span>Struck-through words</span>Banned. Say one and the card is burnt.</div>
   <div class="stat"><span>Nobody knew that word</span>Hit the ✕ next to it after the round. It never comes back.</div>
+  <div class="stat"><span>Ending a round early</span>Press your phone\u2019s back button twice.</div>
   <p class="eyebrow" style="margin:16px 0 7px">Round length</p>
   <div class="chips" id="lenChips"></div>
   <p class="eyebrow" style="margin:12px 0 7px">Card screen</p>
@@ -422,9 +425,8 @@ button{font-family:inherit;font-size:16px;color:var(--ink);background:none;borde
 
 <!-- PLAY -->
 <section id="play" class="screen">
-  <button id="exit" onclick="quitRound()">✕</button>
-  <div id="timer">0:60</div>
-  <div id="liveScore">0</div>
+  <div id="timer">1:00<small>LEFT</small></div>
+  <div id="liveScore">0<small>PTS</small></div>
   <div id="deckTag"></div>
   <div id="hintPass" class="edge">▲<br>pass</div>
   <div id="hintOk" class="edge">▼<br>got it</div>
@@ -456,9 +458,9 @@ button{font-family:inherit;font-size:16px;color:var(--ink);background:none;borde
 </section>
 
 <div id="mismatch"></div>
-<script src="decks.js?v=2026-09-01.3"></script>
+<script src="decks.js?v=2026-09-03.2"></script>
 <script>
-const APP_VERSION = '2026-09-01.3';
+const APP_VERSION = '2026-09-03.2';
 
 /* Wipes the service-worker caches and reloads bypassing the HTTP cache.
    Declared before the version check so the banner can call it. */
@@ -640,7 +642,8 @@ window.addEventListener('popstate', ()=>{
      Anywhere else we swallow it and step back inside the game. */
   if(currentScreen==='home') return;
   history.pushState({s:currentScreen}, '');
-  if(currentScreen==='play' || currentScreen==='ready' || currentScreen==='results') quitRound(true);
+  if(currentScreen==='play') quitRound();                       // arm, then confirm
+  else if(currentScreen==='ready' || currentScreen==='results') quitRound(true);
   else if(currentScreen==='pre') go('decks');
   else go('home');
 });
@@ -652,7 +655,7 @@ function quitRound(confirmed){
      forehead; a single stray press should not bin the round. */
   if(!confirmed && running && (quitArmed===null || performance.now()-quitArmed > 3000)){
     quitArmed = performance.now();
-    showToast('Tap ✕ again to end the round');
+    showToast('Press back again to end the round');
     return;
   }
   quitArmed = null;
@@ -1368,7 +1371,7 @@ function paintCard(){
      deck the room already knows, and the card screen stays bare. */
   const ls=document.getElementById('liveScore');
   ls.style.color = ink;
-  ls.textContent = score;
+  ls.innerHTML = score + '<small>PTS</small>';
   /* On a mix this is the card's own deck; on a single deck it is that deck. */
   const dt=document.getElementById('deckTag');
   const showRule = mode.id!=='normal' && performance.now()-roundStartedAt < 8000;
@@ -1452,7 +1455,7 @@ async function beginPlay(){
 function loop(){
   if(!running) return;
   const now=performance.now(), left=Math.max(0,roundEnd-now), s=Math.ceil(left/1000);
-  document.getElementById('timer').textContent=Math.floor(s/60)+':'+((s%60)<10?'0':'')+(s%60);
+  document.getElementById('timer').innerHTML=Math.floor(s/60)+':'+((s%60)<10?'0':'')+(s%60)+'<small>LEFT</small>';
   if(left<=0){ resolve(null); return; }
   if(left<=5000 && s!==loop.lastTick){ loop.lastTick=s; beep(880,60,'square'); }
   /* The card on screen when five seconds remain becomes the gamble: worth 3, or minus 1
@@ -1496,7 +1499,7 @@ function resolve(correct){
   log.push({t:card.t, ok:!!correct, ms, wild:card.wild, gamble:card.gamble});
   if(challenge){ endChallenge(!!correct, ms); return; }
   nextCard();
-  document.getElementById('liveScore').textContent = score;
+  document.getElementById('liveScore').innerHTML = score + '<small>PTS</small>';
 }
 document.addEventListener('visibilitychange', async ()=>{
   if(document.visibilityState==='visible' && running && !wakeLock){
