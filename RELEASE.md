@@ -1,4 +1,4 @@
-# Tilt — release 2026-08-29.2
+# Tilt — release 2026-09-01.3
 
 ## The whole app is nine files
 
@@ -9,7 +9,7 @@ have version numbers now precisely because that is hard to track by hand.
 
 ```
 index.html        the game: screens, tilt detection, scoring, party mode
-decks.js          all deck content — 78 decks
+decks.js          all deck content — 87 decks
 sw.js             service worker: offline play, and required for the install prompt
 manifest.json     app metadata for installing to the home screen
 icon.svg          icon, vector
@@ -36,7 +36,7 @@ Optional and irrelevant to the running site: `.gitlab-ci.yml` (only for GitLab),
 The home screen now prints a line at the bottom:
 
 ```
-v2026-08-29.2 · 78 decks · 3032 cards
+v2026-09-01.3 · 87 decks · 3276 cards
 ```
 
 Three things to check against it:
@@ -83,6 +83,71 @@ they make the list harder to read:
 - `icon-1.svg` — a duplicate GitHub created when `icon.svg` was uploaded twice
 
 ## What changed in this release
+
+**2026-09-01.3**
+- All mixed is first on the deck screen again, with Start here beneath it
+- Bright room mode (How to play → Card screen): dark text on a pale card for daylight
+- Relay rounds in party mode (More options): 90 seconds, "PASS IT" at 60 and 30
+- Hardest card is tappable on the scorecard: one card, fifteen seconds, whole room clues.
+  Scores and totals are untouched
+- Party setup remembers the last game's result
+- 21 new flow tests
+
+Not done, and why: emoji icons and a bundled typeface are the two visual items left from
+the audits. Both need assets produced outside this file — a drawn icon set, and a font file
+that cannot be fetched from here. They are the right next visual step and they are not a
+code change.
+
+**2026-09-01.2**
+- Last-card gamble: the card on screen at five seconds turns gold — 3 points if guessed,
+  minus 1 on a pass, never below zero. One per round.
+- Steals in party mode: the scorecard has +/− per other team; stolen points are added when
+  the round is saved
+- End-of-round beat: the score fills the screen for 1.6 s before the scorecard
+- "Start here" row of four proven decks for the first five visits, then it retires
+- Teaser lines on twenty decks, replacing the bare card count on the tile
+- Banned-words explainer on the pre-round screen, shown once
+- Party setup halved: decks, clue rules and steals moved under "More options"
+- "Kids" group renamed "More"
+- 18 new flow tests
+
+**2026-09-01.1**
+- Settings on the How to play screen: sound, vibration, round length (30/60/90 s)
+- Countdown is 3 s for the first round, 1 s after that
+- Clue rule shows next to the category for the first 8 s of a non-normal round
+- One wildcard per round, placed between the 4th and 10th card, instead of dice on every card
+- Party mode: "Same deck as last turn" shortcut on the scoreboard
+- Banned words written for 343 cards across Animals, Food, Jobs, Sports, Countries,
+  Kitchen and Around the house — coverage from 0.4% to 10.9%, and at least 80% in
+  each of those decks (tested)
+- Root traps fixed: Dance renamed Moves, Christmas/Space/School/Wedding cards renamed
+- British-only vocabulary removed from the English decks (tested)
+- Nine new decks: Tiny victories, Tiny tragedies, Excuses & white lies, Things people
+  argue about, Ha ha ha, Things you say to a dog, At grandma's house, First world
+  problems, Sounds you can make
+- New content tests: root-trap ratio, banned-word coverage, regional vocabulary
+
+**2026-08-29.5**
+- Category is back on the card screen, on every round
+- Swipe/tap hints retire after three rounds, unless tilt is not responding
+- Party screens audited: 11 new flow cases covering back paths, live score,
+  removing words mid-session, quitting, and reload survival
+- Chips and home links raised to 44px tap targets
+- Accent gradients behind white text darkened; white on the old amber measured
+  1.77:1 on the winner card and the primary button
+
+**2026-08-29.4**
+- Quick play keeps a running total across rounds, shown on the scorecard
+- Scorecard buttons now say what they do to that total: next round same deck,
+  next round change deck, or start over
+
+**2026-08-29.3**
+- Live score on the card screen, top right
+- Removed the clue-rule label and the category label from the card screen
+- Home screen cut from six buttons to two, with the rest as a quiet link row
+- "Removed words" only appears once you have removed something
+- Tilt sensitivity and direction moved to How to play
+- The tilt instructions on the pre-round screen retire after three rounds
 
 **2026-08-29.2**
 - `decks.js` is now requested as `decks.js?v=<version>`. Without this, Chrome

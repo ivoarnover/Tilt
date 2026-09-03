@@ -22,6 +22,10 @@
   --acc-1:#7C5CFF;
   --acc-2:#FF5C93;
   --acc-3:#FFB443;
+  /* text-safe variants: white on these clears 4.5:1 */
+  --on-1:#6B45E8;
+  --on-2:#CC1F5C;
+  --on-3:#9C5207;
   --ok:#2FA36B; --pass:#C25C1C;
   --font:"Inter","Figtree",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
   --r:20px;
@@ -58,11 +62,13 @@ button{font-family:inherit;font-size:16px;color:var(--ink);background:none;borde
 .btn:active{transform:scale(0.985);background:var(--surface-2)}
 .btn small{display:block;color:var(--ink-dim);font-weight:450;font-size:13.5px;margin-top:2px;letter-spacing:0}
 .btn.primary{
-  background:linear-gradient(115deg,var(--acc-1),var(--acc-2) 62%,var(--acc-3));
+  background:linear-gradient(115deg,var(--on-1),var(--on-2) 62%,var(--on-3));
   color:#fff;border:none;text-align:center;font-weight:800;font-size:18px;padding:19px;
   box-shadow:0 10px 26px -8px rgba(124,92,255,0.75)}
 .btn.primary:active{transform:scale(0.985)}
 .btn.ghost{text-align:center;font-weight:650;background:transparent;border-color:var(--line-2)}
+.links{display:flex;flex-wrap:wrap;justify-content:center;gap:4px 18px;margin-top:14px}
+.links button{font-size:14px;font-weight:600;color:var(--ink-dim);min-height:44px;padding:0 4px}
 .back{color:var(--ink-dim);font-size:15px;font-weight:650;text-align:left;width:auto;
   padding:6px 0 10px;display:flex;align-items:center;gap:6px}
 
@@ -102,9 +108,9 @@ button{font-family:inherit;font-size:16px;color:var(--ink);background:none;borde
 
 .chips{display:flex;gap:8px;overflow-x:auto;padding:2px 0 6px;flex-wrap:nowrap;scrollbar-width:none}
 .chips::-webkit-scrollbar{display:none}
-.chip{white-space:nowrap;padding:10px 15px;border-radius:999px;border:1px solid var(--line);
+.chip{white-space:nowrap;min-height:44px;display:inline-flex;align-items:center;padding:0 16px;border-radius:999px;border:1px solid var(--line);
   background:var(--surface);font-size:14px;font-weight:650;color:var(--ink-dim);transition:all .14s ease}
-.chip.on{background:linear-gradient(115deg,var(--acc-1),var(--acc-2));color:#fff;border-color:transparent;
+.chip.on{background:linear-gradient(115deg,var(--on-1),var(--on-2));color:#fff;border-color:transparent;
   box-shadow:0 6px 16px -8px rgba(124,92,255,0.9)}
 .chip:active{transform:scale(0.96)}
 
@@ -126,6 +132,8 @@ button{font-family:inherit;font-size:16px;color:var(--ink);background:none;borde
 #play{padding:0;justify-content:center;align-items:center;text-align:center}
 #play::before{content:"";position:absolute;inset:0;pointer-events:none;
   background:rgba(0,0,0,0.30)}
+#play.bright::before,#play.bright::after{background:none}
+#play.bright #word{text-shadow:none}
 #play::after{content:"";position:absolute;inset:0;pointer-events:none;
   background:radial-gradient(120% 85% at 50% 15%,rgba(255,255,255,0.09),rgba(0,0,0,0.16) 80%)}
 #cardImg{display:none;position:relative;max-width:78%;max-height:44vh;object-fit:contain;
@@ -137,10 +145,11 @@ button{font-family:inherit;font-size:16px;color:var(--ink);background:none;borde
 #timer{position:absolute;top:calc(10px + env(safe-area-inset-top));left:0;right:0;text-align:center;
   font-size:17px;font-weight:800;opacity:0.7;font-variant-numeric:tabular-nums;z-index:2;letter-spacing:0}
 #deckTag{position:absolute;top:calc(34px + env(safe-area-inset-top));left:0;right:0;
-  text-align:center;font-size:13px;font-weight:700;opacity:0.62;z-index:2;
-  letter-spacing:0.06em;text-transform:uppercase}
-#modeTag{position:absolute;bottom:calc(10px + env(safe-area-inset-bottom));left:0;right:0;text-align:center;
-  font-size:12px;font-weight:650;opacity:0.55;z-index:2;letter-spacing:0.04em}
+  text-align:center;font-size:13px;font-weight:700;opacity:0.6;z-index:2;
+  letter-spacing:0.07em;text-transform:uppercase}
+#liveScore{position:absolute;top:calc(6px + env(safe-area-inset-top));right:16px;
+  font-size:17px;font-weight:800;opacity:0.72;z-index:2;font-variant-numeric:tabular-nums}
+
 #exit{position:absolute;top:calc(4px + env(safe-area-inset-top));left:6px;z-index:6;
   width:52px;height:52px;font-size:19px;opacity:0.5;font-weight:700}
 .edge{position:absolute;z-index:3;font-size:12px;font-weight:800;line-height:1.3;
@@ -157,7 +166,7 @@ button{font-family:inherit;font-size:16px;color:var(--ink);background:none;borde
 
 /* results */
 .scoreCard{border-radius:24px;padding:20px;margin-bottom:14px;position:relative;overflow:hidden;
-  background:linear-gradient(125deg,var(--acc-1),var(--acc-2) 70%,var(--acc-3));
+  background:linear-gradient(125deg,var(--on-1),var(--on-2) 70%,var(--on-3));
   box-shadow:0 16px 34px -18px rgba(124,92,255,0.9)}
 .scoreCard .big{font-size:80px;font-weight:800;letter-spacing:-0.05em;line-height:0.95;color:#fff}
 .scoreCard .cap{font-size:14px;font-weight:650;color:rgba(255,255,255,0.85);margin-top:4px}
@@ -187,7 +196,7 @@ button{font-family:inherit;font-size:16px;color:var(--ink);background:none;borde
 #selBar .info{flex:1;font-size:14px;font-weight:650;line-height:1.25}
 #selBar .info em{display:block;font-style:normal;font-size:12px;color:var(--ink-dim);font-weight:500}
 #selBar button{padding:12px 16px;border-radius:14px;font-weight:800;font-size:15px;flex:none}
-#selBar .play{background:linear-gradient(115deg,var(--acc-1),var(--acc-2));color:#fff}
+#selBar .play{background:linear-gradient(115deg,var(--on-1),var(--on-2));color:#fff}
 #selBar .clear{background:var(--surface);color:var(--ink-dim);border:1px solid var(--line)}
 #decks.selecting{padding-bottom:96px}
 #toast{position:fixed;left:12px;right:12px;bottom:calc(14px + env(safe-area-inset-bottom));
@@ -204,7 +213,7 @@ button{font-family:inherit;font-size:16px;color:var(--ink);background:none;borde
 #install p{font-size:13.5px;color:var(--ink-dim);margin-top:4px;line-height:1.45}
 #install .row{display:flex;gap:9px;margin-top:14px}
 #install button{flex:1;padding:13px;border-radius:15px;font-weight:750;font-size:15px}
-#install .go{background:linear-gradient(115deg,var(--acc-1),var(--acc-2));color:#fff}
+#install .go{background:linear-gradient(115deg,var(--on-1),var(--on-2));color:#fff}
 #install .no{background:var(--surface);color:var(--ink-dim);border:1px solid var(--line)}
 </style>
 </head>
@@ -228,24 +237,43 @@ button{font-family:inherit;font-size:16px;color:var(--ink);background:none;borde
   </div>
   <div class="spacer"></div>
   <button class="btn primary" onclick="quickPlay()">Quick round</button>
-  <button class="btn" onclick="openParty()">Party mode<small>Teams or pass the phone, with a running scoreboard</small></button>
-  <button class="btn" onclick="go('how')">How it works<small>Read this once before the first round</small></button>
-  <button class="btn" onclick="openRemoved()" id="removedBtn">Removed words<small>Words you told the game to stop showing</small></button>
-  <button class="btn" onclick="openDiag()">Sensor check<small>Run this if tilt does nothing</small></button>
-  <button class="btn" id="installEntry" onclick="askInstall()">Install as an app<small>Fullscreen, offline, no browser bar</small></button>
+  <button class="btn" onclick="openParty()">Party mode<small>Teams, turns and a running scoreboard</small></button>
+  <div class="links">
+    <button onclick="go('how')">How to play</button>
+    <button onclick="openRemoved()" id="removedBtn">Removed words</button>
+    <button onclick="openDiag()">Sensor check</button>
+    <button id="installEntry" onclick="askInstall()">Install</button>
+  </div>
   <p class="sub" id="verLine" style="text-align:center;font-size:12px;margin-top:8px">—</p>
 </section>
 
 <!-- HOW -->
 <section id="how" class="screen">
   <button class="back" onclick="go('home')"><span>‹</span> Back</button>
-  <h2>How it works</h2>
+  <h2>How to play</h2>
   <p class="sub" style="margin:12px 0 18px">One player holds the phone against their forehead, screen facing everyone else. The others describe the word without saying it. The holder guesses.</p>
   <div class="stat"><span>Guessed it</span>Tilt the screen down toward the floor</div>
   <div class="stat"><span>Give up</span>Tilt the screen up toward the ceiling</div>
   <div class="stat"><span>Prefer not to tilt?</span>Pick Swipe or Tap on the deck screen — good for playing seated, passing the phone around, or when the sensor is unreliable.</div>
   <div class="stat"><span>Struck-through words</span>Banned. Say one and the card is burnt.</div>
   <div class="stat"><span>Nobody knew that word</span>Hit the ✕ next to it after the round. It never comes back.</div>
+  <p class="eyebrow" style="margin:16px 0 7px">Round length</p>
+  <div class="chips" id="lenChips"></div>
+  <p class="eyebrow" style="margin:12px 0 7px">Card screen</p>
+  <div class="chips">
+    <button class="chip" id="brightBtn" onclick="toggleBright()">Bright room</button>
+  </div>
+  <p class="sub" style="font-size:13px;margin-top:4px">Dark text on a pale card. Easier to read outdoors or in daylight.</p>
+  <p class="eyebrow" style="margin:12px 0 7px">Sound &amp; vibration</p>
+  <div class="chips">
+    <button class="chip" id="soundBtn" onclick="toggleSound()">Sound</button>
+    <button class="chip" id="hapticBtn" onclick="toggleHaptics()">Vibration</button>
+  </div>
+  <p class="eyebrow" style="margin:12px 0 7px">Tilt</p>
+  <div class="chips">
+    <button class="chip" onclick="cycleSens()" id="sensBtn">Sensitivity: Medium</button>
+    <button class="chip" onclick="toggleInvert()" id="invBtn">Swap tilt direction</button>
+  </div>
   <div class="spacer"></div>
   <button class="btn primary" onclick="go('decks')">Pick a deck</button>
 </section>
@@ -273,7 +301,7 @@ button{font-family:inherit;font-size:16px;color:var(--ink);background:none;borde
 <section id="party" class="screen">
   <button class="back" onclick="go('home')"><span>‹</span> Back</button>
   <h2>Party mode</h2>
-  <p class="sub" style="margin:6px 0 14px">Everyone takes a turn. The app keeps score and tells you who is next.</p>
+  <p class="sub" id="lastGame" style="font-size:13px;margin:4px 0 10px;display:none"></p>
 
   <p class="eyebrow" style="margin-bottom:7px">Playing as</p>
   <div class="chips" id="partyKind"></div>
@@ -287,14 +315,20 @@ button{font-family:inherit;font-size:16px;color:var(--ink);background:none;borde
   <p class="eyebrow" style="margin:12px 0 7px">Names</p>
   <div id="partyNames"></div>
 
-  <p class="eyebrow" style="margin:12px 0 7px">Decks</p>
-  <div class="chips" id="partyDeck"></div>
-
-  <p class="eyebrow" style="margin:12px 0 7px">Clue rules</p>
-  <div class="chips" id="partyMods"></div>
-
-  <div style="height:18px"></div>
+  <div style="height:14px"></div>
   <button class="btn primary" onclick="startParty()">Start the game</button>
+  <button class="btn ghost" id="moreOpts" onclick="toggleMoreOpts()" style="border:none;color:var(--ink-dim)">More options</button>
+  <div id="partyMore" style="display:none">
+    <p class="eyebrow" style="margin:6px 0 7px">Decks</p>
+    <div class="chips" id="partyDeck"></div>
+    <p class="eyebrow" style="margin:12px 0 7px">Clue rules</p>
+    <div class="chips" id="partyMods"></div>
+    <p class="eyebrow" style="margin:12px 0 7px">Relay</p>
+    <div class="chips" id="partyRelay"></div>
+    <p class="sub" style="font-size:13px">A 90-second round where the phone changes foreheads every 30 seconds without stopping the clock. One score for the whole team.</p>
+    <p class="eyebrow" style="margin:12px 0 7px">Steals</p>
+    <p class="sub" style="font-size:13px">If a team passes and another team shouts the answer, that team gets the point. Add steals on the scorecard.</p>
+  </div>
 </section>
 
 <!-- SCOREBOARD -->
@@ -306,6 +340,7 @@ button{font-family:inherit;font-size:16px;color:var(--ink);background:none;borde
   <div class="spacer"></div>
   <div class="stat" style="text-align:center" id="nextUp"><span>Next up</span>—</div>
   <button class="btn primary" onclick="startTurn()" id="turnBtn">Start the round</button>
+  <button class="btn ghost" id="sameDeckBtn" style="display:none" onclick="startTurnSameDeck()">Same deck as last turn</button>
 </section>
 
 <!-- FINAL -->
@@ -355,8 +390,12 @@ button{font-family:inherit;font-size:16px;color:var(--ink);background:none;borde
     <p class="sub" id="preCount" style="margin-top:4px">0 cards</p>
   </div>
   <div style="height:22px"></div>
-  <div class="stat" style="text-align:center"><span>Tilt down or swipe down</span>Correct</div>
-  <div class="stat" style="text-align:center"><span>Tilt up or swipe up</span>Pass</div>
+  <div id="tiltHowto">
+    <div class="stat" style="text-align:center"><span>Tilt down or swipe down</span>Correct</div>
+    <div class="stat" style="text-align:center"><span>Tilt up or swipe up</span>Pass</div>
+  </div>
+  <div id="tabooNote" class="help" style="display:none;text-align:center"><b>This deck has banned words</b>
+    Words struck through under the answer are off limits. Say one and the card is skipped.</div>
   <p class="sub" id="sensorRead" style="margin-top:10px;font-size:14px;text-align:center">Checking sensor…</p>
   <div id="tiltHelp" class="help" style="display:none">
     <b>Tilt not doing anything?</b>
@@ -373,10 +412,6 @@ button{font-family:inherit;font-size:16px;color:var(--ink);background:none;borde
   <div class="chips" id="modeChips"></div>
   <div style="height:10px"></div>
   <button class="btn primary" onclick="startRound()">Start round</button>
-  <div class="chips">
-    <button class="chip" onclick="cycleSens()" id="sensBtn">Sensitivity: Medium</button>
-    <button class="chip" onclick="toggleInvert()" id="invBtn">Swap tilt direction</button>
-  </div>
 </section>
 
 <!-- COUNTDOWN -->
@@ -389,13 +424,13 @@ button{font-family:inherit;font-size:16px;color:var(--ink);background:none;borde
 <section id="play" class="screen">
   <button id="exit" onclick="quitRound()">✕</button>
   <div id="timer">0:60</div>
+  <div id="liveScore">0</div>
   <div id="deckTag"></div>
   <div id="hintPass" class="edge">▲<br>pass</div>
   <div id="hintOk" class="edge">▼<br>got it</div>
   <img id="cardImg" alt="">
   <div id="word">Word</div>
   <div id="taboo"></div>
-  <div id="modeTag"></div>
 </section>
 <div id="taps" style="display:none"><div id="tapPass"></div><div id="tapOk"></div></div>
 <div id="flash"></div>
@@ -408,19 +443,22 @@ button{font-family:inherit;font-size:16px;color:var(--ink);background:none;borde
     <span class="deckTag" id="deckPill">Deck</span>
     <div class="big" id="score">0</div>
     <div class="cap" id="scoreNote">points</div>
+    <div class="cap" id="runningTotal" style="margin-top:8px;font-weight:800"></div>
   </div>
   <div class="statRow" id="stats"></div>
+  <div id="steals" style="display:none"></div>
   <p class="sub" style="margin:14px 0 2px;font-size:14px">Tap a word to change the verdict. Tap ✕ to never see it again.</p>
   <div id="cardList"></div>
   <div style="height:16px"></div>
   <button class="btn primary" id="resPrimary" onclick="startRound()">Same deck, again</button>
   <button class="btn ghost" id="resSecondary" onclick="go('decks')">Different deck</button>
+  <button class="btn ghost" id="resThird" style="border:none;color:var(--ink-dim)" onclick="startOver()">Back to the decks</button>
 </section>
 
 <div id="mismatch"></div>
-<script src="decks.js?v=2026-08-29.2"></script>
+<script src="decks.js?v=2026-09-01.3"></script>
 <script>
-const APP_VERSION = '2026-08-29.2';
+const APP_VERSION = '2026-09-01.3';
 
 /* Wipes the service-worker caches and reloads bypassing the HTTP cache.
    Declared before the version check so the banner can call it. */
@@ -504,13 +542,42 @@ const MODES = [
 /* ===============================================================
    STATE
 =============================================================== */
-const ROUND_MS = 60000, WILDCARD_EVERY = 12;
+let ROUND_MS = +(store('tilt_len')||60000);
+let soundOn = store('tilt_sound') !== '0';
+let brightOn = store('tilt_bright') === '1';
+function toggleBright(){ brightOn=!brightOn; store('tilt_bright', brightOn?'1':'0'); paintToggles(); }
+let hapticsOn = store('tilt_haptics') !== '0';
+const LENGTHS = [30000, 60000, 90000];
+function setLength(ms){ ROUND_MS = ms; store('tilt_len', String(ms)); buildLenChips(); }
+function buildLenChips(){
+  const w=document.getElementById('lenChips'); if(!w) return; w.innerHTML='';
+  LENGTHS.forEach(ms=>{
+    const b=document.createElement('button');
+    b.className='chip'+(ms===ROUND_MS?' on':''); b.textContent=(ms/1000)+' s';
+    b.onclick=()=>setLength(ms); w.appendChild(b);
+  });
+}
+function toggleSound(){ soundOn=!soundOn; store('tilt_sound', soundOn?'1':'0'); paintToggles(); }
+function toggleHaptics(){ hapticsOn=!hapticsOn; store('tilt_haptics', hapticsOn?'1':'0'); paintToggles(); }
+function paintToggles(){
+  const sb=document.getElementById('soundBtn'), hb=document.getElementById('hapticBtn');
+  const bb=document.getElementById('brightBtn');
+  if(bb){ bb.className='chip'+(brightOn?' on':''); bb.textContent=(brightOn?'\u2713 ':'')+'Bright room'; }
+  if(sb){ sb.className='chip'+(soundOn?' on':''); sb.textContent=(soundOn?'\u2713 ':'')+'Sound'; }
+  if(hb){ hb.className='chip'+(hapticsOn?' on':''); hb.textContent=(hapticsOn?'\u2713 ':'')+'Vibration'; }
+}
 let TRIGGER = 26; const RELEASE = 12, LOCKOUT = 650, ALPHA = 0.22;
 const SENS = [{n:'Low',v:38},{n:'Medium',v:26},{n:'High',v:16}];
 let sensIdx = 1;
 let lastFireMs = 0, recoverSince = 0;
 
 let deck = null, mode = MODES[0], invert = false;
+/* Quick play keeps a running total across rounds until you start over.
+   Banked holds finished rounds only; the round in progress is added on commit. */
+let quickTotal = 0, quickRounds = 0;
+let wildAt = -1, cardIndex = 0, gambleArmed = false;
+let relayRound = false, relayFlashed = {};
+const GAMBLE_WIN = 3, GAMBLE_LOSS = 1;
 let tiltOn  = store('tilt_useTilt')  !== '0';
 let touchOn = store('tilt_useTouch') !== '0';
 
@@ -613,9 +680,9 @@ const GROUPS = [
   {id:'food',   name:'Food',      ids:['food','drinks','desserts','fruitveg','cooking','restaurant','shop','smells']},
   {id:'daily',  name:'Everyday',  ids:['house','essentials','chores','office','money','tools','jobs','school','body','doctor','gym','pocket','wedding','pets']},
   {id:'world',  name:'World',     ids:['countries','cities','landmarks','travel','nature','weather','space','science','history','famous','animals','sealife','dinos','camping','cars']},
-  {id:'silly',  name:'Silly',     ids:['hard','undef','feel','party','badideas','noise','verbs','idioms','impressions','crime','luck']},
+  {id:'silly',  name:'Silly',     ids:['hard','undef','feel','party','badideas','noise','verbs','idioms','impressions','crime','luck','victories','tragedies','excuses','arguments','laughs','dogtalk','grandma','firstworld','bodynoise']},
   {id:'season', name:'Seasonal',  ids:['christmas','halloween','summer','winter']},
-  {id:'kids',   name:'Kids',      ids:['kids','toys','hobbies','sports','fashion','brands','companies','tech']}
+  {id:'kids',   name:'More',      ids:['kids','toys','hobbies','sports','fashion','brands','companies','tech']}
 ];
 let group = 'all';
 function setGroup(g){ group = g; buildDecks(); }
@@ -635,6 +702,29 @@ function buildGroupChips(){
     w.appendChild(b);
   });
 }
+const START_HERE = ['hard','undef','feel','party'];
+const TEASERS = {
+  hard:'Fine objects. Awful to describe out loud.',
+  undef:'Everyone knows what irony is. Nobody can say it.',
+  feel:'Sensations with no proper name.',
+  party:'Half the room will be nodding.',
+  noise:'Best played on Sound only.',
+  idioms:'Say it without saying it.',
+  smells:'Describe a smell. Go on.',
+  eurovision:'Douze points and wind machines.',
+  excuses:'Everyone has used at least ten.',
+  victories:'Small joys, loudly celebrated.',
+  tragedies:'Toast, butter side down.',
+  arguments:'Pineapple on pizza. Discuss.',
+  laughs:'Snort, wheeze, cackle.',
+  dogtalk:'Who is a good boy.',
+  grandma:'Sweets in a tin, plastic on the sofa.',
+  bodynoise:'No words needed. Or allowed.',
+  memes:'The internet, described by hand.',
+  impressions:'Do the voice.',
+  badideas:'We have all done at least one.',
+  verbs:'Act it, or explain it. Both are funny.'
+};
 let multi = false;
 let selected = new Set((store('tilt_sel')||'').split(',').filter(Boolean));
 
@@ -704,7 +794,8 @@ function buildDecks(){
   const totalCards = list.reduce((a,d)=>a+liveCards(d).length,0);
   document.getElementById('deckCount').textContent = list.length + ' decks · ' + totalCards + ' cards';
 
-  if(!q && group==='all' && !multi){
+  buildGroupChips();
+  const addMixTile = ()=>{
     const mix = mixedDeck();
     const t = document.createElement('button');
     t.className = 'tile wide';
@@ -713,9 +804,8 @@ function buildDecks(){
       liveCards(mix).length+' cards from every deck</span></div>';
     t.onclick = ()=>pickDeck(mix);
     g.appendChild(t);
-  }
-  buildGroupChips();
-  list.filter(d=>(!q || d.name.toLowerCase().includes(q)) && (q?true:inGroup(d))).forEach(d=>{
+  };
+  const tileFor = d=>{
     const b = document.createElement('button');
     b.className = 'tile';
     b.style.background = 'linear-gradient(150deg,'+lighten(d.color,22)+','+d.color+')';
@@ -723,7 +813,7 @@ function buildDecks(){
     if(isSel) b.className = 'tile sel';
     b.innerHTML = (isSel ? '<div class="tick">\u2713</div>' : '') +
       '<div class="ic">'+d.emoji+'</div><div><b>'+d.name+'</b><span>'+
-      liveCards(d).length+' cards</span></div>';
+      (TEASERS[d.id] || (liveCards(d).length+' cards'))+'</span></div>';
     b.onclick = multi ? (()=>toggleSelected(d.id)) : (()=>pickDeck(d));
     /* Long-press is the gesture people reach for when they want more than one.
        A resting finger still emits touchmove, so only real movement cancels it. */
@@ -750,8 +840,23 @@ function buildDecks(){
       if(Math.abs(p.clientX-sx) > MOVE_TOLERANCE || Math.abs(p.clientY-sy) > MOVE_TOLERANCE) cancel();
     }, {passive:true});
     b.addEventListener('contextmenu', e=>{ e.preventDefault(); });
-    g.appendChild(b);
-  });
+    return b;
+  };
+  const shown = list.filter(d=>(!q || d.name.toLowerCase().includes(q)) && (q?true:inGroup(d)));
+  const firstVisit = (+(store('tilt_rounds')||0)) < 6;
+  const showMix = !q && group==='all' && !multi;
+  if(showMix && firstVisit){
+    addMixTile();
+    const h=document.createElement('p'); h.className='eyebrow'; h.style.cssText='grid-column:1/-1;margin:6px 0 -2px';
+    h.textContent='Start here'; g.appendChild(h);
+    START_HERE.forEach(id=>{ const d=shown.find(x=>x.id===id); if(d) g.appendChild(tileFor(d)); });
+    const h2=document.createElement('p'); h2.className='eyebrow'; h2.style.cssText='grid-column:1/-1;margin:14px 0 -2px';
+    h2.textContent='All decks'; g.appendChild(h2);
+    shown.filter(d=>START_HERE.indexOf(d.id)<0).forEach(d=>g.appendChild(tileFor(d)));
+  } else {
+    if(showMix) addMixTile();
+    shown.forEach(d=>g.appendChild(tileFor(d)));
+  }
   if(!g.children.length){
     const p=document.createElement('p'); p.className='sub'; p.textContent='No deck by that name.';
     g.appendChild(p);
@@ -775,15 +880,30 @@ function toggleEstonian(){
   buildDecks();
 }
 
-function quickPlay(){ session=null; saveSession(); go('decks'); }
+function quickPlay(){ session=null; saveSession(); quickTotal=0; quickRounds=0; go('decks'); }
+function keepPlaying(sameDeck){
+  quickTotal += score; quickRounds += 1;
+  if(sameDeck) startRound(); else go('decks');
+}
+function startOver(){ quickTotal=0; quickRounds=0; go('decks'); }
 function pickDeck(d){
-  if(session && session.deckMode==='one' && !session.deckId) session.deckId = d.id;
+  if(session){
+    if(session.deckMode==='one' && !session.deckId) session.deckId = d.id;
+    session.lastDeckId = d.id; saveSession();
+  }
   deck = d; bag = []; recent = [];
   document.getElementById('preIcon').textContent = d.emoji;
   document.getElementById('preDeck').textContent = d.name;
-  document.getElementById('preCount').textContent = liveCards(d).length + ' cards';
+  document.getElementById('preCount').textContent =
+    (TEASERS[d.id] ? TEASERS[d.id] + ' \u00B7 ' : '') + liveCards(d).length + ' cards';
   buildModeChips();
   buildInputChips();
+  document.getElementById('tiltHowto').style.display =
+    (+(store('tilt_rounds')||0)) >= 3 ? 'none' : 'block';
+  const hasTaboo = d.cards.some(c=>c.x);
+  document.getElementById('tabooNote').style.display =
+    (hasTaboo && store('tilt_tabooSeen')!=='1') ? 'block' : 'none';
+  if(hasTaboo) store('tilt_tabooSeen','1');
   go('pre');
 }
 function buildModeChips(){
@@ -830,9 +950,10 @@ function banWord(t){ banned.add(t); saveBanned(); }
 function unbanWord(t){ banned.delete(t); saveBanned(); }
 function restoreAll(){ banned.clear(); saveBanned(); openRemoved(); }
 function refreshRemovedBtn(){
-  document.getElementById('removedBtn').innerHTML =
-    'Removed words<small>' + (banned.size ? banned.size + ' words will not come back' :
-    'Words you told the game to stop showing') + '</small>';
+  /* Only offer the list once there is something in it. */
+  const b = document.getElementById('removedBtn');
+  b.textContent = 'Removed words (' + banned.size + ')';
+  b.style.display = banned.size ? 'block' : 'none';
 }
 function openRemoved(){
   const list = document.getElementById('removedList');
@@ -857,7 +978,26 @@ function openRemoved(){
 =============================================================== */
 const MOD_LADDER = ['normal','normal','oneword','sound','alien','opp'];
 let session = null;
-let setup = { kind:'teams', count:2, roundsEach:3, deckMode:'each', mods:true, names:[] };
+let stealsThisRound = {};   // team index -> points stolen on the current scorecard
+function bumpSteal(i, delta){
+  stealsThisRound[i] = Math.max(0, (stealsThisRound[i]||0) + delta);
+  renderSteals();
+}
+function renderSteals(){
+  const w=document.getElementById('steals');
+  if(!session){ w.style.display='none'; return; }
+  w.style.display='block';
+  let html='<p class="eyebrow" style="margin:10px 0 6px">Steals \u00B7 a passed card guessed by another team</p>';
+  session.names.forEach((n,i)=>{
+    if(i===session.turn) return;
+    const v = stealsThisRound[i]||0;
+    html += '<div class="res"><div class="main"><b>'+n+'</b><em>'+v+(v===1?' steal':' steals')+'</em></div>'+
+      '<button class="kill" onclick="bumpSteal('+i+',-1)">\u2212</button>'+
+      '<button class="kill" onclick="bumpSteal('+i+',1)">+</button></div>';
+  });
+  w.innerHTML=html;
+}
+let setup = { kind:'teams', count:2, roundsEach:3, deckMode:'each', mods:true, relay:false, names:[] };
 
 function saveSession(){ store('tilt_session', session ? JSON.stringify(session) : ''); }
 function loadSession(){
@@ -871,7 +1011,19 @@ function defaultNames(){
   }
   return out;
 }
-function openParty(){ buildParty(); go('party'); }
+function openParty(){
+  buildParty();
+  const lg=document.getElementById('lastGame'), v=store('tilt_lastgame');
+  lg.style.display = v ? 'block' : 'none';
+  lg.textContent = v ? 'Last game: ' + v : '';
+  go('party');
+}
+function toggleMoreOpts(){
+  const m=document.getElementById('partyMore');
+  const on = m.style.display==='none';
+  m.style.display = on ? 'block' : 'none';
+  document.getElementById('moreOpts').textContent = on ? 'Fewer options' : 'More options';
+}
 
 function chipRow(el, opts, current, onPick){
   const w=document.getElementById(el); w.innerHTML='';
@@ -894,6 +1046,8 @@ function buildParty(){
     v=>{ setup.deckMode=v; buildParty(); });
   chipRow('partyMods',[{n:'Mix it up',v:true},{n:'Normal only',v:false}], setup.mods,
     v=>{ setup.mods=v; buildParty(); });
+  chipRow('partyRelay',[{n:'Off',v:false},{n:'Relay rounds',v:true}], setup.relay,
+    v=>{ setup.relay=v; buildParty(); });
 
   const wrap=document.getElementById('partyNames'); wrap.innerHTML='';
   defaultNames().forEach((n,i)=>{
@@ -909,7 +1063,7 @@ function startParty(){
   session = {
     kind:setup.kind, names, scores:names.map(()=>0),
     turn:0, played:0, total:names.length*setup.roundsEach,
-    deckMode:setup.deckMode, deckId:null, mods:setup.mods, lastRound:null
+    deckMode:setup.deckMode, deckId:null, mods:setup.mods, relay:setup.relay, lastRound:null
   };
   saveSession(); showBoard();
 }
@@ -946,6 +1100,11 @@ function showBoard(){
     (session.mods ? ' · ' + MODES.find(m=>m.id===MOD_LADDER[session.played % MOD_LADDER.length]).name : '');
   document.getElementById('turnBtn').textContent =
     'Start ' + session.names[session.turn] + '\u2019s round';
+  const again=document.getElementById('sameDeckBtn');
+  if(session.deckMode==='each' && session.lastDeckId && session.played < session.total){
+    again.style.display='block';
+    again.textContent='Same deck as last turn \u00B7 ' + deckById(session.lastDeckId).name;
+  } else again.style.display='none';
   go('board');
 }
 
@@ -962,6 +1121,14 @@ function startTurn(){
     go('decks');            // the picked deck starts the round
   }
 }
+function startTurnSameDeck(){
+  if(!session || !session.lastDeckId) return;
+  if(session.mods){
+    const want = MOD_LADDER[session.played % MOD_LADDER.length];
+    mode = MODES.find(m=>m.id===want) || MODES[0];
+  }
+  pickDeck(deckById(session.lastDeckId));
+}
 function deckById(id){
   if(!id || id==='mixed') return mixedDeck();
   if(id.indexOf('custom:')===0) return customDeck(id.slice(7).split(','));
@@ -972,6 +1139,8 @@ function deckById(id){
 function commitRound(points){
   if(!session) return;
   session.scores[session.turn] += points;
+  Object.keys(stealsThisRound).forEach(i=>{ session.scores[+i] += stealsThisRound[i]; });
+  stealsThisRound = {};
   session.played += 1;
   session.lastRound = session.names[session.turn] + ' scored ' + points;
   session.turn = (session.turn + 1) % session.names.length;
@@ -980,6 +1149,7 @@ function commitRound(points){
 }
 function showFinal(){
   const ranked = session.names.map((n,i)=>({n, s:session.scores[i]})).sort((a,b)=>b.s-a.s);
+  store('tilt_lastgame', ranked.map(r=>r.n+' '+r.s).join(' \u00B7 '));
   const top = ranked[0], tie = ranked.filter(r=>r.s===top.s);
   document.getElementById('winner').textContent =
     tie.length>1 ? 'A tie!' : top.n;
@@ -1111,6 +1281,7 @@ function tiltCheck(now){
    FEEDBACK
 =============================================================== */
 function beep(freq, ms, type){
+  if(!soundOn) return;
   try{
     audioCtx = audioCtx || new (window.AudioContext||window.webkitAudioContext)();
     const o=audioCtx.createOscillator(), g=audioCtx.createGain();
@@ -1122,7 +1293,7 @@ function beep(freq, ms, type){
     o.start(); o.stop(audioCtx.currentTime+ms/1000);
   }catch(e){}
 }
-function buzz(ms){ if(navigator.vibrate) navigator.vibrate(ms); }
+function buzz(ms){ if(hapticsOn && navigator.vibrate) navigator.vibrate(ms); }
 function flash(kind){
   const f=document.getElementById('flash');
   f.style.background = kind==='ok'?'var(--ok)':'var(--pass)';
@@ -1162,11 +1333,16 @@ function nextCard(){
   do{ if(!bag.length) refillBag(); card = bag.shift(); }
   while(card && isBanned(card) && bag.length);
   if(card && isBanned(card)){ refillBag(); card = bag.shift(); }
-  card.wild = (Math.random()*WILDCARD_EVERY|0)===0;
+  cardIndex++;
+  card.wild = (cardIndex === wildAt);
+  card.gamble = false;
   recent.push(card.t);
   remember(card.t);
   cardShownAt = performance.now();
 
+  paintCard();
+}
+function paintCard(){
   const wordEl=document.getElementById('word'), tabEl=document.getElementById('taboo');
   const imgEl=document.getElementById('cardImg');
   /* A picture card shows the image to the room; the holder still guesses the name.
@@ -1182,28 +1358,36 @@ function nextCard(){
   }
   wordEl.textContent = card.t;
   tabEl.textContent = card.x ? card.x.join(' · ') : '';
-  document.body.style.background = card.wild ? '#C9A227' : deck.color;
-  const ink = card.wild ? '#3A2E05' : '#FFFFFF';
+  const gold = card.wild || card.gamble;
+  document.body.style.background = gold ? '#C9A227' : (brightOn ? '#F4F1EA' : deck.color);
+  const ink = gold ? '#3A2E05' : (brightOn ? '#151515' : '#FFFFFF');
+  document.getElementById('play').classList.toggle('bright', brightOn && !gold);
   wordEl.style.color=ink; tabEl.style.color=ink;
   document.getElementById('timer').style.color=ink;
-  document.getElementById('modeTag').style.color=ink;
   /* Only worth showing when the card really could be from anywhere. On a single
      deck the room already knows, and the card screen stays bare. */
+  const ls=document.getElementById('liveScore');
+  ls.style.color = ink;
+  ls.textContent = score;
+  /* On a mix this is the card's own deck; on a single deck it is that deck. */
   const dt=document.getElementById('deckTag');
-  dt.textContent = card.src || '';
+  const showRule = mode.id!=='normal' && performance.now()-roundStartedAt < 8000;
+  dt.textContent = card.gamble ? 'LAST CARD \u00B7 3 POINTS OR \u22121'
+    : card.wild ? (card.src || deck.name) + '  \u00B7  DOUBLE POINTS'
+    : (card.src || deck.name) + (showRule ? '  \u00B7  ' + mode.name : '');
   dt.style.color = ink;
-  dt.style.display = card.src ? 'block' : 'none';
   /* Hints describe whatever is switched on right now: touch instructions when
      touch is on, and a warning if tilt is on but the sensor is silent. */
   const tiltDead = tiltOn && !sensorLive();
+  const learning = (+(store('tilt_rounds')||0)) <= 3;
   const hp=document.getElementById('hintPass'), ho=document.getElementById('hintOk');
-  hp.style.display = ho.style.display = (touchOn || tiltDead) ? 'block' : 'none';
+  /* Useful while you are learning, and whenever tilt is not responding.
+     After that they are clutter on a screen read from across a room. */
+  hp.style.display = ho.style.display = (tiltDead || (touchOn && learning)) ? 'block' : 'none';
   hp.innerHTML = touchOn ? '\u25B2<br>swipe up<br>or tap left<br>pass' : '\u25B2<br>tilt up<br>pass';
   ho.innerHTML = touchOn ? '\u25BC<br>swipe down<br>or tap right<br>got it' : '\u25BC<br>tilt down<br>got it';
   hp.style.color = ho.style.color = ink;
-  document.getElementById('modeTag').textContent =
-    (card.wild ? mode.name+' \u00B7 double points' : mode.name) +
-    (tiltDead ? '  \u00B7  no tilt signal' : '');
+
   fitText();
 }
 function fitText(){
@@ -1225,8 +1409,9 @@ window.addEventListener('resize', ()=>{ if(running) fitText(); });
 /* ===============================================================
    ROUND
 =============================================================== */
+let roundsThisVisit = 0;
 function startRound(){
-  log=[]; score=0; streak=0; bag=[]; recent=[];
+  log=[]; score=0; streak=0; bag=[]; recent=[]; stealsThisRound = {};
   document.body.style.background = deck.color;
   go('ready');
   calibrating=true; calibSamples=[];
@@ -1234,7 +1419,8 @@ function startRound(){
     (tiltOn && sensorLive()) ? 'Phone on your forehead now'
     : touchOn ? 'Swipe down or tap right for correct \u00B7 up or left to pass'
     : 'No tilt detected — turn on Swipe & tap';
-  countdown(3);
+  countdown(roundsThisVisit ? 1 : 3);
+  roundsThisVisit++;
 }
 function countdown(n){
   document.getElementById('count').textContent = n>0?n:'Go';
@@ -1251,18 +1437,40 @@ function countdown(n){
   }
   setTimeout(()=>countdown(n-1),700);
 }
+let roundStartedAt = 0;
 async function beginPlay(){
-  running=true; loop.lastTick=null;
-  roundEnd = performance.now()+ROUND_MS;
+  running=true; loop.lastTick=null; roundStartedAt = performance.now();
+  relayRound = !!(session && session.relay);
+  relayFlashed = {};
+  /* one wildcard per round, somewhere in the middle, rather than dice on every card */
+  wildAt = 4 + (Math.random()*6|0); cardIndex = 0; gambleArmed = false;
+  store('tilt_rounds', String((+(store('tilt_rounds')||0)) + 1));
+  roundEnd = performance.now() + (relayRound ? 90000 : ROUND_MS);
   try{ if('wakeLock' in navigator) wakeLock = await navigator.wakeLock.request('screen'); }catch(e){}
   go('play'); nextCard(); loop();
 }
 function loop(){
   if(!running) return;
   const now=performance.now(), left=Math.max(0,roundEnd-now), s=Math.ceil(left/1000);
-  document.getElementById('timer').textContent='0:'+(s<10?'0':'')+s;
+  document.getElementById('timer').textContent=Math.floor(s/60)+':'+((s%60)<10?'0':'')+(s%60);
   if(left<=0){ resolve(null); return; }
   if(left<=5000 && s!==loop.lastTick){ loop.lastTick=s; beep(880,60,'square'); }
+  /* The card on screen when five seconds remain becomes the gamble: worth 3, or minus 1
+     on a pass. Cards after it in the same five seconds are ordinary. */
+  if(relayRound){
+    [60000,30000].forEach(mark=>{
+      if(left<=mark && !relayFlashed[mark]){
+        relayFlashed[mark]=true;
+        const f=document.getElementById('flash');
+        f.style.background='#1F2547'; f.textContent='PASS IT'; f.style.fontSize='16vmin';
+        f.style.display='flex'; buzz([0,120,80,120,80,120]); beep(660,300);
+        setTimeout(()=>{ f.style.display='none'; f.style.fontSize=''; }, 900);
+      }
+    });
+  }
+  if(left<=5000 && !gambleArmed && card){
+    gambleArmed = true; card.gamble = true; paintCard(); buzz([40,60,40]);
+  }
   const ev=tiltCheck(now);
   if(ev) resolve(ev==='ok');
   raf=requestAnimationFrame(loop);
@@ -1270,32 +1478,82 @@ function loop(){
 function resolve(correct){
   const ms = performance.now()-cardShownAt;
   if(correct===null){
-    log.push({t:card.t, ok:false, ms, timeout:true, wild:card.wild});
+    if(challenge){ endChallenge(false, ms); return; }
+    log.push({t:card.t, ok:false, ms, timeout:true, wild:card.wild, gamble:card.gamble});
     stopRound(true); return;
   }
   if(correct){
     streak++;
-    let pts = card.wild?2:1;
-    if(streak%3===0) pts+=1;
+    let pts = card.gamble ? GAMBLE_WIN : (card.wild?2:1);
+    if(!card.gamble && streak%3===0) pts+=1;
     score+=pts;
-    flash('ok'); buzz(40); beep(880,90);
+    flash('ok'); buzz(40); beep(card.gamble?1200:880,card.gamble?200:90);
   } else {
     streak=0;
+    if(card.gamble) score = Math.max(0, score - GAMBLE_LOSS);
     flash('pass'); buzz(120); beep(300,120);
   }
-  log.push({t:card.t, ok:!!correct, ms, wild:card.wild});
+  log.push({t:card.t, ok:!!correct, ms, wild:card.wild, gamble:card.gamble});
+  if(challenge){ endChallenge(!!correct, ms); return; }
   nextCard();
+  document.getElementById('liveScore').textContent = score;
 }
 document.addEventListener('visibilitychange', async ()=>{
   if(document.visibilityState==='visible' && running && !wakeLock){
     try{ if('wakeLock' in navigator) wakeLock = await navigator.wakeLock.request('screen'); }catch(e){}
   }
 });
+/* One card, fifteen seconds, the whole room clues. Turns a statistic into a moment.
+   Does not touch scores or totals. */
+let challenge = null;
+function retryCard(c){
+  challenge = { t:c.t, deckName: deck.name };
+  const savedLog = log.slice(), savedScore = score;
+  log=[]; score=0; streak=0;
+  bag = [ Object.assign({}, deck.cards.find(x=>x.t===c.t) || {t:c.t, x:null}) ];
+  document.body.style.background = deck.color;
+  go('ready');
+  document.getElementById('count').textContent = '15';
+  document.getElementById('readyNote').textContent = 'One card. Fifteen seconds. Everyone clues.';
+  setTimeout(async ()=>{
+    running=true; loop.lastTick=null; roundStartedAt=performance.now();
+    wildAt=-1; cardIndex=0; gambleArmed=true; relayRound=false;
+    roundEnd = performance.now()+15000;
+    try{ if('wakeLock' in navigator) wakeLock = await navigator.wakeLock.request('screen'); }catch(e){}
+    go('play'); nextCard(); loop();
+    challenge.restore = ()=>{ log=savedLog; score=savedScore; };
+  }, 1200);
+}
+function endChallenge(got, ms){
+  running=false;
+  if(raf) cancelAnimationFrame(raf);
+  if(wakeLock){ try{ wakeLock.release(); }catch(e){} wakeLock=null; }
+  const t = challenge.t;
+  if(challenge.restore) challenge.restore();
+  challenge = null;
+  document.body.style.background = '';
+  document.getElementById('count').textContent = got ? '\u2713' : '\u2717';
+  document.getElementById('readyNote').textContent = got
+    ? t + ' \u2014 in ' + (ms/1000).toFixed(1) + 's'
+    : t + ' \u2014 still nobody';
+  go('ready');
+  if(got){ buzz([40,60,40,60,120]); beep(1100,250); } else { buzz(200); beep(220,300,'sawtooth'); }
+  setTimeout(renderResults, 1800);
+}
 function stopRound(showResults){
   running=false;
   if(raf) cancelAnimationFrame(raf);
   if(wakeLock){ try{ wakeLock.release(); }catch(e){} wakeLock=null; }
-  if(showResults){ buzz([0,200,100,200]); beep(200,400,'sawtooth'); renderResults(); }
+  if(showResults){
+    buzz([0,200,100,200]); beep(200,400,'sawtooth');
+    /* A beat before the list, so the room reacts to the number together. */
+    const got = log.filter(c=>c.ok).length;
+    document.getElementById('count').textContent = score;
+    document.getElementById('readyNote').textContent =
+      got + (got===1?' card':' cards') + (score!==got ? ' \u00B7 ' + score + ' points' : '');
+    go('ready');
+    setTimeout(renderResults, 1600);
+  }
 }
 
 /* ===============================================================
@@ -1315,7 +1573,8 @@ function renderResults(){
   }
   if(done.length){
     const hard=done.reduce((a,b)=>a.ms>b.ms?a:b);
-    stats.innerHTML += '<div class="stat"><span>Hardest</span>'+hard.t+'<br><em style="font-style:normal;color:var(--ink-faint);font-size:13px">'+(hard.ms/1000).toFixed(1)+'s</em></div>';
+    stats.innerHTML += '<div class="stat" id="hardStat" style="cursor:pointer"><span>Hardest \u00B7 tap to retry</span>'+hard.t+'<br><em style="font-style:normal;color:var(--ink-faint);font-size:13px">'+(hard.ms/1000).toFixed(1)+'s</em></div>';
+    setTimeout(()=>{ const el=document.getElementById('hardStat'); if(el) el.onclick=()=>retryCard(hard); },0);
   }
 
   const list=document.getElementById('cardList'); list.innerHTML='';
@@ -1329,7 +1588,8 @@ function renderResults(){
       (banned.has(c.t)?'removed':(c.timeout?'time ran out':(c.ms/1000).toFixed(1)+'s'))+'</em>';
     main.onclick=()=>{
       c.ok=!c.ok;
-      score += c.ok ? (c.wild?2:1) : -(c.wild?2:1);
+      const v = c.gamble ? GAMBLE_WIN : (c.wild?2:1);
+      score += c.ok ? v : -v;
       if(score<0) score=0;
       renderResults();
     };
@@ -1352,16 +1612,28 @@ function renderResults(){
     list.appendChild(row);
   });
   const p=document.getElementById('resPrimary'), sec=document.getElementById('resSecondary');
+  const rt=document.getElementById('runningTotal');
+  const third=document.getElementById('resThird');
   if(session){
+    rt.textContent='';
+    third.style.display='none';
+    renderSteals();
     p.textContent = 'Save ' + score + ' pts \u00B7 pass the phone';
     p.onclick = ()=>commitRound(score);
     sec.textContent = 'Play this round again';
     sec.onclick = ()=>startRound();
   } else {
-    p.textContent = 'Same deck, again';
-    p.onclick = ()=>startRound();
-    sec.textContent = 'Different deck';
-    sec.onclick = ()=>go('decks');
+    document.getElementById('steals').style.display='none';
+    rt.textContent = quickRounds
+      ? 'Running total ' + (quickTotal + score) + ' over ' + (quickRounds+1) + ' rounds'
+      : '';
+    p.textContent = 'Next round \u00B7 same deck';
+    p.onclick = ()=>keepPlaying(true);
+    sec.textContent = 'Next round \u00B7 change deck';
+    sec.onclick = ()=>keepPlaying(false);
+    third.style.display = 'block';
+    third.textContent = quickRounds ? 'Start over (clears the total)' : 'Back to the decks';
+    third.onclick = ()=>startOver();
   }
   go('results');
 }
@@ -1458,6 +1730,8 @@ session = loadSession();
 buildDecks();
 buildModeChips();
 buildInputChips();
+buildLenChips();
+paintToggles();
 refreshRemovedBtn();
 </script>
 </body>

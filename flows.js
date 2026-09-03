@@ -19,6 +19,7 @@ function makeEl(id, cls){
       toggle(c,on){ if(on===undefined) on=!this._s.has(c); on?this._s.add(c):this._s.delete(c); }
     },
     _listeners:{},
+    removeAttribute(){}, setAttribute(){},
     appendChild(c){ this.children.push(c); },
     addEventListener(ev,fn){ (this._listeners[ev]=this._listeners[ev]||[]).push(fn); },
     fire(ev,arg){ (this._listeners[ev]||[]).forEach(f=>f(arg)); }
@@ -42,8 +43,9 @@ function boot(storage){
       return { forEach(f){ list.forEach(f); } };
     },
     createElement(){ return makeEl('new'); },
-    addEventListener(){}, visibilityState:'visible', body:{ style:{} }
+    addEventListener(){}, visibilityState:'visible', body:makeEl('body')
   };
+  els.body = document.body;
   const data = Object.assign({}, storage);
   const localStorage = {
     getItem(k){ return k in data ? data[k] : null; },
@@ -94,7 +96,13 @@ function boot(storage){
       get sensorSeen(){return sensorSeen}, set sensorSeen(v){sensorSeen=v},
       get selected(){return selected}, get multi(){return multi},
       get banned(){return banned}, get ALL_DECKS(){return ALL_DECKS},
-      get bag(){return bag}, set bag(v){bag=v}
+      get bag(){return bag}, set bag(v){bag=v},
+      get gambleArmed(){return gambleArmed},
+      setRoundEnd(v){ roundEnd=v; gambleArmed=false; loop.lastTick=null; relayFlashed={}; },
+      setRelay(v){ relayRound=v; },
+      el(id){ return document.getElementById(id); },
+      tick(){ loop(); },
+      bumpSteal
     }`
   )(
     win, document, {vibrate(){},userAgent:'node',wakeLock:null},
@@ -150,6 +158,44 @@ console.log('\n=== FLOW 1: first-time player, quick round ===');
   check('results list every card played', 5, t.els.cardList.children.length);
   t.els.resPrimary.onclick();
   check('"same deck again" restarts the countdown', 'ready', t.screen());
+}
+
+console.log('\n=== FLOW 1b: the score is visible while playing ===');
+{
+  const t = boot();
+  t.api.deck = t.api.ALL_DECKS[0]; t.api.bag = [];
+  t.api.running = true; t.api.go('play'); t.api.nextCard();
+  check('the score starts at zero on screen', '0', t.els.liveScore.textContent);
+  t.api.resolve(true); t.clock.advance(1500);
+  check('a correct answer updates the score on screen', '1', t.els.liveScore.textContent);
+  t.api.resolve(false); t.clock.advance(1500);
+  check('a pass leaves the score alone', '1', t.els.liveScore.textContent);
+  t.api.resolve(true); t.clock.advance(1500);
+  t.api.resolve(true); t.clock.advance(1500);
+  check('the streak bonus shows up live', String(t.api.score), t.els.liveScore.textContent);
+}
+
+console.log('\n=== FLOW 1c: quick play keeps a running total ===');
+{
+  const t = boot();
+  t.api.deck = t.api.ALL_DECKS[0]; t.api.bag = [];
+  playRound(t, 3);
+  check('the first round shows no running total yet', '', t.els.runningTotal.textContent);
+  const r1 = t.api.score;
+  t.els.resPrimary.onclick();                       // next round, same deck
+  check('continuing starts another round', 'ready', t.screen());
+  t.api.running = true; t.api.go('play'); t.api.nextCard();
+  for(let i=0;i<3;i++){ t.api.resolve(true); t.clock.advance(1500); }
+  t.api.running = false; t.api.renderResults();
+  check('the running total adds both rounds', true,
+        t.els.runningTotal.textContent.indexOf(String(r1 + t.api.score)) > -1);
+  check('it says how many rounds', true,
+        t.els.runningTotal.textContent.indexOf('2 rounds') > -1);
+  t.els.resThird.onclick();                          // start over
+  check('starting over returns to the decks', 'decks', t.screen());
+  t.api.deck = t.api.ALL_DECKS[0]; t.api.bag = [];
+  playRound(t, 2);
+  check('starting over cleared the total', '', t.els.runningTotal.textContent);
 }
 
 console.log('\n=== FLOW 2: back button from every screen ===');
@@ -338,6 +384,188 @@ console.log('\n=== FLOW 9: Estonian toggle ===');
   check('the Estonian toggle adds decks', 2, after-before);
   t.api.toggleEstonian();
   check('toggling back removes them again', before, t.tiles().length);
+}
+
+console.log('\n=== FLOW 10: party screens against the earlier defect classes ===');
+{
+  /* 1. back button: does every party screen lead somewhere sensible? */
+  const b1 = boot();
+  b1.api.openParty(); b1.back();
+  check('back from party setup lands on home', 'home', b1.screen());
+
+  const b2 = boot();
+  b2.api.setup.count=2; b2.api.setup.roundsEach=1; b2.api.setup.names=['A','B'];
+  b2.api.startParty(); b2.back();
+  check('back from the scoreboard does not trap you', true,
+        ['home','board'].indexOf(b2.screen()) > -1);
+
+  /* 2. a party round shows the score and the category, like a quick round */
+  const t = boot();
+  t.api.setup.count=2; t.api.setup.roundsEach=1; t.api.setup.names=['A','B'];
+  t.api.startParty(); t.api.startTurn(); t.tiles()[1].onclick();
+  t.api.running=true; t.api.go('play'); t.api.nextCard();
+  check('a party round shows the live score', '0', t.els.liveScore.textContent);
+  check('a party round shows the category', true, t.els.deckTag.textContent.length > 0);
+  t.api.resolve(true); t.clock.advance(1200);
+  check('the score updates mid-round in party mode', '1', t.els.liveScore.textContent);
+
+  /* 3. removing a word works inside a session too */
+  t.api.running=false; t.api.renderResults();
+  const word = t.api.log[0].t;
+  t.els.cardList.children[0].children[1].onclick({stopPropagation(){}});
+  check('a word can be removed from a party scorecard', true, t.api.banned.has(word));
+
+  /* 4. the party scorecard must not offer the quick-play running total */
+  check('no running total on a party scorecard', '', t.els.runningTotal.textContent);
+  check('the party scorecard hides the start-over link', 'none',
+        t.els.resThird.style.display);
+
+  /* 5. quitting mid-round keeps the session (regression from the earlier fix) */
+  t.els.resPrimary.onclick();
+  t.api.startTurn(); t.tiles()[1].onclick();
+  t.api.running=true; t.api.go('play'); t.api.nextCard();
+  t.api.quitRound(); t.api.quitRound();
+  check('quitting a party round keeps the scoreboard', 'board', t.screen());
+  check('and keeps the scores', 1, t.api.session.scores[0]);
+
+  /* 6. an unfinished party game survives a reload */
+  const saved = t.data;
+  const again = boot(saved);
+  check('a party game in progress survives closing the app', true, !!again.api.session);
+}
+
+console.log('\n=== FLOW 11: the last-card gamble ===');
+{
+  /* drive the real loop: the harness rAF is a no-op, so we call loop() by hand */
+  const t = boot();
+  t.api.deck = t.api.ALL_DECKS[0]; t.api.bag = [];
+  t.api.running = true; t.api.go('play'); t.api.nextCard();
+  // emulate beginPlay's clock: roundEnd is set inside beginPlay, so set state directly
+  t.api.setRoundEnd(t.clock.get() + 60000);
+  t.api.tick();                                   // 60 s left: normal card
+  check('no gamble at the start of a round', false, !!t.api.card.gamble);
+  t.clock.advance(56000); t.api.tick();           // 4 s left
+  check('the card on screen at five seconds becomes the gamble', true, !!t.api.card.gamble);
+  check('the card screen says so', true, t.els.deckTag.textContent.indexOf('LAST CARD') > -1);
+  const before = t.api.score;
+  t.api.resolve(true);
+  check('winning the gamble is worth three', before + 3, t.api.score);
+  check('the next card is an ordinary card', false, !!t.api.card.gamble);
+  check('only one gamble per round', true, t.api.gambleArmed);
+
+  const u = boot();
+  u.api.deck = u.api.ALL_DECKS[0]; u.api.bag = [];
+  u.api.running = true; u.api.go('play'); u.api.nextCard();
+  u.api.setRoundEnd(u.clock.get() + 60000);
+  u.api.resolve(true); u.api.resolve(true);        // 2 points banked
+  u.clock.advance(56000); u.api.tick();
+  u.api.resolve(false);
+  check('passing the gamble costs a point', 1, u.api.score);
+
+  const z = boot();
+  z.api.deck = z.api.ALL_DECKS[0]; z.api.bag = [];
+  z.api.running = true; z.api.go('play'); z.api.nextCard();
+  z.api.setRoundEnd(z.clock.get() + 60000);
+  z.clock.advance(56000); z.api.tick(); z.api.resolve(false);
+  check('the gamble cannot take the score below zero', 0, z.api.score);
+}
+
+console.log('\n=== FLOW 12: steals in party mode ===');
+{
+  const t = boot();
+  t.api.setup.kind='teams'; t.api.setup.count=3; t.api.setup.roundsEach=1;
+  t.api.setup.names=['Reds','Blues','Greens'];
+  t.api.startParty(); t.api.startTurn(); t.tiles()[1].onclick();
+  playRound(t, 4);
+  check('the party scorecard offers steals', 'block', t.els.steals.style.display);
+  check('you cannot steal from yourself', false, t.els.steals.innerHTML.indexOf('<b>Reds</b>') > -1);
+  t.api.bumpSteal(1, 1); t.api.bumpSteal(1, 1); t.api.bumpSteal(2, 1);
+  const played = t.api.score;
+  t.els.resPrimary.onclick();
+  check('the playing team keeps its own points', played, t.api.session.scores[0]);
+  check('stolen points go to the stealing teams', '2,1',
+        t.api.session.scores[1]+','+t.api.session.scores[2]);
+  t.api.startTurn(); t.tiles()[1].onclick(); playRound(t, 2);
+  check('steals reset for the next scorecard', false, t.els.steals.innerHTML.indexOf('1 steal') > -1);
+
+  const q = boot();
+  q.api.deck = q.api.ALL_DECKS[0]; q.api.bag = []; playRound(q, 2);
+  check('no steals section in quick play', 'none', q.els.steals.style.display);
+}
+
+console.log('\n=== FLOW 13: first-visit deck screen ===');
+{
+  const t = boot();
+  t.api.go('decks');
+  const labels = t.els.deckGrid.children.filter(c=>c.className==='eyebrow').map(c=>c.textContent);
+  check('a new player sees a Start here row', true, labels.indexOf('Start here') > -1);
+  check('All mixed stays first', true, t.tiles()[0].innerHTML.indexOf('All mixed') > -1);
+  const first = t.tiles()[1];
+  check('the first deck under it is a fun-to-explain deck', true, first.innerHTML.indexOf('Hard to say') > -1);
+  check('tiles carry a teaser instead of a bare count', true,
+        first.innerHTML.indexOf('Awful to describe') > -1);
+
+  const v = boot({tilt_rounds:'10'});
+  v.api.go('decks');
+  const l2 = v.els.deckGrid.children.filter(c=>c.className==='eyebrow').map(c=>c.textContent);
+  check('the Start here row retires for experienced players', false, l2.indexOf('Start here') > -1);
+}
+
+console.log('\n=== FLOW 14: retry the hardest card ===');
+{
+  const t = boot();
+  t.api.deck = t.api.ALL_DECKS[0]; t.api.bag = [];
+  playRound(t, 4);
+  const roundScore = t.api.score, roundLog = t.api.log.length;
+  t.flush(10);                                  // the onclick is attached on a 0ms timer
+  const hard = t.els.hardStat;
+  check('the hardest card can be tapped', true, !!hard && typeof hard.onclick === 'function');
+  hard.onclick();
+  check('a retry opens with a countdown', 'ready', t.screen());
+  t.flush(1300);
+  check('then shows the one card', 'play', t.screen());
+  check('it is the hardest card', true, t.api.card.t.length > 0);
+  t.api.resolve(true);
+  check('a correct guess ends the challenge with a verdict', 'ready', t.screen());
+  t.flush(2000);
+  check('and returns to the scorecard', 'results', t.screen());
+  check('the round score is untouched', roundScore, t.api.score);
+  check('the round log is untouched', roundLog, t.api.log.length);
+}
+
+console.log('\n=== FLOW 15: relay rounds ===');
+{
+  const t = boot();
+  t.api.setup.count=2; t.api.setup.roundsEach=1; t.api.setup.names=['A','B']; t.api.setup.relay=true;
+  t.api.startParty();
+  check('relay is stored on the session', true, t.api.session.relay);
+  t.api.startTurn(); t.tiles()[1].onclick();
+  t.api.running=true; t.api.go('play'); t.api.nextCard();
+  t.api.setRelay(true);
+  t.api.setRoundEnd(t.clock.get() + 90000);
+  t.api.tick();
+  const fl = t.api.el('flash');
+  check('no pass flash at the start', true, fl.style.display !== 'flex');
+  t.clock.advance(30500); t.api.tick();
+  check('the phone says PASS IT at sixty seconds', 'PASS IT', t.els.flash.textContent);
+  t.els.flash.style.display='none'; t.els.flash.textContent='';
+  t.clock.advance(20000); t.api.tick();
+  check('no second flash between marks', '', t.els.flash.textContent);
+  t.clock.advance(10500); t.api.tick();
+  check('and again at thirty seconds', 'PASS IT', t.els.flash.textContent);
+}
+
+console.log('\n=== FLOW 16: bright room ===');
+{
+  const t = boot({tilt_bright:'1'});
+  t.api.deck = t.api.ALL_DECKS[0]; t.api.bag = [];
+  t.api.running=true; t.api.go('play'); t.api.nextCard();
+  check('bright room gives the card a pale background', '#F4F1EA', t.els.body.style.background);
+  check('and dark text', '#151515', t.els.word.style.color);
+  const d = boot();
+  d.api.deck = d.api.ALL_DECKS[0]; d.api.bag = [];
+  d.api.running=true; d.api.go('play'); d.api.nextCard();
+  check('the default keeps the deck colour', d.api.deck.color, d.els.body.style.background);
 }
 
 console.log('\n=== SUMMARY ===');

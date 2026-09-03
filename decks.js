@@ -1,4 +1,4 @@
-const DECKS_VERSION = '2026-08-29.2';
+const DECKS_VERSION = '2026-09-01.3';
 
 /* ===============================================================
    TILT — deck content
@@ -26,7 +26,7 @@ const DECKS = [
 
 {id:'tv',n:'TV shows',e:'📺',c:'#2E86DE',lang:'en',k:[
  'Friends','The Office','Game of Thrones','Stranger Things','Breaking Bad','The Simpsons','Sherlock',
- 'Squid Game','Black Mirror','Bake Off','Big Brother','Soap opera','Sitcom','Reality show',
+ 'Squid Game','Black Mirror','Baking show','Big Brother','Soap opera','Sitcom','Reality show',
  'News anchor','Documentary','Cliffhanger','Binge watching','Spoiler','Season finale','Laugh track',
  'Talk show','Weather forecast','Cooking show','Quiz show','Nature documentary','Crime drama',
  'Streaming','Remote control','Next episode',
@@ -40,11 +40,11 @@ const DECKS = [
  'Inventory','Skill tree','Open world','Local co-op','Split screen','Achievement','Sandbox','Fast travel','Character creator','Rubber banding','Ping','Patch notes','Loot box','Retro remake','Motion controls','Endless runner','Puzzle platformer','Random encounter']},
 
 {id:'animals',n:'Animals',e:'🐼',c:'#E67E22',lang:'en',k:[
- 'Elephant|grey,trunk,Africa','Penguin','Octopus','Sloth','Hedgehog','Giraffe','Bat','Crocodile',
- 'Squirrel','Owl','Jellyfish','Kangaroo','Chameleon','Woodpecker','Hamster','Seagull','Moose','Lynx',
- 'Wolf','Bumblebee','Snail','Flamingo','Otter','Peacock','Camel','Rhino','Panda','Raccoon','Donkey',
- 'Goat','Parrot','Tortoise','Mole','Swan',
- 'Badger','Ostrich','Weasel','Pelican','Stork','Toad','Beetle','Dragonfly','Hyena','Zebra','Meerkat','Alpaca','Ferret','Newt','Skunk','Lemur','Puffin','Porcupine','Antelope','Chipmunk','Boar','Bison']},
+ 'Elephant|grey,trunk,Africa','Penguin|ice,bird,black','Octopus|eight,tentacles,sea','Sloth|slow,tree,lazy','Hedgehog|spikes,prickly,small','Giraffe|tall,neck,spots','Bat|night,cave,fly','Crocodile|teeth,river,green',
+ 'Squirrel|nuts,tree,tail','Owl|night,hoot,wise','Jellyfish|sting,sea,transparent','Kangaroo|Australia,jump,pouch','Chameleon|colour,change,lizard','Woodpecker|tree,beak,knock','Hamster|wheel,cage,pet','Seagull|beach,chips,bird','Moose|antlers,big,forest','Lynx|cat,wild,ears',
+ 'Wolf|howl,pack,moon','Bumblebee|honey,sting,buzz','Snail|slow,shell,slime','Flamingo|pink,leg,bird','Otter|river,swim,cute','Peacock|feathers,tail,blue','Camel|desert,hump,sand','Rhino|horn,grey,Africa','Panda|bamboo,black,white','Raccoon|bins,mask,stripes','Donkey|ears,stubborn,horse',
+ 'Goat|beard,climb,cheese','Parrot|talk,colourful,repeat','Tortoise|shell,slow,old','Mole|dig,blind,underground','Swan|white,lake,neck',
+ 'Badger|stripe,dig,night','Ostrich|big,bird,run','Weasel|sneaky,thin,small','Pelican|beak,fish,pouch','Stork|baby,long,legs','Toad|frog,warty,jump','Beetle|shell,insect,black','Dragonfly|wings,pond,insect','Hyena|laugh,Africa,pack','Zebra|stripes,black,white','Meerkat|stand,look,desert','Alpaca|wool,llama,fluffy','Ferret|long,thin,pet','Newt|pond,lizard,small','Skunk|smell,stripe,spray','Lemur|Madagascar,tail,eyes','Puffin|beak,cliff,bird','Porcupine|spikes,quills,sharp','Antelope|horns,run,Africa','Chipmunk|cheeks,stripes,nuts','Boar|pig,wild,tusks','Bison|buffalo,big,hairy']},
 
 {id:'sealife',n:'Under the sea',e:'🐙',c:'#0A7EA4',lang:'en',k:[
  'Shark','Dolphin','Coral reef','Seahorse','Starfish','Whale','Crab','Lobster','Pearl','Shipwreck',
@@ -53,11 +53,11 @@ const DECKS = [
  'Manta ray','Barnacle','Plankton','Deep sea vent','Sea urchin','Clownfish','Kelp forest','Trawler','Rowing boat','Life jacket','Tidal wave','Message buoy','Ferry crossing','Harbour seal','Fish market','Sea salt','Pearl diver','Mooring rope']},
 
 {id:'food',n:'Food',e:'🍕',c:'#D63447',lang:'en',k:[
- 'Pizza|cheese,Italy,slice','Sushi','Pancake','Garlic','Popcorn','Spaghetti','Pickle','Chilli pepper',
- 'Croissant','Kebab','Porridge','Mustard','Olive','Burnt toast','Soup','Chewing gum','Sandwich',
- 'Blue cheese','Leftovers','Bacon','Omelette','Rice','Noodles','Burger','Salad','Meatballs','Sausage',
- 'Butter','Bread crust','Ketchup','Curry','Taco','Dumpling','Peanut butter',
- 'Fried egg','Melted cheese','Instant noodles','Salad dressing','Sour cream','Fish and chips','Roast potatoes','Meat pie','Pastry','Salt and pepper','Overcooked rice','Falafel','Hummus','Pesto','Nachos','Gravy','Anchovy','Cabbage roll','Cold pizza','Hot dog','Cereal','Marmite','Feta','Ramen']},
+ 'Pizza|cheese,Italy,slice','Sushi|Japan,fish,rice','Pancake|flat,syrup,flip','Garlic|smell,cloves,vampire','Popcorn|cinema,pop,butter','Spaghetti|Italy,long,pasta','Pickle|cucumber,jar,sour','Chilli pepper|hot,spicy,red',
+ 'Croissant|France,butter,flaky','Kebab|late,meat,wrap','Porridge|oats,breakfast,warm','Mustard|yellow,hot dog,sauce','Olive|green,oil,pit','Burnt toast|bread,black,smoke','Soup|spoon,bowl,liquid','Chewing gum|mouth,stick,bubble','Sandwich|bread,lunch,filling',
+ 'Blue cheese|smell,mould,strong','Leftovers|fridge,yesterday,reheat','Bacon|pig,breakfast,crispy','Omelette|eggs,pan,fold','Rice|white,grain,Asia','Noodles|long,slurp,Asia','Burger|bun,patty,fast food','Salad|green,healthy,leaves','Meatballs|round,mince,Sweden','Sausage|meat,grill,long',
+ 'Butter|spread,yellow,toast','Bread crust|edge,hard,sandwich','Ketchup|tomato,red,chips','Curry|India,spicy,sauce','Taco|Mexico,shell,fold','Dumpling|dough,filling,steam','Peanut butter|spread,nuts,sticky',
+ 'Fried egg|yolk,pan,sunny','Melted cheese|gooey,stretchy,hot','Instant noodles|cheap,student,packet','Salad dressing|oil,pour,leaves','Sour cream|white,dollop,taco','Fish and chips|Britain,fried,newspaper','Roast potatoes|Sunday,crispy,oven','Meat pie|pastry,filling,oven','Pastry|flaky,butter,bake','Salt and pepper|table,shakers,season','Overcooked rice|mushy,sticky,pot','Falafel|chickpea,ball,fried','Hummus|chickpea,dip,pita','Pesto|green,basil,pasta','Nachos|chips,cheese,Mexico','Gravy|brown,pour,roast','Anchovy|salty,tiny,pizza','Cabbage roll|wrap,mince,stuffed','Cold pizza|morning,leftover,fridge','Hot dog|sausage,bun,stadium','Cereal|milk,bowl,box','Nutella on toast','Feta|Greek,white,crumbly','Ramen|Japan,broth,noodles']},
 
 {id:'drinks',n:'Drinks',e:'🥤',c:'#0E7C7B',lang:'en',k:[
  'Coffee|drink,morning,caffeine','Green tea','Lemonade','Milkshake','Hot chocolate','Smoothie',
@@ -76,22 +76,22 @@ const DECKS = [
 {id:'fruitveg',n:'Fruit & veg',e:'🥕',c:'#4E9F3D',lang:'en',k:[
  'Watermelon','Pineapple','Avocado','Broccoli','Mushroom','Cucumber','Banana','Onion|cry,layers,smell',
  'Corn on the cob','Beetroot','Cabbage','Pumpkin','Strawberry','Kiwi','Lemon','Potato','Carrot',
- 'Tomato','Grapes','Cherry','Aubergine','Pea pod','Radish','Coconut','Fig','Rhubarb','Sauerkraut',
- 'Melon','Mango','Peach','Plum','Raspberry','Blueberry','Lime','Spinach','Lettuce','Pepper','Courgette','Turnip','Leek','Celery','Asparagus','Sweetcorn','Apple core','Fruit bowl']},
+ 'Tomato','Grapes','Cherry','Eggplant','Pea pod','Radish','Coconut','Fig','Rhubarb','Sauerkraut',
+ 'Melon','Mango','Peach','Plum','Raspberry','Blueberry','Lime','Spinach','Lettuce','Pepper','Zucchini','Turnip','Leek','Celery','Asparagus','Sweetcorn','Apple core','Fruit bowl']},
 
 {id:'cooking',n:'In the kitchen',e:'👨‍🍳',c:'#B85C38',lang:'en',k:[
- 'Whisk','Colander','Garlic press','Corkscrew','Cling film','Chopping board','Kettle','Microwave',
- 'Bread knife','Rolling pin','Frying pan','Oven mitt','Grater','Peeler','Measuring jug','Blender',
- 'Recipe','Boiling over','Burnt dinner','Smoke alarm','Washing up','Tupperware','Apron','Timer',
- 'Taste test','Leftover fridge',
- 'Slow cooker','Wooden spoon','Baking tray','Sieve','Ice tray','Salt shaker','Bottle opener','Bread bin','Dish cloth','Steam','Preheat','Marinade','Simmer','Whisking eggs','Chopping onions','Recipe from a friend']},
+ 'Whisk|eggs,beat,wire','Colander|drain,pasta,holes','Garlic press|squeeze,cloves,crush','Corkscrew|wine,bottle,twist','Plastic wrap','Chopping board|knife,cut,wood','Kettle|boil,water,tea','Microwave|beep,reheat,minutes',
+ 'Bread knife|slice,loaf,serrated','Rolling pin|dough,flat,roll','Frying pan|eggs,oil,hob','Oven mitt|hot,glove,tray','Grater|cheese,shred,holes','Peeler|skin,potato,strip','Measuring jug|ml,pour,recipe','Blender|smoothie,blade,loud',
+ 'Recipe|steps,ingredients,book','Boiling over|pot,foam,stove','Burnt dinner|black,smoke,ruined','Smoke alarm|beep,ceiling,toast','Washing up|sink,dishes,sponge','Tupperware|plastic,lid,leftovers','Apron|wear,front,splash','Timer|ding,minutes,oven',
+ 'Taste test|spoon,try,seasoning','Leftover fridge',
+ 'Slow cooker|hours,stew,low','Wooden spoon|stir,pot,wood','Baking tray|oven,flat,cookies','Sieve|flour,shake,mesh','Ice tray|freezer,cubes,water','Salt shaker|table,sprinkle,white','Bottle opener|beer,cap,lever','Bread bin|loaf,store,lid','Dish cloth|wipe,wet,counter','Steam|hot,rise,kettle','Preheat|oven,before,temperature','Marinade|soak,meat,flavour','Simmer|low,bubble,gentle','Whisking eggs|fast,fluffy,bowl','Chopping onions|cry,knife,tears','Recipe from a friend']},
 
 {id:'house',n:'Around the house',e:'🏠',c:'#0FA3B1',lang:'en',k:[
- 'Vacuum cleaner','Doormat','Radiator','Fridge magnet','Ironing board','Shower curtain','Light switch',
- 'Laundry basket','Bookshelf','Doorbell','Mousetrap','Broom','Candle','Mirror','Keyhole','Ladder',
- 'Toolbox','Duct tape','Extension cord','Curtain rail','Draught','Squeaky floorboard','Sofa',
- 'Wardrobe','Bathtub','Balcony','Attic','Spare room','Blocked drain','Doorbell camera',
- 'Skirting board','Coat hook','Junk drawer','Spare key','Loft hatch','Rug','Fuse box','Bin day','Window sill','Airing cupboard','Doorstop','Ceiling fan','Front porch','Garden shed','Letterbox','Stair creak','Wall clock','Picture frame']},
+ 'Vacuum cleaner|suck,carpet,loud','Doormat|wipe,feet,welcome','Radiator|heat,wall,warm','Fridge magnet|stick,door,souvenir','Ironing board|flat,creases,steam','Shower curtain|wet,bathroom,rings','Light switch|flick,on,wall',
+ 'Laundry basket|dirty,clothes,pile','Bookshelf|books,wall,rows','Doorbell|ring,visitor,press','Mousetrap|cheese,snap,rodent','Broom|sweep,handle,floor','Candle|flame,wax,wick','Mirror|reflection,glass,face','Keyhole|peek,lock,door','Ladder|climb,steps,high',
+ 'Toolbox|hammer,tools,box','Duct tape|sticky,grey,fix','Extension cord|plug,long,socket','Curtain rail|hang,window,pole','Draught|cold,gap,window','Squeaky floorboard|creak,step,night','Sofa|sit,cushions,TV',
+ 'Wardrobe|clothes,hang,doors','Bathtub|soak,water,bubbles','Balcony|outside,railing,view','Attic|roof,boxes,dusty','Spare room|guest,bed,empty','Blocked drain|hair,water,plunger','Doorbell camera|porch,video,visitor',
+ 'Coat hook|hang,jacket,wall','Junk drawer|batteries,mess,kitchen','Spare key|hidden,neighbour,backup','Loft hatch|ceiling,ladder,attic','Rug|floor,soft,carpet','Fuse box|trip,switches,power','Rubbish day','Window sill|ledge,plants,cat','Airing cupboard|boiler,towels,warm','Doorstop|wedge,open,floor','Ceiling fan|spin,cool,blades','Front porch|step,door,outside','Garden shed|tools,wood,lawnmower','Letterbox|post,slot,door','Stair creak|step,noise,night','Wall clock|tick,hang,time','Picture frame|photo,hang,glass']},
 
 {id:'tools',n:'Tools & DIY',e:'🔧',c:'#7F6A00',lang:'en',k:[
  'Hammer','Screwdriver','Spirit level','Power drill','Sandpaper','Paint roller','Tape measure',
@@ -101,12 +101,12 @@ const DECKS = [
  'Allen key','Duct tape fix','Pliers','Vice','Blowtorch','Extension ladder','Spirit level bubble','Drill bit','Paint tin','Masking tape','Skirting cut','Sawdust','Workshop radio','Trip to the hardware shop','Missing instructions','Left-over screws']},
 
 {id:'jobs',n:'Jobs',e:'💼',c:'#5D8233',lang:'en',k:[
- 'Plumber|pipe,water,toilet','Air traffic controller','Sommelier','Bouncer','Roadie','Undertaker',
- 'Beekeeper|bee,honey,sting','Chimney sweep','Referee','Lighthouse keeper','Crash test dummy',
- 'Dog groomer','Auctioneer','Tattoo artist','Window cleaner','Postman','Firefighter','Barista',
- 'Bus driver','Nurse','Farmer','Translator','Lifeguard','Architect','Vet','Butcher','Electrician',
- 'Flight attendant','Detective','Hairdresser','Ski instructor','Night watchman',
- 'Librarian','Chef','Pilot','Journalist','Carpenter','Miner','Sailor','Surgeon','Coach','Cleaner','Security guard','Radio host','Courier','Tailor','Diver','Park ranger','Baker','Mechanic','Zookeeper','Weather presenter']},
+ 'Plumber|pipe,water,toilet','Air traffic controller|planes,tower,land','Sommelier|wine,taste,restaurant','Bouncer|door,club,ID','Roadie|band,tour,equipment','Undertaker|funeral,coffin,death',
+ 'Beekeeper|bee,honey,sting','Chimney sweep|soot,roof,brush','Referee|whistle,card,match','Lighthouse keeper|light,ships,tower','Crash test dummy|car,crash,seat',
+ 'Dog groomer|fur,wash,trim','Auctioneer|bid,fast,hammer','Tattoo artist|ink,needle,skin','Window cleaner|glass,ladder,squeegee','Postman|letters,bag,deliver','Firefighter|hose,fire,truck','Barista|coffee,cafe,espresso',
+ 'Bus driver|passengers,wheel,stops','Nurse|hospital,care,patient','Farmer|field,tractor,animals','Translator|language,words,speak','Lifeguard|pool,rescue,whistle','Architect|buildings,drawings,plan','Vet|animals,sick,pets','Butcher|meat,knife,shop','Electrician|wires,power,socket',
+ 'Flight attendant|plane,drinks,safety','Detective|clues,crime,solve','Hairdresser|scissors,cut,salon','Ski instructor|snow,slope,teach','Night watchman|dark,guard,torch',
+ 'Librarian|books,quiet,shelves','Chef|kitchen,cook,hat','Pilot|plane,fly,cockpit','Journalist|news,write,story','Carpenter|wood,saw,build','Miner|underground,dig,coal','Sailor|boat,sea,ship','Surgeon|operate,hospital,knife','Coach|team,train,sport','Cleaner|mop,tidy,dust','Security guard|watch,uniform,door','Radio host|talk,microphone,music','Courier|deliver,parcel,van','Tailor|sew,suit,measure','Diver|underwater,tank,sea','Park ranger|forest,nature,protect','Baker|bread,oven,flour','Mechanic|car,engine,fix','Zookeeper|animals,feed,cage','Weather presenter|forecast,map,rain']},
 
 {id:'office',n:'Office life',e:'🖇️',c:'#3D5A80',lang:'en',k:[
  'Monday morning','Coffee machine','Printer jam','Pointless meeting','Spreadsheet',
@@ -142,17 +142,17 @@ const DECKS = [
  'Touchscreen','Fingerprint unlock','Face unlock','Notification','Storage full','Wireless charging','Smart bulb','Router restart','Printer driver','Cable tangle','Backup','Data roaming','Screen crack','Zoom fatigue','Password reset','Battery saver','Widget','App store']},
 
 {id:'sports',n:'Sports',e:'⚽',c:'#2D9E5F',lang:'en',k:[
- 'Marathon','Ski jump','Curling','Boxing','Yoga','Surfing','Darts','Fencing','Bowling','Ice hockey',
- 'Basketball','Tennis','Rowing','Climbing','Penalty kick','Slam dunk','Own goal','Hat-trick',
- 'Photo finish','Sumo','Half-time','Podium','Warm-up','Sudden death','Cycling','Golf','Volleyball',
- 'Gymnastics','Relay race','Cross-country skiing','Referee whistle','Team huddle',
- 'Ping pong','Badminton','Handball','Triathlon','Javelin','High jump','Long jump','Weightlifting','Rugby','Cricket','Snooker','Formula One','Motocross','Skateboarding','Snowboarding','Wrestling','Archery','Horse riding','Diving','Sprint finish']},
+ 'Marathon|run,long,42','Ski jump|snow,fly,ramp','Curling|ice,stone,broom','Boxing|punch,gloves,ring','Yoga|stretch,mat,breathe','Surfing|wave,board,sea','Darts|throw,board,pub','Fencing|sword,mask,lunge','Bowling|pins,ball,lane','Ice hockey|puck,stick,rink',
+ 'Basketball|hoop,dribble,tall','Tennis|racket,net,court','Rowing|oars,boat,water','Climbing|rope,wall,up','Penalty kick|football,goal,spot','Slam dunk|basketball,hoop,jump','Own goal|football,wrong,net','Hat-trick|three,goals,football',
+ 'Photo finish|race,close,camera','Sumo|Japan,big,push','Half-time|break,middle,match','Podium|first,medal,stand','Warm-up|stretch,before,jog','Sudden death|tie,next,wins','Cycling|bike,pedal,race','Golf|club,hole,green','Volleyball|net,spike,beach',
+ 'Gymnastics|flip,beam,flexible','Relay race|baton,team,pass','Cross-country skiing|snow,poles,Norway','Referee whistle|stop,blow,foul','Team huddle|circle,talk,plan',
+ 'Ping pong|table,paddle,ball','Badminton|net,shuttlecock,racket','Handball|throw,goal,court','Triathlon|swim,bike,run','Javelin|throw,spear,far','High jump|bar,over,jump','Long jump|sand,run,far','Weightlifting|bar,heavy,lift','Rugby|oval,tackle,scrum','Cricket|bat,wicket,England','Snooker|cue,table,balls','Formula One|cars,race,fast','Motocross|bike,mud,jumps','Skateboarding|board,wheels,trick','Snowboarding|snow,board,slope','Wrestling|grapple,mat,pin','Archery|bow,arrow,target','Horse riding|saddle,horse,trot','Diving|board,water,splash','Sprint finish|fast,end,line']},
 
 {id:'countries',n:'Countries',e:'🌍',c:'#8E44AD',lang:'en',k:[
- 'Japan','Brazil','Egypt','Estonia','Finland','Italy','Iceland','Mexico','India','Australia','Canada',
- 'Greece','Norway','Kenya','Peru','Netherlands','Switzerland','Turkey','Spain','Portugal','Ireland',
- 'Vietnam','Morocco','Argentina','Sweden','Poland','Thailand','South Korea',
- 'Germany','France','China','Chile','Nepal','Latvia','Lithuania','Denmark','Croatia','Hungary','Georgia','Ukraine','Israel','Cuba','Jamaica','New Zealand','Singapore']},
+ 'Japan|sushi,Tokyo,Asia','Brazil|football,carnival,Rio','Egypt|pyramids,Nile,pharaoh','Estonia|Tallinn,Baltic,sauna','Finland|Helsinki,sauna,lakes','Italy|pizza,Rome,pasta','Iceland|cold,volcano,Reykjavik','Mexico|taco,sombrero,cactus','India|curry,Taj Mahal,Bollywood','Australia|kangaroo,Sydney,outback','Canada|maple,cold,moose',
+ 'Greece|islands,Athens,olives','Norway|fjords,oil,Oslo','Kenya|safari,Africa,run','Peru|Machu Picchu,llama,Andes','Netherlands|tulips,bikes,Amsterdam','Switzerland|chocolate,Alps,watches','Turkey|Istanbul,kebab,bazaar','Spain|paella,Madrid,bulls','Portugal|Lisbon,port,Ronaldo','Ireland|green,Dublin,Guinness',
+ 'Vietnam|pho,Hanoi,war','Morocco|Marrakesh,desert,souk','Argentina|tango,Messi,steak','Sweden|IKEA,ABBA,Stockholm','Poland|Warsaw,pierogi,vodka','Thailand|Bangkok,beaches,Thai','South Korea|Seoul,K-pop,kimchi',
+ 'Germany|Berlin,beer,cars','France|Paris,wine,croissant','China|Great Wall,Beijing,panda','Chile|long,Andes,Santiago','Nepal|Everest,mountains,Kathmandu','Latvia|Riga,Baltic,neighbour','Lithuania|Vilnius,Baltic,basketball','Denmark|Copenhagen,Lego,Vikings','Croatia|coast,Dubrovnik,football','Hungary|Budapest,goulash,paprika','Georgia|wine,Tbilisi,mountains','Ukraine|Kyiv,borscht,sunflower','Israel|Jerusalem,Tel Aviv,desert','Cuba|Havana,cigars,Castro','Jamaica|reggae,Bob Marley,beach','New Zealand|Kiwi,rugby,hobbits','Singapore|city,clean,Asia']},
 
 {id:'cities',n:'Cities',e:'🏙️',c:'#1E5F9E',lang:'en',k:[
  'Paris','Tokyo','New York','Venice','Berlin','Rome','Istanbul','Rio de Janeiro','Amsterdam','Cairo',
@@ -177,17 +177,17 @@ const DECKS = [
 {id:'cars',n:'Cars & driving',e:'🚗',c:'#C0392B',lang:'en',k:[
  'Steering wheel','Traffic jam','Parking ticket','Roundabout','Windscreen','Petrol station',
  'Rear-view mirror','Speed camera','Tow truck','Hitchhiking','Convertible','Flat tyre','Seatbelt',
- 'Car wash','Test drive','Winter tyres','Motorway','Reverse parking','Number plate','Electric car',
+ 'Car wash','Test drive','Winter tyres','Highway','Reverse parking','Number plate','Electric car',
  'Road rage','Sat nav','Driving lesson','Toll booth','Jump start','Rally driver','School run',
  'Handbrake',
  'Ignition key','Wing mirror','Dashboard light','Hazard lights','Parking sensor','Boot space','Roof box','Trailer','Petrol smell','Bumper sticker','Learner plate','Traffic light','Zebra crossing','Speed bump','Cruise control','Car keys lost','Backseat driver','Full tank']},
 
 {id:'space',n:'Space',e:'🚀',c:'#5F27CD',lang:'en',k:[
- 'Astronaut','Black hole','Saturn','Moon landing','Rocket','Meteor','Space station','Alien',
- 'Telescope','Solar eclipse','Mars rover','Comet','Milky Way','Satellite','Spacesuit','Zero gravity',
+ 'Astronaut','Black hole','Saturn','Moon landing','Rocket','Meteor','Orbiting station','Alien',
+ 'Telescope','Solar eclipse','Mars rover','Comet','Milky Way','Satellite','Astronaut suit','Zero gravity',
  'Constellation','Launch pad','Countdown','Space junk','Shooting star','Orbit','Mission control',
  'Asteroid belt',
- 'Northern lights','Galaxy','Space debris','Lunar rover','Solar wind','Gravity assist','Docking','Star map','Radio telescope','Cosmic ray','Red planet','Supernova','Space race','Escape velocity','Weightless food','Solar system']},
+ 'Northern lights','Galaxy','Space debris','Lunar rover','Solar wind','Gravity assist','Docking','Star map','Radio telescope','Cosmic ray','Red planet','Supernova','Race to the Moon','Escape velocity','Weightless food','Solar system']},
 
 {id:'science',n:'Science',e:'🔬',c:'#1ABC9C',lang:'en',k:[
  'Magnet','Volcano','Photosynthesis','DNA','Microscope','Lightning','Evaporation','Periodic table',
@@ -215,11 +215,11 @@ const DECKS = [
  'Backpack','Wristwatch','Beanie','Overalls','Tuxedo','Wedding dress','Socks with sandals','Hoodie',
  'Belt','Earrings','Shoelaces','Fur coat','Mullet','Matching outfits','Wrong size','Fitting room',
  'Runway show','Ripped jeans','Handbag','Tie knot',
- 'Turtleneck','Trench coat','Trainers','Cardigan','Leather jacket','Baseball cap','Bucket hat','Blazer','Skirt','Dungarees','Mittens','Slippers','Cufflinks','Statement necklace','Nail polish','Handbag strap','Vintage shop','Ironed shirt']},
+ 'Turtleneck','Trench coat','Sneakers','Cardigan','Leather jacket','Baseball cap','Bucket hat','Blazer','Skirt','Dungarees','Mittens','Slippers','Cufflinks','Statement necklace','Nail polish','Handbag strap','Vintage shop','Ironed shirt']},
 
 {id:'essentials',n:'Everyday essentials',e:'🪥',c:'#9B59B6',lang:'en',k:[
  'Toothbrush|teeth,brush,mouth','Umbrella','House keys','Wallet','Alarm clock','Soap','Towel','Pillow',
- 'Shopping list','Bin bag','Glasses','Toilet paper','Hairbrush','Deodorant','Plaster','Scissors',
+ 'Shopping list','Bin bag','Glasses','Toilet paper','Hairbrush','Deodorant','Scissors',
  'Notebook','Water bottle','Loose change','Phone charger','Nail clippers','Tissues','Shoe horn',
  'Reading lamp','Spare batteries','Sunscreen','Lip balm','Safety pin',
  'Shoe polish','Sewing kit','Torch','Batteries','Pen that works','Sticky tape','Ice scraper','Reusable bag','Face mask','Hand sanitiser','Bottle opener','Comb','Mouthwash','Cotton buds','Shopping trolley coin','Spare socks']},
@@ -232,11 +232,11 @@ const DECKS = [
  'Sore feet','Stiff neck','Cold shivers','Dry throat','Runny nose','Sweaty palms','Heavy eyelids','Growling stomach','Tickly cough','Muscle ache','Stretching in the morning','Deep sleep','Power nap','Sunburn line']},
 
 {id:'school',n:'Back to school',e:'✏️',c:'#6AB04C',lang:'en',k:[
- 'Homework','Detention','School bus','Chalkboard','Pencil case','Exam','Lunchbox','Class photo',
- 'Field trip','Report card','Gym class','Substitute teacher','Locker','Group project','School play',
+ 'Homework','Detention','Yellow bus','Chalkboard','Pencil case','Exam','Lunchbox','Class photo',
+ 'Field trip','Report card','Gym class','Substitute teacher','Locker','Group project','Nativity play',
  'Graduation','Timetable','Ruler','Last day of term','Nervous presentation','Cheat sheet',
  'Hand raised','Playground fight','Parents evening','Textbook','Detention slip',
- 'Assembly','Head teacher','School dinner','Whiteboard marker','Class clown','Sports day','Homework excuse','Spelling test','Show and tell','Library card','Bell ringing','Uniform','Pen pal','Science fair','School photo','Study group']},
+ 'Assembly','Head teacher','Canteen lunch','Whiteboard marker','Class clown','Sports day','Homework excuse','Spelling test','Show and tell','Library card','Bell ringing','Uniform','Pen pal','Science fair','Class photo day','Study group']},
 
 {id:'kids',n:'Kids zone',e:'🧸',c:'#00B894',lang:'en',k:[
  'Teddy bear','Swing','Soap bubble','Balloon','Sandpit','Slide','Puppy','Rainbow','Snowman','Kite',
@@ -265,7 +265,7 @@ const DECKS = [
  'Electric guitar','Bagpipes','Recorder','Gong','Maracas','Panpipes',
  'Clarinet','Trombone','Tuba','Bass guitar','Keyboard','Bongos','Synthesiser','French horn','Mandolin','Zither','Church bells','Drum kit','Sound board','Tuning fork']},
 
-{id:'dance',n:'Dance & moves',e:'💃',c:'#EE5A24',lang:'en',k:[
+{id:'dance',n:'Moves',e:'💃',c:'#EE5A24',lang:'en',k:[
  'Tango','Moonwalk','Breakdance','Waltz','Conga line','Salsa','Ballet','Line dancing','Headbanging',
  'Slow dance','Robot dance','Twerking','Tap dance','Wedding first dance','Dad dancing','Limbo',
  'Cheerleading','Flash mob','Disco','Ballroom','Zumba','Air drumming',
@@ -387,11 +387,11 @@ const DECKS = [
  'Bubblegum card','Portable CD','Chunky monitor','Modem screech','Poster on the wall','Mixtape','Video store late fee','Instant messenger away message','Snake game','Camcorder','Pocket calculator','Scrunchie']},
 
 {id:'christmas',n:'Christmas',e:'🎄',c:'#C0392B',lang:'en',k:[
- 'Advent calendar','Mistletoe','Gingerbread','Santa','Reindeer','Christmas tree','Wrapping paper',
- 'Carol singing','Snowball fight','Mulled wine','Tinsel','Secret Santa','Sledging','Christmas jumper',
+ 'Advent calendar','Mistletoe','Gingerbread','Santa','Reindeer','Decorated tree','Wrapping paper',
+ 'Carol singing','Snowball fight','Mulled wine','Tinsel','Secret Santa','Sledging','Ugly festive jumper',
  'Roast dinner','Fireplace','Winter boots','Fireworks','Advent candle','Nativity play',
- 'Christmas market','Last-minute present','Family argument','Leftover turkey','Fairy lights','Chimney',
- 'Snow globe','Christmas card','Log fire','Candy cane','Bauble','Angel on top','Turkey dinner','Present queue','Christmas film','Sledge ride','Reindeer bells','Frosty window']},
+ 'Festive market','Last-minute present','Family argument','Leftover turkey','Fairy lights','Chimney',
+ 'Snow globe','Festive card','Log fire','Candy cane','Bauble','Angel on top','Turkey dinner','Present queue','Festive film','Sledge ride','Reindeer bells','Frosty window']},
 
 {id:'halloween',n:'Halloween',e:'🎃',c:'#E58E26',lang:'en',k:[
  'Pumpkin','Ghost','Vampire','Witch','Skeleton','Haunted house','Trick or treat','Spider web',
@@ -456,9 +456,9 @@ const DECKS = [
  'Umami','Metallic taste','Menthol','Stale air','Damp basement','Pine forest','Nail polish remover']},
 
 {id:'wedding',n:'Weddings',e:'💍',c:'#D81159',lang:'en',k:[
- 'Bouquet toss','First dance','Best man speech','Ring bearer','Wedding cake','Vows','Confetti',
- 'Something borrowed','Seating plan','Open bar','Wedding photographer','Church bells','Honeymoon',
- 'Bridal party','Cold feet','Reception dinner','Wedding crasher','Slow song','Family photo',
+ 'Bouquet toss','First dance','Best man speech','Ring bearer','Tiered cake','Vows','Confetti',
+ 'Something borrowed','Seating plan','Open bar','The photographer','Church bells','Honeymoon',
+ 'Bridal party','Cold feet','Reception dinner','Uninvited guest','Slow song','Family photo',
  'Late RSVP','Dress fitting','Grandma dancing','Toast gone long','Sparkler exit','Rain on the day',
  'Two left feet']},
 
@@ -470,7 +470,7 @@ const DECKS = [
  'Checkout chocolate','Out of stock']},
 
 {id:'doctor',n:'At the doctor',e:'🩺',c:'#2A9D8F',lang:'en',k:[
- 'Waiting room','Stethoscope','Blood pressure cuff','Say aaah','Prescription','Plaster',
+ 'Waiting room','Stethoscope','Blood pressure cuff','Say aaah','Prescription',
  'Bandage','Thermometer','Reflex hammer','Eye chart','Crutches','Wheelchair','X-ray',
  'Hospital gown','Appointment card','Second opinion','Flu shot','Dentist chair','Dental floss',
  'Sitting very still','Nurse call button','Waiting for results','White coat','Cotton wool']},
@@ -518,7 +518,7 @@ const DECKS = [
  'Wrong technique','Rest day','New year resolution','Stretching','Kettlebell','Running playlist']},
 
 {id:'chores',n:'Chores',e:'🧹',c:'#5A5A72',lang:'en',k:[
- 'Washing up','Hoovering','Taking out the bin','Folding laundry','Making the bed','Mopping',
+ 'Washing up','Vacuuming','Taking out the bin','Folding laundry','Making the bed','Mopping',
  'Dusting','Cleaning the oven','Changing bed sheets','Watering plants','Mowing the lawn',
  'Raking leaves','Shovelling snow','Washing windows','Sorting recycling','Defrosting the freezer',
  'Scrubbing the bath','Ironing','Putting things back','Nobody else did it']},
@@ -542,6 +542,74 @@ const DECKS = [
  'Harlem Shake','Gangnam Style','Planking','Ice Bucket Challenge','Left Shark','Salt Bae',
  'Ok Boomer','Rage Comic','Slow Clap','Deal With It Sunglasses','One Does Not Simply',
  'Awkward Penguin','Overly Attached','First World Problems','Mocking Text Case']},
+
+{id:'victories',n:'Tiny victories',e:'🙌',c:'#2E8B57',lang:'en',k:[
+ 'Money in an old coat pocket','Green lights all the way','Parking right outside','The last slice',
+ 'Catching the bus just in time','Perfectly ripe avocado','Waking up before the alarm','Skipping the queue',
+ 'Free upgrade','Empty seat next to you','Password right first time','Charger already plugged in',
+ 'Song comes on as you leave','Rain stops as you step out','Finding the other sock','Leftovers you forgot about',
+ 'Snooze without being late','Quiet train carriage','Bag fits in overhead locker','Exact change',
+ 'Fresh sheets','Someone laughs at your joke','Guessing the plot twist','Secretly glad it was cancelled',
+ 'First try parallel park','Nailing the high note','Peeling an orange in one go','Wi-Fi password on the wall']},
+
+{id:'tragedies',n:'Tiny tragedies',e:'😩',c:'#7A3E4A',lang:'en',k:[
+ 'Toast lands butter side down','Phone at one percent','Wet sock','Stubbed toe','Missed the bus by seconds',
+ 'Ice cream falls off the cone','Hair in the food','Stepping on a plug','Cold coffee','Hangnail',
+ 'Autocorrect strikes','Tangled headphones','Empty toilet roll','Losing the remote',
+ 'Paper cut','Rain on the day off','Spoiler in the headline','Bag splits in the street',
+ 'Forgetting why you walked in','Pen dies mid-sentence','Dropping the best bit','Sock inside out all day',
+ 'Battery dies at the checkout','Last page missing','Cracked screen','Getting splashed by a bus',
+ 'Reply all','Your sentence finished wrong']},
+
+{id:'excuses',n:'Excuses & white lies',e:'🤥',c:'#B8860B',lang:'en',k:[
+ 'Five minutes away','Traffic was terrible','My phone died','I read the terms','I am fine',
+ 'I was just about to call you','The dog ate it','It was on sale','I only had one','I am listening',
+ 'I will start Monday','Just one more episode','I did not see your message','I am not tired','It is not you',
+ 'I have plans','I have a headache','My alarm did not go off','It was already like that',
+ 'I meant to do that','I have a friend who','I am almost done','I remember you','I will be there at eight',
+ 'I was going to say that','The cat did it','Sorry I fell asleep','I did not get the invite']},
+
+{id:'arguments',n:'Things people argue about',e:'⚖️',c:'#6A5ACD',lang:'en',k:[
+ 'Toilet roll direction','Pineapple on pizza','Window or aisle seat','The thermostat','Loading the dishwasher',
+ 'Whose turn to cook','Milk first or tea first','Best Beatle','Cats or dogs','How to pronounce gif',
+ 'Is a hot dog a sandwich','Blanket hogging','Who took the bins out','Best pizza topping',
+ 'Front seat','Music in the car','Splitting the bill','Whether it is cold in here','Directions',
+ 'Which way to hang the towel','Leaving the light on','Snooze button','Restaurant choice','Whose fault it was',
+ 'Where to put the keys','Whether to bring a jacket','Squeezing the toothpaste','Board game rules']},
+
+{id:'laughs',n:'Ha ha ha',e:'😂',c:'#E67E22',lang:'en',k:[
+ 'Snort laugh','Silent shaking','Wheeze','Evil laugh','Nervous giggle','Belly laugh','Fake polite laugh',
+ 'Laughing at your own joke','Crying laughing','Laugh that turns into a cough','Laughing in a library',
+ 'Dad chuckle','Cackle','Snigger','Laughing at a funeral','Church laugh','Delayed laugh','Laughing so hard no sound',
+ 'Goose honk','Machine gun laugh','Villain laugh','Laughing at nothing','Baby giggle','Laughing while drinking',
+ 'Chuckle into your hand','Hiccup laugh']},
+
+{id:'dogtalk',n:'Things you say to a dog',e:'🐶',c:'#C0692B',lang:'en',k:[
+ 'Who is a good boy','Drop it','Not on the sofa','Walkies','Sit','Do you want a treat','Leave it',
+ 'Where is the ball','Who did this','Stay','Paw','Come here','No barking','Good girl','Dinner time',
+ 'Roll over','You stink','Off the bed','We are going to the vet','Look at you','Wait','Say hello',
+ 'What have you got','Down','Bath time','Fetch','Give me the sock','Bedtime']},
+
+{id:'grandma',n:'At grandma\u2019s house',e:'🧶',c:'#8B5E83',lang:'en',k:[
+ 'Boiled sweets in a tin','Doilies','Plastic on the sofa','Cash in an envelope','Too much food','Photo albums',
+ 'Clock that ticks loudly','Slippers by the door','Knitted blanket','Biscuit tin full of buttons',
+ 'Old landline phone','Radio always on','Plants everywhere','Second helping','Mints in a handbag',
+ 'Stories about the war','Cardigan in summer','Remote wrapped in plastic','The good china','Slow cooker smell',
+ 'Cushions you cannot sit on','Lace curtains','Handwritten recipes','Taking your shoes off','Sweets in a pocket',
+ 'You have grown','The same three jokes','Falling asleep after lunch']},
+
+{id:'firstworld',n:'First world problems',e:'🙄',c:'#4B6584',lang:'en',k:[
+ 'One bar of Wi-Fi','Charger too short','Too many streaming services','Buffering','Slow walker in front',
+ 'Face unlock fails','Cold pizza delivery','Wrong coffee order','No phone signal in the lift',
+ 'Autoplay next episode too soon','Fridge too full','Cannot decide what to watch','Delivery window of eight hours',
+ 'Headphones not pairing','Too many passwords','Notifications piling up','Battery saver mode',
+ 'Update available','Ad before the video','Nothing to wear','Waiting for the kettle','Song stuck in the queue',
+ 'Wrong side of the bed','Left phone in another room','Not enough pillows']},
+
+{id:'bodynoise',n:'Sounds you can make',e:'👄',c:'#D35400',lang:'en',k:[
+ 'Whistle','Burp','Knuckle crack','Tongue click','Raspberry','Finger snap','Hiccup','Yawn','Sneeze',
+ 'Cough','Clap','Stomp','Hum','Growl','Gargle','Cheek pop','Kissing sound','Slurp','Wolf whistle',
+ 'Snore','Sniff','Squeak','Purr','Sigh','Gasp','Clear your throat','Beatbox','Duck call']},
 
 /* ---- Estonian decks: hidden unless the Estonian toggle is on ---- */
 
