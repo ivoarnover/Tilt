@@ -1,4 +1,4 @@
-# Tilt — release 2026-09-03.3
+# Tilt — release 2026-09-05.1
 
 ## The whole app is nine files
 
@@ -9,7 +9,7 @@ have version numbers now precisely because that is hard to track by hand.
 
 ```
 index.html        the game: screens, tilt detection, scoring, party mode
-decks.js          all deck content — 87 decks
+decks.js          all deck content — 86 decks
 sw.js             service worker: offline play, and required for the install prompt
 manifest.json     app metadata for installing to the home screen
 icon.svg          icon, vector
@@ -36,7 +36,7 @@ Optional and irrelevant to the running site: `.gitlab-ci.yml` (only for GitLab),
 The home screen now prints a line at the bottom:
 
 ```
-v2026-09-03.3 · 87 decks · 3276 cards
+v2026-09-05.1 · 86 decks · 3485 cards
 ```
 
 Three things to check against it:
@@ -83,6 +83,23 @@ they make the list harder to read:
 - `icon-1.svg` — a duplicate GitHub created when `icon.svg` was uploaded twice
 
 ## What changed in this release
+
+**2026-09-05.1** — playtest feedback from Keiu and Ivo
+- Words too tiny: the card is built for landscape, and the app now says so. Tapping Start
+  requests fullscreen and locks landscape where the browser allows it; the countdown shows
+  "Turn the phone sideways" while the phone is upright; the type ceiling is gone.
+- Countdown is three seconds every round again, so the phone can be passed.
+- Scoring setting: Simple (every card counts once — the new default) or Bonus (streaks,
+  double card, last-card gamble).
+- Party mode is open-ended: no more choosing turns. The scoreboard says how many rounds
+  are played, who still has to play this turn, and Finish game warns if a team is waiting.
+- Whose turn it is now appears on the deck screen, the pre-round screen and the countdown.
+- "Go back to the words you missed" on the scorecard: a short round of just those cards,
+  scores untouched.
+- Decks merged wider: Animals & pets (with Under the sea), Nature & weather, Kids & toys,
+  Places (landmarks + cities). Water gun / water pistol duplicate removed.
+- New decks: Italy, Wine, Sommelier (the hard one), Fashion. The old Fashion is now Clothing.
+- Fixed: the deck screen did not show who was picking when reached from the scoreboard.
 
 **2026-09-03.3**
 - Settings rows (round length, sound, tilt) could collapse to a sliver on the How to

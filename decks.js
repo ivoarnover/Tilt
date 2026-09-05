@@ -1,4 +1,4 @@
-const DECKS_VERSION = '2026-09-03.3';
+const DECKS_VERSION = '2026-09-05.1';
 
 /* ===============================================================
    TILT — deck content
@@ -39,18 +39,21 @@ const DECKS = [
  'Final level','Rage quit','Tutorial','Leaderboard','Virtual reality',
  'Inventory','Skill tree','Open world','Local co-op','Split screen','Achievement','Sandbox','Fast travel','Character creator','Rubber banding','Ping','Patch notes','Loot box','Retro remake','Motion controls','Endless runner','Puzzle platformer','Random encounter']},
 
-{id:'animals',n:'Animals',e:'🐼',c:'#E67E22',lang:'en',k:[
+{id:'animals',n:'Animals & pets',e:'🐼',c:'#E67E22',lang:'en',k:[
  'Elephant|grey,trunk,Africa','Penguin|ice,bird,black','Octopus|eight,tentacles,sea','Sloth|slow,tree,lazy','Hedgehog|spikes,prickly,small','Giraffe|tall,neck,spots','Bat|night,cave,fly','Crocodile|teeth,river,green',
  'Squirrel|nuts,tree,tail','Owl|night,hoot,wise','Jellyfish|sting,sea,transparent','Kangaroo|Australia,jump,pouch','Chameleon|colour,change,lizard','Woodpecker|tree,beak,knock','Hamster|wheel,cage,pet','Seagull|beach,chips,bird','Moose|antlers,big,forest','Lynx|cat,wild,ears',
  'Wolf|howl,pack,moon','Bumblebee|honey,sting,buzz','Snail|slow,shell,slime','Flamingo|pink,leg,bird','Otter|river,swim,cute','Peacock|feathers,tail,blue','Camel|desert,hump,sand','Rhino|horn,grey,Africa','Panda|bamboo,black,white','Raccoon|bins,mask,stripes','Donkey|ears,stubborn,horse',
  'Goat|beard,climb,cheese','Parrot|talk,colourful,repeat','Tortoise|shell,slow,old','Mole|dig,blind,underground','Swan|white,lake,neck',
- 'Badger|stripe,dig,night','Ostrich|big,bird,run','Weasel|sneaky,thin,small','Pelican|beak,fish,pouch','Stork|baby,long,legs','Toad|frog,warty,jump','Beetle|shell,insect,black','Dragonfly|wings,pond,insect','Hyena|laugh,Africa,pack','Zebra|stripes,black,white','Meerkat|stand,look,desert','Alpaca|wool,llama,fluffy','Ferret|long,thin,pet','Newt|pond,lizard,small','Skunk|smell,stripe,spray','Lemur|Madagascar,tail,eyes','Puffin|beak,cliff,bird','Porcupine|spikes,quills,sharp','Antelope|horns,run,Africa','Chipmunk|cheeks,stripes,nuts','Boar|pig,wild,tusks','Bison|buffalo,big,hairy']},
+ 'Badger|stripe,dig,night','Ostrich|big,bird,run','Weasel|sneaky,thin,small','Pelican|beak,fish,pouch','Stork|baby,long,legs','Toad|frog,warty,jump','Beetle|shell,insect,black','Dragonfly|wings,pond,insect','Hyena|laugh,Africa,pack','Zebra|stripes,black,white','Meerkat|stand,look,desert','Alpaca|wool,llama,fluffy','Ferret|long,thin,pet','Newt|pond,lizard,small','Skunk|smell,stripe,spray','Lemur|Madagascar,tail,eyes','Puffin|beak,cliff,bird','Porcupine|spikes,quills,sharp','Antelope|horns,run,Africa','Chipmunk|cheeks,stripes,nuts','Boar|pig,wild,tusks','Bison|buffalo,big,hairy',
+ 'Dog lead|walk,collar,pull','Cat scratching post|claws,sofa,tower','Litter tray|cat,sand,toilet','Fetch|ball,throw,dog','Wagging tail|happy,dog,wag','Vet visit|sick,doctor,animal','Dog park|run,off lead,grass',
+ 'Purring|cat,happy,rumble','Chewed shoe|puppy,teeth,ruined','Hamster wheel|spin,cage,run','Aquarium|fish,tank,glass','Parrot talking|repeat,bird,words','Bird cage|bars,perch,wings','Puppy training|sit,treats,lessons',
+ 'Cat on the keyboard|typing,laptop,sits','Muddy paws|floor,rain,prints','Dog begging at the table|eyes,food,dinner','Fur on clothes|lint,black,roller','Pet name|call,cute,nickname',
+ 'Feeding time|bowl,hungry,clock','Walkies|lead,door,excited','Cat in a box|cardboard,sits,fits','Vet bill|expensive,pay,animal','Rescue shelter|adopt,homeless,cages',
+ 'Shark|fin,teeth,Jaws','Dolphin|clever,jump,smile','Coral reef|colourful,fish,underwater','Seahorse|tiny,curly,upright','Starfish|five,arms,rock','Whale|huge,blow,sing','Crab|sideways,claws,shell','Lobster|red,claws,expensive','Pearl|oyster,white,necklace','Shipwreck|sunk,old,treasure',
+ 'Scuba diving|tank,mask,underwater','Snorkel|tube,mask,surface','Tide pool|rocks,low,small','Seaweed|green,slimy,beach','Anchor|heavy,chain,boat','Lighthouse|tower,light,ships','Fishing net|catch,mesh,boat','Message in a bottle|note,float,cork',
+ 'Sea turtle|shell,slow,swim','Wave|surf,crash,water','Submarine|underwater,periscope,navy','Pirate treasure|chest,gold,map','Sandcastle|beach,bucket,build','Buoy|float,marker,bob',
+ 'Manta ray|flat,wings,glide','Barnacle|stuck,hull,shell','Plankton|tiny,whale,food','Deep sea vent|hot,dark,bottom','Sea urchin|spiky,ball,rock','Clownfish|orange,stripes,Nemo','Kelp forest|tall,seaweed,underwater','Trawler|boat,fish,net','Rowing boat|oars,small,lake','Life jacket|float,orange,safety','Tidal wave|huge,wall,crash','Message buoy|float,signal,sea','Ferry crossing|boat,cars,across','Harbour seal|grey,rocks,whiskers','Fish market|stalls,smell,ice','Sea salt|crystals,grind,flakes','Pearl diver|breath,oyster,deep','Mooring rope|tie,boat,dock']},
 
-{id:'sealife',n:'Under the sea',e:'🐙',c:'#0A7EA4',lang:'en',k:[
- 'Shark','Dolphin','Coral reef','Seahorse','Starfish','Whale','Crab','Lobster','Pearl','Shipwreck',
- 'Scuba diving','Snorkel','Tide pool','Seaweed','Anchor','Lighthouse','Fishing net','Message in a bottle',
- 'Sea turtle','Wave','Submarine','Pirate treasure','Sandcastle','Buoy',
- 'Manta ray','Barnacle','Plankton','Deep sea vent','Sea urchin','Clownfish','Kelp forest','Trawler','Rowing boat','Life jacket','Tidal wave','Message buoy','Ferry crossing','Harbour seal','Fish market','Sea salt','Pearl diver','Mooring rope']},
 
 {id:'food',n:'Food',e:'🍕',c:'#D63447',lang:'en',k:[
  'Pizza|cheese,Italy,slice','Sushi|Japan,fish,rice','Pancake|flat,syrup,flip','Garlic|smell,cloves,vampire','Popcorn|cinema,pop,butter','Spaghetti|Italy,long,pasta','Pickle|cucumber,jar,sour','Chilli pepper|hot,spicy,red',
@@ -64,7 +67,7 @@ const DECKS = [
  'Sparkling water','Orange juice','Beer','Champagne','Cocktail','Mulled wine','Iced coffee',
  'Energy drink','Tap water','Straw','Ice cubes','Coconut water','Kefir','Cider','Espresso shot',
  'Bubble tea','Toast to the bride','Last call','Refill','Thermos',
- 'Cappuccino','Herbal tea','Fizzy drink','Lemon slice','Wine tasting','Barrel','Cork','Milk carton','Instant coffee','Ginger shot','Punch bowl','Frozen margarita','Sparkling wine','Coffee grinder','Empty glass','Tea bag','Beer garden','Water fountain']},
+ 'Cappuccino','Herbal tea','Fizzy drink','Lemon slice','Tasting flight','Barrel','Cork','Milk carton','Instant coffee','Ginger shot','Punch bowl','Frozen margarita','Sparkling wine','Coffee grinder','Empty glass','Tea bag','Beer garden','Water fountain']},
 
 {id:'desserts',n:'Sweets',e:'🍰',c:'#E84393',lang:'en',k:[
  'Ice cream','Doughnut','Cheesecake','Marshmallow','Candy floss','Chocolate bar','Waffle','Brownie',
@@ -154,18 +157,17 @@ const DECKS = [
  'Vietnam|pho,Hanoi,war','Morocco|Marrakesh,desert,souk','Argentina|tango,Messi,steak','Sweden|IKEA,ABBA,Stockholm','Poland|Warsaw,pierogi,vodka','Thailand|Bangkok,beaches,Thai','South Korea|Seoul,K-pop,kimchi',
  'Germany|Berlin,beer,cars','France|Paris,wine,croissant','China|Great Wall,Beijing,panda','Chile|long,Andes,Santiago','Nepal|Everest,mountains,Kathmandu','Latvia|Riga,Baltic,neighbour','Lithuania|Vilnius,Baltic,basketball','Denmark|Copenhagen,Lego,Vikings','Croatia|coast,Dubrovnik,football','Hungary|Budapest,goulash,paprika','Georgia|wine,Tbilisi,mountains','Ukraine|Kyiv,borscht,sunflower','Israel|Jerusalem,Tel Aviv,desert','Cuba|Havana,cigars,Castro','Jamaica|reggae,Bob Marley,beach','New Zealand|Kiwi,rugby,hobbits','Singapore|city,clean,Asia']},
 
-{id:'cities',n:'Cities',e:'🏙️',c:'#1E5F9E',lang:'en',k:[
- 'Paris','Tokyo','New York','Venice','Berlin','Rome','Istanbul','Rio de Janeiro','Amsterdam','Cairo',
- 'Barcelona','Moscow','Sydney','Dubai','Helsinki','Tallinn','Riga','Prague','Vienna','Las Vegas',
- 'Hong Kong','Reykjavik','Lisbon','San Francisco','Bangkok','Marrakesh',
- 'London','Madrid','Milan','Oslo','Copenhagen','Stockholm','Warsaw','Budapest','Athens','Munich','Naples','Seoul','Shanghai','Mumbai','Cape Town','Buenos Aires','Toronto','Chicago','Miami','Zurich']},
 
-{id:'landmarks',n:'World landmarks',e:'🗼',c:'#3867D6',lang:'en',k:[
+{id:'landmarks',n:'Places',e:'🗼',c:'#3867D6',lang:'en',k:[
  'Eiffel Tower','Big Ben','Pyramids','Colosseum','Great Wall','Taj Mahal','Statue of Liberty',
  'Stonehenge','Niagara Falls','Grand Canyon','Sydney Opera House','Mount Everest','Leaning Tower',
  'Machu Picchu','Times Square','Northern lights','Sahara','Amazon river','Venice canals',
  'Golden Gate Bridge','Mount Fuji','Dead Sea','Angkor Wat','Christ the Redeemer',
- 'Acropolis','Petra','Hagia Sophia','Alhambra','Neuschwanstein','Buckingham Palace','Red Square','Brandenburg Gate','Louvre','Uluru','Victoria Falls','Great Barrier Reef','Table Mountain','Trevi Fountain','Little Mermaid statue','Tower Bridge']},
+ 'Acropolis','Petra','Hagia Sophia','Alhambra','Neuschwanstein','Buckingham Palace','Red Square','Brandenburg Gate','Louvre','Uluru','Victoria Falls','Great Barrier Reef','Table Mountain','Trevi Fountain','Little Mermaid statue','Tower Bridge',
+ 'Paris','Tokyo','New York','Venice','Berlin','Rome','Istanbul','Rio de Janeiro','Amsterdam','Cairo',
+ 'Barcelona','Moscow','Sydney','Dubai','Helsinki','Tallinn','Riga','Prague','Vienna','Las Vegas',
+ 'Hong Kong','Reykjavik','Lisbon','San Francisco','Bangkok','Marrakesh',
+ 'London','Madrid','Milan','Oslo','Copenhagen','Stockholm','Warsaw','Budapest','Athens','Munich','Naples','Seoul','Shanghai','Mumbai','Cape Town','Buenos Aires','Toronto','Chicago','Miami','Zurich']},
 
 {id:'travel',n:'Travel',e:'✈️',c:'#EB3B5A',lang:'en',k:[
  'Passport','Suitcase','Boarding pass','Jet lag','Hostel','Souvenir','Sunburn','Airport security',
@@ -196,21 +198,20 @@ const DECKS = [
  'Magnifying glass','Solar panel','Chain reaction','Boiling point','X-ray','Compass needle',
  'Centrifuge','Petri dish','Catalyst','Molecule','Atom','Circuit board','Pulley','Lever','Friction','Density','Vacuum','Laser','Thermometer','Barometer','Condensation','Genome','Enzyme','Neuron']},
 
-{id:'nature',n:'Nature',e:'🌲',c:'#218C74',lang:'en',k:[
+{id:'nature',n:'Nature & weather',e:'🌲',c:'#218C74',lang:'en',k:[
  'Waterfall','Thunderstorm','Mushroom picking','Moss','Glacier','Swamp','Desert','Forest fire','Tide',
  'Cave','Fog','Avalanche','Bog','Sunrise','Pine cone','Anthill','Beaver dam','Frost','Berry picking',
  'Dew','Quicksand','Tree stump','Bird migration','Autumn leaves','Spider web','Rock pool','Wildflower',
  'Echo',
- 'Meadow','Riverbank','Marsh','Sand dune','Cliff edge','Pebble beach','Willow tree','Birch forest','Wild boar tracks','Owl at night','Bird nest','Fallen tree','Puddle ice','Northern forest','Beach stones','Sunset over water']},
-
-{id:'weather',n:'Weather',e:'☔',c:'#2980B9',lang:'en',k:[
+ 'Meadow','Riverbank','Marsh','Sand dune','Cliff edge','Pebble beach','Willow tree','Birch forest','Wild boar tracks','Owl at night','Bird nest','Fallen tree','Puddle ice','Northern forest','Beach stones','Sunset over water',
  'Hailstorm','Heatwave','Drizzle','Blizzard','Rainbow','Puddle','Umbrella turned inside out',
  'Black ice','Humidity','Wind chill','Thunder','Slush','First snow','Sunburn weather','Fog horn',
  'Sandstorm','Tornado','Drought','Weather app lying','Frozen windscreen','Melting snow','Windy hair',
  'Sudden downpour','Perfect beach day',
  'Cloud cover','Barometric drop','Clear sky','Frostbite','Sunny spell','Overcast','Storm warning','Flood','Muggy evening','Crisp morning','Rain on the roof','Wind turbine','Snowdrift','Warm front']},
 
-{id:'fashion',n:'Fashion',e:'👗',c:'#D6336C',lang:'en',k:[
+
+{id:'fashion',n:'Clothing',e:'👕',c:'#D6336C',lang:'en',k:[
  'High heels','Bow tie','Denim jacket','Scarf','Sunglasses','Knitted jumper','Raincoat','Flip-flops',
  'Backpack','Wristwatch','Beanie','Overalls','Tuxedo','Wedding dress','Socks with sandals','Hoodie',
  'Belt','Earrings','Shoelaces','Fur coat','Mullet','Matching outfits','Wrong size','Fitting room',
@@ -238,19 +239,18 @@ const DECKS = [
  'Hand raised','Playground fight','Parents evening','Textbook','Detention slip',
  'Assembly','Head teacher','Canteen lunch','Whiteboard marker','Class clown','Sports day','Homework excuse','Spelling test','Show and tell','Library card','Bell ringing','Uniform','Pen pal','Science fair','Class photo day','Study group']},
 
-{id:'kids',n:'Kids zone',e:'🧸',c:'#00B894',lang:'en',k:[
+{id:'kids',n:'Kids & toys',e:'🧸',c:'#00B894',lang:'en',k:[
  'Teddy bear','Swing','Soap bubble','Balloon','Sandpit','Slide','Puppy','Rainbow','Snowman','Kite',
  'Crayon','Lullaby','Playground','Hopscotch','Puddle jumping','Sticker','Colouring book',
  'Hide and seek','Tooth fairy','Tricycle','Bedtime story','Piggyback','Face paint','Bouncy castle',
  'Rubber duck','Skipping rope','Cartoon','Nap time',
- 'Building blocks','Story time','Balloon animal','Playdough','Toy car','Doll house','Water balloon','Sandcastle bucket','Piggyback ride','Cartoon marathon','Sleepover','Lost tooth','Birthday party','Bubble bath','Bike stabilisers','Ice cream cone']},
-
-{id:'toys',n:'Games & toys',e:'🧩',c:'#E58E26',lang:'en',k:[
+ 'Building blocks','Story time','Balloon animal','Playdough','Toy car','Doll house','Water balloon','Sandcastle bucket','Piggyback ride','Cartoon marathon','Sleepover','Lost tooth','Birthday party','Bubble bath','Bike stabilisers','Ice cream cone',
  'Jigsaw puzzle','Chess','Monopoly','Rubiks cube','Yo-yo','Dominoes','Card castle','Jenga','Darts',
  'Marbles','Kite flying','Water pistol','Board game rules','Dice roll','Playing cards','Scrabble',
  'Hula hoop','Frisbee','Slinky','Snakes and ladders','Tug of war','Rock paper scissors','Bingo',
  'Musical chairs',
- 'Lego brick','Spinning top','Kaleidoscope','Toy soldier','Puppet','Water gun','Skipping rope','Card trick','Rubber band ball','Paper aeroplane','Treasure hunt','Charades','Twister','Pictionary','Cluedo','Darts board']},
+ 'Lego brick','Spinning top','Kaleidoscope','Toy soldier','Puppet','Card trick','Rubber band ball','Paper aeroplane','Treasure hunt','Charades','Twister','Pictionary','Cluedo','Darts board']},
+
 
 {id:'hobbies',n:'Hobbies',e:'🎨',c:'#8854D0',lang:'en',k:[
  'Knitting','Gardening','Birdwatching','Pottery','Fishing','Photography','Baking','Jogging',
@@ -476,7 +476,7 @@ const DECKS = [
  'Sitting very still','Nurse call button','Waiting for results','White coat','Cotton wool']},
 
 {id:'restaurant',n:'Restaurant',e:'🍽️',c:'#BC4749',lang:'en',k:[
- 'Menu','Specials board','Waiter','Table for two','Reservation','Tip','Bill','Wine list',
+ 'Menu','Specials board','Waiter','Table for two','Reservation','Tip','Bill','The list at the restaurant',
  'Bread basket','Napkin','Candle on the table','Open kitchen','Takeaway box','Delivery driver',
  'Kids menu','Dessert trolley','Wrong order','Long wait','Loud table nearby','Table by the window',
  'Sharing plates','Chef recommendation','Cutlery drop','Splitting the starter']},
@@ -487,11 +487,6 @@ const DECKS = [
  'Bear-proof box','River crossing','Hiking boots','Blister','Sunrise from a hill','Rain on the tent',
  'Lost trail marker','Bird waking you up','Instant coffee outdoors','Packing up wet']},
 
-{id:'pets',n:'Pets',e:'🐕',c:'#E76F51',lang:'en',k:[
- 'Dog lead','Cat scratching post','Litter tray','Fetch','Wagging tail','Vet visit','Dog park',
- 'Purring','Chewed shoe','Hamster wheel','Aquarium','Parrot talking','Bird cage','Puppy training',
- 'Cat on the keyboard','Muddy paws','Dog begging at the table','Fur on clothes','Pet name',
- 'Feeding time','Walkies','Cat in a box','Vet bill','Rescue shelter']},
 
 {id:'dinos',n:'Dinosaurs',e:'🦕',c:'#606C38',lang:'en',k:[
  'Tyrannosaurus','Triceratops','Velociraptor','Stegosaurus','Brachiosaurus','Pterodactyl',
@@ -610,6 +605,46 @@ const DECKS = [
  'Whistle','Burp','Knuckle crack','Tongue click','Raspberry','Finger snap','Hiccup','Yawn','Sneeze',
  'Cough','Clap','Stomp','Hum','Growl','Gargle','Cheek pop','Kissing sound','Slurp','Wolf whistle',
  'Snore','Sniff','Squeak','Purr','Sigh','Gasp','Clear your throat','Beatbox','Duck call']},
+
+{id:'couture',n:'Fashion',e:'👗',c:'#C2185B',lang:'en',k:[
+ 'Coco Chanel','Little black dress','Runway','Haute couture','Fashion week','Vogue magazine',
+ 'Gucci','Prada','Louis Vuitton','Versace','Dior','Balenciaga','Karl Lagerfeld','Anna Wintour',
+ 'Supermodel','Catwalk strut','Front row','Vintage Chanel','Logo everywhere','Capsule wardrobe',
+ 'Fast fashion','Thrift find','Statement piece','Power suit','Ballgown','Trench coat classic',
+ 'Met Gala','Street style','Designer knock-off','Fashion victim','Ripped jeans on purpose',
+ 'It bag','Monochrome look','Oversized blazer','Platform heels','Dressing for the weather',
+ 'Ironing at the last minute','Outfit repeat','Mirror check']},
+
+{id:'italy',n:'Italy',e:'🇮🇹',c:'#2E7D32',lang:'en',k:[
+ 'Pizza Margherita|cheese,tomato,Naples','Espresso at the bar','Vespa','Colosseum','Venice gondola',
+ 'Leaning Tower','Pasta carbonara','Tiramisu','Gelato','Prosecco','Limoncello','Aperol spritz',
+ 'Nonna','Hand gestures','Siesta','Roman Forum','Vatican','Sistine Chapel','Pompeii','Amalfi Coast',
+ 'Cinque Terre','Tuscany','Sicily','Sardinia','Milan fashion','Ferrari','Fiat 500','Juventus',
+ 'Pavarotti','Da Vinci','Michelangelo','Dolce vita','Mamma mia','Ciao bella','Mafia movie',
+ 'Parmesan wheel','Mozzarella','Prosciutto','Risotto','Lasagne','Pesto from Genoa','Focaccia',
+ 'Cannoli','Panettone','Chianti','Roman fountain','Piazza','Trevi coin toss','Nonna\u2019s Sunday lunch',
+ 'Passeggiata','Naples traffic','Talking with your hands']},
+
+{id:'wine',n:'Wine',e:'🍷',c:'#7B1E3B',lang:'en',k:[
+ 'Corkscrew','Red','White','Rose','Champagne','Prosecco','Cork','Glass with a stem','Decanter',
+ 'Vineyard','Grape harvest','Tasting flight','Swirling the glass','Sniffing the cork','Sommelier',
+ 'Cellar','Screw cap','Box with a tap','Glogg','Sangria','Red stain on the carpet','Cheese board',
+ 'Toast','Cheers','Vintage','Bottle label','The list at the restaurant','House pour','Corked','Hangover',
+ 'Chardonnay','Merlot','Cabernet Sauvignon','Pinot Noir','Riesling','Sauvignon Blanc','Malbec',
+ 'Bubbles','Dessert bottle','Port','Sherry','Bordeaux','Burgundy','Rioja','Tuscan red',
+ 'Napa Valley','Barrel aged','Tannins','Dry','Sweet','Full bodied','Legs on the glass',
+ 'Letting it breathe','Pairing','Sediment','Bottle fridge','Half bottle','Magnum','Popping the cork']},
+
+{id:'sommelier',n:'Sommelier',e:'🍇',c:'#4A1030',lang:'en',k:[
+ 'Terroir','Tannin structure','Oak influence','Malolactic fermentation','Lees','Brettanomyces',
+ 'Cork taint','Botrytis','Late harvest','Ice wine','Amarone','Barolo','Brunello','Sancerre','Chablis',
+ 'Pouilly-Fume','Gewurztraminer','Gruner Veltliner','Nebbiolo','Sangiovese','Tempranillo','Grenache',
+ 'Syrah','Viognier','Chenin Blanc','Pet-nat','Natural wine','Biodynamic','Old vines','Single vineyard',
+ 'Grand cru','Premier cru','Appellation','Vintage variation','Decanting sediment','Blind tasting',
+ 'Nose','Finish','Minerality','Acidity','Body','Mouthfeel','Legs','Punt','Sabrage','Coravin',
+ 'Riedel glass','Room temperature myth','Second label','Cellar door','Wine fraud','Corkage fee',
+ 'Spitting bucket','Aeration','Vertical tasting','Horizontal tasting','Jeroboam','Solera','Fortified',
+ 'Noble rot']},
 
 /* ---- Estonian decks: hidden unless the Estonian toggle is on ---- */
 

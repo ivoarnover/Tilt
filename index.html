@@ -257,6 +257,12 @@ button{font-family:inherit;font-size:16px;color:var(--ink);background:none;borde
   <div style="height:10px"></div>
   <p class="eyebrow" style="margin:0 0 7px">Round length</p>
   <div class="chips" id="lenChips"></div>
+  <p class="eyebrow" style="margin:12px 0 7px">Scoring</p>
+  <div class="chips">
+    <button class="chip" id="simpleBtn" onclick="setBonus(false)">Simple</button>
+    <button class="chip" id="bonusBtn" onclick="setBonus(true)">Bonus</button>
+  </div>
+  <p class="sub" style="font-size:13px;margin-top:4px" id="scoringNote"></p>
   <p class="eyebrow" style="margin:12px 0 7px">Card screen</p>
   <div class="chips">
     <button class="chip" id="brightBtn" onclick="toggleBright()">Bright room</button>
@@ -316,8 +322,6 @@ button{font-family:inherit;font-size:16px;color:var(--ink);background:none;borde
   <p class="eyebrow" style="margin:12px 0 7px">How many</p>
   <div class="chips" id="partyCount"></div>
 
-  <p class="eyebrow" style="margin:12px 0 7px">Turns each</p>
-  <div class="chips" id="partyRounds"></div>
 
   <p class="eyebrow" style="margin:12px 0 7px">Names</p>
   <div id="partyNames"></div>
@@ -340,7 +344,7 @@ button{font-family:inherit;font-size:16px;color:var(--ink);background:none;borde
 
 <!-- SCOREBOARD -->
 <section id="board" class="screen">
-  <button class="back" onclick="leaveParty()"><span>‹</span> End game</button>
+  <button class="back" onclick="leaveParty()"><span>‹</span> Quit without finishing</button>
   <h2 id="boardTitle">Scoreboard</h2>
   <p class="sub" id="boardSub" style="margin:6px 0 14px">Round 1</p>
   <div id="boardList"></div>
@@ -348,6 +352,7 @@ button{font-family:inherit;font-size:16px;color:var(--ink);background:none;borde
   <div class="stat" style="text-align:center" id="nextUp"><span>Next up</span>—</div>
   <button class="btn primary" onclick="startTurn()" id="turnBtn">Start the round</button>
   <button class="btn ghost" id="sameDeckBtn" style="display:none" onclick="startTurnSameDeck()">Same deck as last turn</button>
+  <button class="btn ghost" id="finishBtn" style="display:none;border:none;color:var(--ink-dim)" onclick="finishGame()">Finish game</button>
 </section>
 
 <!-- FINAL -->
@@ -369,6 +374,7 @@ button{font-family:inherit;font-size:16px;color:var(--ink);background:none;borde
 <section id="decks" class="screen">
   <button class="back" onclick="go('home')"><span>‹</span> Back</button>
   <div class="sticky">
+    <p class="eyebrow" id="whoPicks" style="display:none;color:var(--acc-3);margin-bottom:4px"></p>
     <h2>Decks</h2>
     <input id="deckSearch" class="search" placeholder="Search decks" oninput="buildDecks()" autocomplete="off">
     <p class="sub" id="deckHint" style="font-size:13px;margin:0 0 8px">Tap a deck to play it, or hold to combine several.</p>
@@ -392,6 +398,7 @@ button{font-family:inherit;font-size:16px;color:var(--ink);background:none;borde
   <button class="back" onclick="go('decks')"><span>‹</span> Back</button>
   <div class="spacer"></div>
   <div style="text-align:center">
+    <p class="eyebrow" id="whoseRound" style="display:none;color:var(--acc-3);margin-bottom:8px;font-size:14px"></p>
     <div id="preIcon" style="font-size:56px">🎬</div>
     <h1 id="preDeck" style="font-size:36px;margin-top:6px">Deck</h1>
     <p class="sub" id="preCount" style="margin-top:4px">0 cards</p>
@@ -425,6 +432,7 @@ button{font-family:inherit;font-size:16px;color:var(--ink);background:none;borde
 <section id="ready" class="screen" style="justify-content:center;align-items:center;text-align:center">
   <div id="count">3</div>
   <p class="sub" id="readyNote" style="margin-top:18px">Hold still</p>
+  <p id="turnHint" style="display:none;margin-top:14px;font-size:20px;font-weight:800">\u21BB Turn the phone sideways</p>
 </section>
 
 <!-- PLAY -->
@@ -452,6 +460,7 @@ button{font-family:inherit;font-size:16px;color:var(--ink);background:none;borde
     <div class="cap" id="runningTotal" style="margin-top:8px;font-weight:800"></div>
   </div>
   <div class="statRow" id="stats"></div>
+  <button class="btn ghost" id="retryMissedBtn" style="display:none" onclick="retryMissed()">Go back to the ones you missed</button>
   <div id="steals" style="display:none"></div>
   <p class="sub" style="margin:14px 0 2px;font-size:14px">Tap a word to change the verdict. Tap ✕ to never see it again.</p>
   <div id="cardList"></div>
@@ -462,9 +471,9 @@ button{font-family:inherit;font-size:16px;color:var(--ink);background:none;borde
 </section>
 
 <div id="mismatch"></div>
-<script src="decks.js?v=2026-09-03.3"></script>
+<script src="decks.js?v=2026-09-05.1"></script>
 <script>
-const APP_VERSION = '2026-09-03.3';
+const APP_VERSION = '2026-09-05.1';
 
 /* Wipes the service-worker caches and reloads bypassing the HTTP cache.
    Declared before the version check so the banner can call it. */
@@ -551,6 +560,8 @@ const MODES = [
 let ROUND_MS = +(store('tilt_len')||60000);
 let soundOn = store('tilt_sound') !== '0';
 let brightOn = store('tilt_bright') === '1';
+let bonusOn = store('tilt_bonus') === '1';     // simple scoring by default: one point per card
+function setBonus(v){ bonusOn=!!v; store('tilt_bonus', bonusOn?'1':'0'); paintToggles(); }
 function toggleBright(){ brightOn=!brightOn; store('tilt_bright', brightOn?'1':'0'); paintToggles(); }
 let hapticsOn = store('tilt_haptics') !== '0';
 const LENGTHS = [30000, 60000, 90000];
@@ -568,6 +579,11 @@ function toggleHaptics(){ hapticsOn=!hapticsOn; store('tilt_haptics', hapticsOn?
 function paintToggles(){
   const sb=document.getElementById('soundBtn'), hb=document.getElementById('hapticBtn');
   const bb=document.getElementById('brightBtn');
+  const sm=document.getElementById('simpleBtn'), bo=document.getElementById('bonusBtn');
+  if(sm){ sm.className='chip'+(bonusOn?'':' on'); bo.className='chip'+(bonusOn?' on':'');
+    document.getElementById('scoringNote').textContent = bonusOn
+      ? 'Streak bonus every third card, one double-points card, and a last-card gamble worth 3 or minus 1.'
+      : 'Every card counts once. Nothing else.'; }
   if(bb){ bb.className='chip'+(brightOn?' on':''); bb.textContent=(brightOn?'\u2713 ':'')+'Bright room'; }
   if(sb){ sb.className='chip'+(soundOn?' on':''); sb.textContent=(soundOn?'\u2713 ':'')+'Sound'; }
   if(hb){ hb.className='chip'+(hapticsOn?' on':''); hb.textContent=(hapticsOn?'\u2713 ':'')+'Vibration'; }
@@ -665,6 +681,7 @@ function quitRound(confirmed){
   quitArmed = null;
   document.getElementById('toast').style.display='none';
   running=false;
+  leaveLandscape();
   if(session){
     if(raf) cancelAnimationFrame(raf);
     if(wakeLock){ try{ wakeLock.release(); }catch(e){} wakeLock=null; }
@@ -684,12 +701,12 @@ const GROUPS = [
   {id:'all',    name:'All'},
   {id:'music',  name:'Music',     ids:['music','singers','popstars','madonna','eurovision','instruments','dance']},
   {id:'screen', name:'Screen',    ids:['movies','tv','games','characters','heroes','myth','retro','internet','memes']},
-  {id:'food',   name:'Food',      ids:['food','drinks','desserts','fruitveg','cooking','restaurant','shop','smells']},
-  {id:'daily',  name:'Everyday',  ids:['house','essentials','chores','office','money','tools','jobs','school','body','doctor','gym','pocket','wedding','pets']},
-  {id:'world',  name:'World',     ids:['countries','cities','landmarks','travel','nature','weather','space','science','history','famous','animals','sealife','dinos','camping','cars']},
+  {id:'food',   name:'Food',      ids:['food','drinks','wine','sommelier','desserts','fruitveg','cooking','restaurant','shop','smells','italy']},
+  {id:'daily',  name:'Everyday',  ids:['house','essentials','chores','office','money','tools','jobs','school','body','doctor','gym','pocket','wedding','couture']},
+  {id:'world',  name:'World',     ids:['countries','landmarks','travel','nature','space','science','history','famous','animals','dinos','camping','cars']},
   {id:'silly',  name:'Silly',     ids:['hard','undef','feel','party','badideas','noise','verbs','idioms','impressions','crime','luck','victories','tragedies','excuses','arguments','laughs','dogtalk','grandma','firstworld','bodynoise']},
   {id:'season', name:'Seasonal',  ids:['christmas','halloween','summer','winter']},
-  {id:'kids',   name:'More',      ids:['kids','toys','hobbies','sports','fashion','brands','companies','tech']}
+  {id:'kids',   name:'More',      ids:['kids','hobbies','sports','fashion','brands','companies','tech']}
 ];
 let group = 'all';
 function setGroup(g){ group = g; buildDecks(); }
@@ -788,6 +805,9 @@ function updateSelBar(){
 }
 
 function buildDecks(){
+  const wp=document.getElementById('whoPicks');
+  if(session){ wp.style.display='block'; wp.textContent = session.names[session.turn] + ' \u2014 pick a deck'; }
+  else wp.style.display='none';
   const q = (document.getElementById('deckSearch').value||'').trim().toLowerCase();
   const g = document.getElementById('deckGrid');
   const list = visibleDecks();
@@ -887,7 +907,7 @@ function toggleEstonian(){
   buildDecks();
 }
 
-function quickPlay(){ session=null; saveSession(); quickTotal=0; quickRounds=0; go('decks'); }
+function quickPlay(){ session=null; saveSession(); quickTotal=0; quickRounds=0; buildDecks(); go('decks'); }
 function keepPlaying(sameDeck){
   quickTotal += score; quickRounds += 1;
   if(sameDeck) startRound(); else go('decks');
@@ -899,6 +919,9 @@ function pickDeck(d){
     session.lastDeckId = d.id; saveSession();
   }
   deck = d; bag = []; recent = [];
+  const wr=document.getElementById('whoseRound');
+  if(session){ wr.style.display='block'; wr.textContent = session.names[session.turn] + '\u2019s round'; }
+  else wr.style.display='none';
   document.getElementById('preIcon').textContent = d.emoji;
   document.getElementById('preDeck').textContent = d.name;
   document.getElementById('preCount').textContent =
@@ -1008,7 +1031,12 @@ let setup = { kind:'teams', count:2, roundsEach:3, deckMode:'each', mods:true, r
 
 function saveSession(){ store('tilt_session', session ? JSON.stringify(session) : ''); }
 function loadSession(){
-  try{ const raw = store('tilt_session'); return raw ? JSON.parse(raw) : null; }catch(e){ return null; }
+  try{
+    const raw = store('tilt_session'); if(!raw) return null;
+    const ss = JSON.parse(raw);
+    if(ss && (ss.total===null || ss.total===undefined)) ss.total = Infinity;
+    return ss;
+  }catch(e){ return null; }
 }
 
 function defaultNames(){
@@ -1047,8 +1075,6 @@ function buildParty(){
     v=>{ setup.kind=v; setup.names=[]; buildParty(); });
   chipRow('partyCount',[2,3,4,5,6].map(n=>({n:String(n),v:n})), setup.count,
     v=>{ setup.count=v; buildParty(); });
-  chipRow('partyRounds',[1,2,3,4].map(n=>({n:n+(n===1?' turn':' turns'),v:n})), setup.roundsEach,
-    v=>{ setup.roundsEach=v; buildParty(); });
   chipRow('partyDeck',[{n:'Pick each turn',v:'each'},{n:'One deck all game',v:'one'}], setup.deckMode,
     v=>{ setup.deckMode=v; buildParty(); });
   chipRow('partyMods',[{n:'Mix it up',v:true},{n:'Normal only',v:false}], setup.mods,
@@ -1069,7 +1095,7 @@ function startParty(){
   const names = defaultNames().map((n,i)=>(setup.names[i]||n).trim() || ('Team '+(i+1)));
   session = {
     kind:setup.kind, names, scores:names.map(()=>0),
-    turn:0, played:0, total:names.length*setup.roundsEach,
+    turn:0, played:0, total:Infinity,
     deckMode:setup.deckMode, deckId:null, mods:setup.mods, relay:setup.relay, lastRound:null
   };
   saveSession(); showBoard();
@@ -1086,9 +1112,15 @@ function showBoard(){
   if(!session) return go('home');
   document.getElementById('boardTitle').textContent =
     session.played ? 'Scoreboard' : (session.kind==='teams' ? 'Teams ready' : 'Players ready');
+  const n = session.names.length, full = Math.floor(session.played / n), rem = session.played % n;
   document.getElementById('boardSub').textContent =
-    'Round ' + Math.min(session.played+1, session.total) + ' of ' + session.total +
+    (session.played ? session.played + (session.played===1?' round played':' rounds played') : 'No rounds yet') +
+    (rem ? '  ·  ' + (n-rem) + ' still to play this turn'
+         : (full ? '  ·  everyone has had ' + full + (full===1?' turn':' turns') : '')) +
     (session.lastRound ? '  ·  ' + session.lastRound : '');
+  const fin = document.getElementById('finishBtn');
+  fin.style.display = session.played ? 'block' : 'none';
+  fin.textContent = rem ? 'Finish game (' + (n-rem) + ' still to play)' : 'Finish game';
 
   const list=document.getElementById('boardList'); list.innerHTML='';
   const ranked = session.names.map((n,i)=>({n, s:session.scores[i], i}))
@@ -1108,7 +1140,7 @@ function showBoard(){
   document.getElementById('turnBtn').textContent =
     'Start ' + session.names[session.turn] + '\u2019s round';
   const again=document.getElementById('sameDeckBtn');
-  if(session.deckMode==='each' && session.lastDeckId && session.played < session.total){
+  if(session.deckMode==='each' && session.lastDeckId){
     again.style.display='block';
     again.textContent='Same deck as last turn \u00B7 ' + deckById(session.lastDeckId).name;
   } else again.style.display='none';
@@ -1125,6 +1157,7 @@ function startTurn(){
     deck = deckById(session.deckId);
     pickDeck(deck);
   } else {
+    buildDecks();           // so the "who is picking" label is current
     go('decks');            // the picked deck starts the round
   }
 }
@@ -1152,7 +1185,20 @@ function commitRound(points){
   session.lastRound = session.names[session.turn] + ' scored ' + points;
   session.turn = (session.turn + 1) % session.names.length;
   saveSession();
-  if(session.played >= session.total) showFinal(); else showBoard();
+  showBoard();
+}
+function finishGame(){
+  const n = session.names.length, rem = session.played % n;
+  if(rem && !finishGame.armed){
+    finishGame.armed = true;
+    const names = [];
+    for(let i=0;i<n-rem;i++) names.push(session.names[(session.turn + i) % n]);
+    showToast(names.join(' and ') + (names.length===1?' has':' have') + ' not had this turn. Tap Finish again to end anyway.');
+    setTimeout(()=>{ finishGame.armed=false; }, 4000);
+    return;
+  }
+  finishGame.armed=false;
+  showFinal();
 }
 function showFinal(){
   const ranked = session.names.map((n,i)=>({n, s:session.scores[i]})).sort((a,b)=>b.s-a.s);
@@ -1341,7 +1387,7 @@ function nextCard(){
   while(card && isBanned(card) && bag.length);
   if(card && isBanned(card)){ refillBag(); card = bag.shift(); }
   cardIndex++;
-  card.wild = (cardIndex === wildAt);
+  card.wild = bonusOn && (cardIndex === wildAt);
   card.gamble = false;
   recent.push(card.t);
   remember(card.t);
@@ -1402,8 +1448,8 @@ function fitText(){
   const hasImg = document.getElementById('cardImg').style.display === 'block';
   const availH = window.innerHeight *
     (hasImg ? 0.22 : (document.getElementById('taboo').textContent ? 0.50 : 0.66));
-  const availW = window.innerWidth * 0.90;
-  let lo=26, hi=Math.min(window.innerHeight*0.58,280), best=lo;
+  const availW = window.innerWidth * 0.94;
+  let lo=26, hi=window.innerHeight*0.7, best=lo;
   for(let i=0;i<13;i++){
     const mid=(lo+hi)/2;
     el.style.fontSize=mid+'px';
@@ -1418,18 +1464,21 @@ window.addEventListener('resize', ()=>{ if(running) fitText(); });
 =============================================================== */
 let roundsThisVisit = 0;
 function startRound(){
+  goLandscape();
   log=[]; score=0; streak=0; bag=[]; recent=[]; stealsThisRound = {};
   document.body.style.background = deck.color;
   go('ready');
   calibrating=true; calibSamples=[];
   document.getElementById('readyNote').textContent =
-    (tiltOn && sensorLive()) ? 'Phone on your forehead now'
-    : touchOn ? 'Swipe down or tap right for correct \u00B7 up or left to pass'
-    : 'No tilt detected — turn on Swipe & tap';
-  countdown(roundsThisVisit ? 1 : 3);
+    (session ? session.names[session.turn] + ' \u2014 ' : '') +
+    ((tiltOn && sensorLive()) ? 'phone on your forehead now'
+    : touchOn ? 'swipe down or tap right for correct \u00B7 up or left to pass'
+    : 'no tilt detected \u2014 turn on Swipe & tap');
+  countdown(3);
   roundsThisVisit++;
 }
 function countdown(n){
+  document.getElementById('turnHint').style.display = isPortrait() ? 'block' : 'none';
   document.getElementById('count').textContent = n>0?n:'Go';
   beep(n>0?520:760, n>0?90:160);
   if(n<0){
@@ -1445,6 +1494,19 @@ function countdown(n){
   setTimeout(()=>countdown(n-1),700);
 }
 let roundStartedAt = 0;
+async function goLandscape(){
+  /* Fullscreen removes the browser bar; the orientation lock only works once fullscreen.
+     Both are best-effort: on iOS Safari neither exists and the hint has to do the work. */
+  try{ if(document.documentElement.requestFullscreen && !document.fullscreenElement)
+         await document.documentElement.requestFullscreen({navigationUI:'hide'}); }catch(e){}
+  try{ if(screen.orientation && screen.orientation.lock) await screen.orientation.lock('landscape'); }catch(e){}
+}
+function leaveLandscape(){
+  try{ if(screen.orientation && screen.orientation.unlock) screen.orientation.unlock(); }catch(e){}
+  try{ if(document.fullscreenElement && document.exitFullscreen) document.exitFullscreen(); }catch(e){}
+}
+function isPortrait(){ return window.innerHeight > window.innerWidth; }
+
 async function beginPlay(){
   running=true; loop.lastTick=null; roundStartedAt = performance.now();
   relayRound = !!(session && session.relay);
@@ -1475,7 +1537,7 @@ function loop(){
       }
     });
   }
-  if(left<=5000 && !gambleArmed && card){
+  if(bonusOn && left<=5000 && !gambleArmed && card){
     gambleArmed = true; card.gamble = true; paintCard(); buzz([40,60,40]);
   }
   const ev=tiltCheck(now);
@@ -1485,23 +1547,30 @@ function loop(){
 function resolve(correct){
   const ms = performance.now()-cardShownAt;
   if(correct===null){
-    if(challenge){ endChallenge(false, ms); return; }
+    if(challenge){ endChallenge(challenge.multi ? challenge.got>0 : false, ms); return; }
     log.push({t:card.t, ok:false, ms, timeout:true, wild:card.wild, gamble:card.gamble});
     stopRound(true); return;
   }
   if(correct){
     streak++;
-    let pts = card.gamble ? GAMBLE_WIN : (card.wild?2:1);
-    if(!card.gamble && streak%3===0) pts+=1;
+    let pts = 1;
+    if(bonusOn){ pts = card.gamble ? GAMBLE_WIN : (card.wild?2:1); if(!card.gamble && streak%3===0) pts+=1; }
     score+=pts;
     flash('ok'); buzz(40); beep(card.gamble?1200:880,card.gamble?200:90);
   } else {
     streak=0;
-    if(card.gamble) score = Math.max(0, score - GAMBLE_LOSS);
+    if(bonusOn && card.gamble) score = Math.max(0, score - GAMBLE_LOSS);
     flash('pass'); buzz(120); beep(300,120);
   }
   log.push({t:card.t, ok:!!correct, ms, wild:card.wild, gamble:card.gamble});
-  if(challenge){ endChallenge(!!correct, ms); return; }
+  if(challenge){
+    if(challenge.multi){
+      if(correct) challenge.got++;
+      if(bag.length){ nextCard(); return; }
+      endChallenge(challenge.got>0, ms); return;
+    }
+    endChallenge(!!correct, ms); return;
+  }
   nextCard();
   document.getElementById('liveScore').innerHTML = score + '<small>PTS</small>';
 }
@@ -1535,22 +1604,53 @@ function endChallenge(got, ms){
   running=false;
   if(raf) cancelAnimationFrame(raf);
   if(wakeLock){ try{ wakeLock.release(); }catch(e){} wakeLock=null; }
-  const t = challenge.t;
+  const t = challenge.t, multi = challenge.multi, cGot = challenge.got, cTot = challenge.total;
   if(challenge.restore) challenge.restore();
   challenge = null;
+  leaveLandscape();
   document.body.style.background = '';
-  document.getElementById('count').textContent = got ? '\u2713' : '\u2717';
-  document.getElementById('readyNote').textContent = got
-    ? t + ' \u2014 in ' + (ms/1000).toFixed(1) + 's'
-    : t + ' \u2014 still nobody';
+  document.getElementById('turnHint').style.display='none';
+  if(multi){
+    document.getElementById('count').textContent = cGot + '/' + cTot;
+    document.getElementById('readyNote').textContent = cGot===cTot ? 'All of them, this time.' : 'Got ' + cGot + ' of the ' + cTot + ' missed words.';
+  } else {
+    document.getElementById('count').textContent = got ? '\u2713' : '\u2717';
+    document.getElementById('readyNote').textContent = got
+      ? t + ' \u2014 in ' + (ms/1000).toFixed(1) + 's'
+      : t + ' \u2014 still nobody';
+  }
   go('ready');
   if(got){ buzz([40,60,40,60,120]); beep(1100,250); } else { buzz(200); beep(220,300,'sawtooth'); }
   setTimeout(renderResults, 1800);
+}
+/* A short round made only of the cards that were passed or timed out. Scores and totals
+   are untouched; it exists so the room finally gets to hear the answers explained. */
+function retryMissed(){
+  const missed = log.filter(c=>!c.ok).map(c=>c.t);
+  if(!missed.length) return;
+  challenge = { t:'', deckName:deck.name, multi:true, total:missed.length, got:0 };
+  const savedLog = log.slice(), savedScore = score;
+  challenge.restore = ()=>{ log=savedLog; score=savedScore; };
+  log=[]; score=0; streak=0;
+  bag = missed.map(t=>Object.assign({}, deck.cards.find(x=>x.t===t) || {t, x:null}));
+  goLandscape();
+  document.body.style.background = deck.color;
+  go('ready');
+  document.getElementById('count').textContent = String(missed.length);
+  document.getElementById('readyNote').textContent = 'The ones you missed. ' + (missed.length*12) + ' seconds.';
+  setTimeout(async ()=>{
+    running=true; loop.lastTick=null; roundStartedAt=performance.now();
+    wildAt=-1; cardIndex=0; gambleArmed=true; relayRound=false;
+    roundEnd = performance.now() + missed.length*12000;
+    try{ if('wakeLock' in navigator) wakeLock = await navigator.wakeLock.request('screen'); }catch(e){}
+    go('play'); nextCard(); loop();
+  }, 1500);
 }
 function stopRound(showResults){
   running=false;
   if(raf) cancelAnimationFrame(raf);
   if(wakeLock){ try{ wakeLock.release(); }catch(e){} wakeLock=null; }
+  leaveLandscape();
   if(showResults){
     buzz([0,200,100,200]); beep(200,400,'sawtooth');
     /* A beat before the list, so the room reacts to the number together. */
@@ -1595,7 +1695,7 @@ function renderResults(){
       (banned.has(c.t)?'removed':(c.timeout?'time ran out':(c.ms/1000).toFixed(1)+'s'))+'</em>';
     main.onclick=()=>{
       c.ok=!c.ok;
-      const v = c.gamble ? GAMBLE_WIN : (c.wild?2:1);
+      const v = bonusOn ? (c.gamble ? GAMBLE_WIN : (c.wild?2:1)) : 1;
       score += c.ok ? v : -v;
       if(score<0) score=0;
       renderResults();
@@ -1618,6 +1718,10 @@ function renderResults(){
     row.appendChild(main); row.appendChild(kill);
     list.appendChild(row);
   });
+  const missed = log.filter(c=>!c.ok);
+  const rm=document.getElementById('retryMissedBtn');
+  rm.style.display = missed.length ? 'block' : 'none';
+  rm.textContent = 'Go back to the ' + missed.length + (missed.length===1?' word':' words') + ' you missed';
   const p=document.getElementById('resPrimary'), sec=document.getElementById('resSecondary');
   const rt=document.getElementById('runningTotal');
   const third=document.getElementById('resThird');
