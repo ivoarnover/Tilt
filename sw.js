@@ -1,8 +1,8 @@
 /* Network-first, cache-fallback.
    Network-first on purpose: a cache-first worker would keep serving an old
    build after every deploy, which is worse than being briefly offline. */
-const CACHE = 'tilt-2026-09-05.1';
-const FILES = ['./', './index.html', './decks.js?v=2026-09-05.1', './manifest.json',
+const CACHE = 'tilt-2026-09-05.2';
+const FILES = ['./', './index.html', './decks.js?v=2026-09-05.2', './manifest.json',
                './icon.svg', './icon-192.png', './icon-512.png'];
 /* Images under img/ are cached on first use by the fetch handler below. */
 

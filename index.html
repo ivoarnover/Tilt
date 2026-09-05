@@ -140,7 +140,8 @@ button{font-family:inherit;font-size:16px;color:var(--ink);background:none;borde
   background:radial-gradient(120% 85% at 50% 15%,rgba(255,255,255,0.09),rgba(0,0,0,0.16) 80%)}
 #cardImg{display:none;position:relative;max-width:78%;max-height:44vh;object-fit:contain;
   border-radius:14px;margin-bottom:14px;box-shadow:0 10px 30px rgba(0,0,0,0.45)}
-#word{font-weight:800;letter-spacing:-0.035em;line-height:1.02;padding:0 5%;width:100%;position:relative;
+#word{font-weight:800;letter-spacing:-0.035em;line-height:1.02;padding:0;width:auto;max-width:94%;
+  display:inline-block;position:relative;overflow-wrap:normal;word-break:normal;
   text-shadow:0 2px 20px rgba(0,0,0,0.22)}
 #taboo{font-size:15px;margin-top:16px;opacity:0.7;text-decoration:line-through;
   letter-spacing:0.05em;padding:0 8%;position:relative;font-weight:600}
@@ -471,9 +472,9 @@ button{font-family:inherit;font-size:16px;color:var(--ink);background:none;borde
 </section>
 
 <div id="mismatch"></div>
-<script src="decks.js?v=2026-09-05.1"></script>
+<script src="decks.js?v=2026-09-05.2"></script>
 <script>
-const APP_VERSION = '2026-09-05.1';
+const APP_VERSION = '2026-09-05.2';
 
 /* Wipes the service-worker caches and reloads bypassing the HTTP cache.
    Declared before the version check so the banner can call it. */
@@ -1449,11 +1450,16 @@ function fitText(){
   const availH = window.innerHeight *
     (hasImg ? 0.22 : (document.getElementById('taboo').textContent ? 0.50 : 0.66));
   const availW = window.innerWidth * 0.94;
-  let lo=26, hi=window.innerHeight*0.7, best=lo;
-  for(let i=0;i<13;i++){
+  /* Binary search on font size. The element shrinks to its text, so scrollWidth is the
+     text width; a single word wider than the screen shows as scrollWidth > clientWidth. */
+  let lo=26, hi=Math.max(120, window.innerHeight*0.75), best=lo;
+  for(let i=0;i<14;i++){
     const mid=(lo+hi)/2;
     el.style.fontSize=mid+'px';
-    if(el.scrollWidth<=availW && el.scrollHeight<=availH){ best=mid; lo=mid; } else hi=mid;
+    const fits = el.scrollWidth <= Math.max(el.clientWidth, 1) + 1 &&   // no single word overflowing
+                 el.scrollWidth <= availW &&
+                 el.scrollHeight <= availH;
+    if(fits){ best=mid; lo=mid; } else hi=mid;
   }
   el.style.fontSize=best+'px';
 }
